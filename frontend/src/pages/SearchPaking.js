@@ -1,10 +1,10 @@
-import { useParksContext } from "../hooks/useParksContext";
+import { useParksContext } from '../hooks/useParksContext'
 
-import SearchForm from "../components/SearchForm";
-import ParkDetails from "../components/ParkInfo";
+import ParkDetails from '../components/ParkInfo'
+import SearchForm from '../components/SearchForm'
 
 const SearchParking = () => {
-  const { parks, dispatch } = useParksContext();
+  const { parks } = useParksContext()
 
   return (
     <div className="searchParking">
@@ -13,7 +13,7 @@ const SearchParking = () => {
         {parks && parks.map((park) => <ParkDetails park={park} />)}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SearchParking;
+export default SearchParking
