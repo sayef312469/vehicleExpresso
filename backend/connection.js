@@ -23,4 +23,15 @@ const runQuery = async (query, params) => {
   return data.rows;
 };
 
-module.exports = { runQuery };
+const runQueryOutBinds = async (query, params) => {
+  const conn = await connection();
+  const data = await conn.execute(query, params, {
+    outFormat: oracledb.OUT_FORMAT_OBJECT,
+  });
+  conn.commit();
+  await conn.close();
+  console.log(data);
+  return data.outBinds;
+};
+
+module.exports = { runQuery, runQueryOutBinds };

@@ -1,19 +1,20 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import NavbarTop from "./components/NavbarTop";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import SearchParking from "./pages/SearchPaking";
-import Signup from "./pages/Signup";
-import { useAuthContext } from "./hooks/useAuthContext";
-import CarWashRepair from "./pages/CarWashRepair";
-import PickupVanService from "./pages/PickupVanService";
-import RentingCars from "./pages/RentingCars";
-import LongTermCare from "./pages/LongTermCare";
-import CarInsuranceRenewal from "./pages/CarInsuranceRenewal";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import NavbarTop from './components/NavbarTop'
+import { useAuthContext } from './hooks/useAuthContext'
+import AddParkAdmin from './pages/AddParkAdmin'
+import CarInsuranceRenewal from './pages/CarInsuranceRenewal'
+import CarWashRepair from './pages/CarWashRepair'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import LongTermCare from './pages/LongTermCare'
+import PickupVanService from './pages/PickupVanService'
+import RentingCars from './pages/RentingCars'
+import SearchParking from './pages/SearchPaking'
+import Signup from './pages/Signup'
 
 function App() {
-  const { user } = useAuthContext();
+  const { user } = useAuthContext()
 
   return (
     <div className="App">
@@ -22,7 +23,10 @@ function App() {
         <div className="pages">
           <main>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route
+                path="/"
+                element={<Home />}
+              />
               <Route
                 path="/login"
                 element={!user ? <Login /> : <Navigate to="/" />}
@@ -31,7 +35,10 @@ function App() {
                 path="/signup"
                 element={!user ? <Signup /> : <Navigate to="/" />}
               />
-              <Route path="/searchparks" element={<SearchParking />} />
+              <Route
+                path="/searchparks"
+                element={<SearchParking />}
+              />
               <Route
                 path="/carwashrepair"
                 element={user ? <CarWashRepair /> : <Navigate to="/login" />}
@@ -54,12 +61,16 @@ function App() {
                   user ? <CarInsuranceRenewal /> : <Navigate to="/login" />
                 }
               />
+              <Route
+                path="/addparkadmin"
+                element={<AddParkAdmin />}
+              />
             </Routes>
           </main>
         </div>
       </BrowserRouter>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
