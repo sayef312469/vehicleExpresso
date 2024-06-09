@@ -60,20 +60,30 @@ div.error {
   margin: 20px 0;
 }
 
+div.msg {
+  padding: 10px;
+  background: #ffefef;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
 .serachParkForm,
 .parks,
 .signup,
 .login,
 .emailsForPark {
-  max-width: 400px;
+  width: 400px;
   margin: 40px auto;
   padding: 20px;
   background: #fff;
   border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-.addParkAdmin {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 100px;
+.addParkAdmin, .addVehicle {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
 }

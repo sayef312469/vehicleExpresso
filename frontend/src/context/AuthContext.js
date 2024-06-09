@@ -21,7 +21,27 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'))
     if (user) {
-      dispatch({ type: 'LOGIN', payload: user })
+      const setParkAdmin = async () => {
+        const response = await fetch(
+          'http://localhost:4000/api/parking/isparkadmin',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userid: user.id }),
+          },
+        )
+        const data = await response.json()
+        if (response.ok) {
+          user.parkAdmin = data.CNT
+          dispatch({ type: 'LOGIN', payload: user })
+        } else {
+          user.parkAdmin = 0
+          dispatch({ type: 'LOGIN', payload: user })
+        }
+      }
+      setParkAdmin()
     }
   }, [dispatch])
 

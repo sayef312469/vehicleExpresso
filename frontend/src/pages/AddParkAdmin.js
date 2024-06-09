@@ -8,6 +8,7 @@ const AddParkAdmin = () => {
   const [city, setCity] = useState('')
   const [area, setArea] = useState('')
   const [name, setName] = useState('')
+  const [status, setStatus] = useState(null)
   const [error, setError] = useState(null)
   const [emailsForPark, setEmailsForPark] = useState([])
   const { parks, dispatch } = useParksContext()
@@ -57,6 +58,7 @@ const AddParkAdmin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    console.log('address: ', country, city, area, name)
 
     const address = `${area}, ${city}, ${country}`
 
@@ -65,6 +67,7 @@ const AddParkAdmin = () => {
     )
       .then((geoloc) => geoloc.json())
       .then(async (data) => {
+        console.log('location data: ', data)
         setError(null)
 
         const response = await fetch(
@@ -78,15 +81,17 @@ const AddParkAdmin = () => {
               city,
               area,
               name,
+              status,
               longitude: data.features[0].geometry.coordinates[0],
               latitude: data.features[0].geometry.coordinates[1],
             }),
           },
         )
-        const json = await response.json()
+        const dt = await response.json()
+        console.log('lon-lat: ', dt)
 
         if (response.ok) {
-          dispatch({ type: 'ADD_PARK', payload: json })
+          dispatch({ type: 'ADD_PARK', payload: dt })
 
           const serachEmailsforPark = async () => {
             const response = await fetch(
@@ -99,15 +104,15 @@ const AddParkAdmin = () => {
                 body: JSON.stringify({ country, city, area, name }),
               },
             )
-            const data = await response.json()
+            const dat = await response.json()
             if (response.ok) {
-              console.log(data)
-              setEmailsForPark(data)
+              console.log(dat)
+              setEmailsForPark(dat)
             }
           }
           serachEmailsforPark()
         } else {
-          setError(json.error)
+          setError(dt.error)
         }
       })
   }
@@ -152,37 +157,45 @@ const AddParkAdmin = () => {
           onChange={(e) => setName(e.target.value)}
           value={name}
         />
+        <label>Status:</label>
+        <input
+          type="text"
+          onChange={(e) => setStatus(e.target.value)}
+          value={status}
+        />
         <br />
         <button>Add</button>
         {error && <div className="error">{error}</div>}
       </form>
-
-      <div className="parks">
-        {email && (
-          <div>
-            <h3>Such parks where {email} is admin</h3>
-            <hr />
-            {parks && parks.map((park) => <ParkDetails park={park} />)}
-          </div>
-        )}
-      </div>
-      <div className="emailsForPark">
-        {emailsForPark.length > 0 && (
-          <div>
-            <h3>Admins of the park</h3>
-            <hr />
-            {emailsForPark.map((email) => (
-              <div className="adminList">
-                <strong>
-                  Username: {email.NAME}
-                  <br />
-                  Email: {email.EMAIL}
-                </strong>
-                <hr />
-              </div>
-            ))}
-          </div>
-        )}
+      <div>
+        <div className="parks">
+          {email && (
+            <div>
+              <h3>Such parks where {email} is admin</h3>
+              <hr />
+              {parks && parks.map((park) => <ParkDetails park={park} />)}
+            </div>
+          )}
+          {!email && <h3>EMPTY EMAIL</h3>}
+        </div>
+        <div className="emailsForPark">
+          {emailsForPark.length > 0 && (
+            <div>
+              <h3>Admin of the park</h3>
+              <hr />
+              {emailsForPark.map((email) => (
+                <div className="adminList">
+                  <strong>
+                    Username: {email.NAME}
+                    <br />
+                    Email: {email.EMAIL}
+                  </strong>
+                  <hr />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

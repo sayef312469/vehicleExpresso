@@ -49,8 +49,8 @@ const SearchForm = () => {
         setError('Something went wrong')
       } else {
         setError(null)
-        setLon(data.features[0].properties.lon)
-        setLat(data.features[0].properties.lat)
+        setLon(() => data.features[0].properties.lon)
+        setLat(() => data.features[0].properties.lat)
         console.log('through input: ', lon, lat)
       }
     }
@@ -122,22 +122,11 @@ const SearchForm = () => {
         value={vehicletyp}
         onChange={(e) => setVehicletyp(e.target.value)}
       >
-        <option value="select">Select Vehicle</option>
-        <option value="A">(A) Motorcycle</option>
-        <option value="AU">(AU) Truck, Van</option>
-        <option value="BA">(BA) Inter-city bus</option>
-        <option value="CHA">(CHA) Microbus</option>
-        <option value="DA">(DA) Truck, Van</option>
-        <option value="GA">(GA) Private car</option>
-        <option value="GHA">(GHA) Jeep</option>
-        <option value="HA">(HA) Motorcycle</option>
-        <option value="JA">(JA) Minibus</option>
-        <option value="JHA">(JHA) Coach bus</option>
-        <option value="LA">(LA) Motorcycle</option>
-        <option value="MA">(MA) Delivery van</option>
-        <option value="NA">(NA) Truck, Van</option>
-        <option value="PA">(PA) Taxicab</option>
-        <option value="U">(U) Truck, Van</option>
+        <option value="">Select Vehicle</option>
+        <option value="CAR">CAR</option>
+        <option value="JEEP">JEEP</option>
+        <option value="BIKE">BIKE</option>
+        <option value="MICRO">MICRO</option>
       </select>
 
       <button>Search</button>

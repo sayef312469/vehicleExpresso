@@ -4,15 +4,17 @@ const ParkDetails = ({ park }) => {
       <h4>{park.NAME}</h4>
       <p>
         {park.AREA}, {park.CITY}, {park.COUNTRY} <br />
-        {park.VEHICLENAME && (
+        {park.VEHICLETYPE && (
           <div>
-            <strong>
-              Vehicle type: {park.VEHICLENAME} ({park.VEHICLETYPE})
-            </strong>
+            <strong>Vehicle type: {park.VEHICLETYPE}</strong>
             <br />
-            <strong>Ability: {park.LEFTVECHICLE}</strong>
+            <strong>Short Term Ability: {park.LEFTSHORT}</strong>
             <br />
-            <strong>Cost per hour: {park.COSTPERHOUR}</strong>
+            <strong>Long Term Ability: {park.LEFTLONG}</strong>
+            <br />
+            <strong>Short Term Cost: {park.COSTSHORT}</strong>
+            <br />
+            <strong>Long Term Cost: {park.COSTLONG}</strong>
           </div>
         )}
       </p>
