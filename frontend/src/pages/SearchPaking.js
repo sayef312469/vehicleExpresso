@@ -11,6 +11,7 @@ const SearchParking = () => {
       <SearchForm />
       <div className="parks">
         {parks && parks.map((park) => <ParkDetails park={park} />)}
+        {!parks && <h4>No Parks</h4>}
       </div>
     </div>
   )

@@ -26,10 +26,12 @@ const loginUser = async (req, res) => {
         if (!match) {
           res.status(400).json({ error: 'Password is not correct' })
         } else {
-          const token = createToken(user.ID)
+          const token = createToken(user.USERID)
           console.log(token)
           const username = user.NAME
-          res.status(200).json({ username, email, token })
+          res
+            .status(200)
+            .json({ id: user.USERID, name: username, email, token })
         }
       }
     } catch (error) {
@@ -55,9 +57,12 @@ const signUpUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
     try {
-      const exists = await runQuery('select id from users where email=:email', {
-        email,
-      })
+      const exists = await runQuery(
+        'select userid id from users where email=:email',
+        {
+          email,
+        },
+      )
       if (exists.length == 0) {
         const ins = await runQuery(
           'insert into users(name, email, password) values(:username, :email, :hash)',
@@ -67,14 +72,13 @@ const signUpUser = async (req, res) => {
             hash,
           },
         )
-        console.log(ins)
         const data = await runQuery('select * from users where email=:email', {
           email,
         })
         const user = data[0]
-        const username = user.NAME
-        const token = createToken(user.ID)
-        res.status(200).json({ username, email, token })
+        const usname = await user.NAME
+        const token = createToken(user.USERID)
+        res.status(200).json({ id: user.USERID, name: usname, email, token })
       } else {
         console.log(exists)
         res.status(400).json({ error: 'Email already exists' })

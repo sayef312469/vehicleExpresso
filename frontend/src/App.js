@@ -3,6 +3,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import NavbarTop from './components/NavbarTop'
 import { useAuthContext } from './hooks/useAuthContext'
 import AddParkAdmin from './pages/AddParkAdmin'
+import AddRentInfo from './pages/AddRentInfo'
+import AddVehicle from './pages/AddVehicle'
 import CarInsuranceRenewal from './pages/CarInsuranceRenewal'
 import CarWashRepair from './pages/CarWashRepair'
 import Home from './pages/Home'
@@ -12,9 +14,11 @@ import PickupVanService from './pages/PickupVanService'
 import RentingCars from './pages/RentingCars'
 import SearchParking from './pages/SearchPaking'
 import Signup from './pages/Signup'
+import VehicleEntryExit from './pages/VehicleEntryExit'
 
 function App() {
   const { user } = useAuthContext()
+  console.log('login user: ', user)
 
   return (
     <div className="App">
@@ -61,10 +65,34 @@ function App() {
                   user ? <CarInsuranceRenewal /> : <Navigate to="/login" />
                 }
               />
-              <Route
-                path="/addparkadmin"
-                element={<AddParkAdmin />}
-              />
+              {user && (
+                <Route
+                  path="/addparkadmin"
+                  element={
+                    user.id < 100 ? <AddParkAdmin /> : <Navigate to="/" />
+                  }
+                />
+              )}
+              {user && (
+                <Route
+                  path="/addvehicle"
+                  element={user ? <AddVehicle /> : <Navigate to="/login" />}
+                />
+              )}
+              {user && (
+                <Route
+                  path="/vehicleentryexit"
+                  element={
+                    user ? <VehicleEntryExit /> : <Navigate to="/login" />
+                  }
+                />
+              )}
+              {user && (
+                <Route
+                  path="/addrentinfo"
+                  element={user ? <AddRentInfo /> : <Navigate to="/login" />}
+                />
+              )}
             </Routes>
           </main>
         </div>
