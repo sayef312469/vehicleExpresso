@@ -159,7 +159,10 @@ const AddRentInfo = () => {
           value={llong}
         />
         <br />
-        <button>Update Cost</button>
+        <button>
+          <span class="material-symbols-outlined">security_update_good</span>
+          Update Cost
+        </button>
         {error && <div className="error">{error}</div>}
         {msg && <div className="msg">{msg}</div>}
       </form>

@@ -69,6 +69,21 @@ div.msg {
   margin: 20px 0;
 }
 
+.material-symbols-outlined {
+  vertical-align: middle; 
+  line-height: 1; 
+  margin-right: 5px; 
+}
+
+.parkDetails{
+  margin-bottom: 20px;
+}
+
+.parks_info{
+  display: flex;
+  justify-content: space-between;
+}
+
 .serachParkForm,
 .parks,
 .signup,
@@ -82,7 +97,7 @@ div.msg {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-.addParkAdmin, .addVehicle {
+.addParkAdmin, .addVehicle, .searchParking{
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
