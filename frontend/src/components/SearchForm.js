@@ -129,7 +129,10 @@ const SearchForm = () => {
         <option value="MICRO">MICRO</option>
       </select>
 
-      <button>Search</button>
+      <button>
+        <span className="material-symbols-outlined">Search</span>
+        <span>Search</span>
+      </button>
       {error && <div className="error">{error}</div>}
     </form>
   )

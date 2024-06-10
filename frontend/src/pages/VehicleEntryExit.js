@@ -272,7 +272,9 @@ const VehicleEntryExit = () => {
         />
 
         <br />
-        <button disabled={!stype ? 'disables' : ''}>Entry Vehicle</button>
+        <button disabled={!stype ? 'disables' : ''}>
+          <span class="material-symbols-outlined">download</span>Entry Vehicle
+        </button>
         {error && <div className="error">{error}</div>}
         {msg && <div className="msg">{msg}</div>}
       </form>
@@ -309,7 +311,9 @@ const VehicleEntryExit = () => {
           value={exitAmount}
         />
         <br />
-        <button>Exit Vehicle</button>
+        <button>
+          <span class="material-symbols-outlined">upload</span>Exit Vehicle
+        </button>
         {errorExit && <div className="error">{errorExit}</div>}
         {msgExit && <div className="msg">{msgExit}</div>}
         {exitData && (

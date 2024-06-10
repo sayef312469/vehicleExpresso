@@ -88,7 +88,9 @@ const AddVehicle = () => {
           value={vehicleColor}
         />
         <br />
-        <button>Add Vehicle</button>
+        <button>
+          <span class="material-symbols-outlined">add_to_queue</span>Add Vehicle
+        </button>
         {error && <div className="error">{error}</div>}
         {msg && <div className="msg">{msg}</div>}
       </form>

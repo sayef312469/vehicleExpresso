@@ -35,6 +35,7 @@ export const AuthContextProvider = ({ children }) => {
         const data = await response.json()
         if (response.ok) {
           user.parkAdmin = data.CNT
+          console.log('userauth parkcnt:', user)
           dispatch({ type: 'LOGIN', payload: user })
         } else {
           user.parkAdmin = 0

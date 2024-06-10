@@ -9,9 +9,11 @@ import { useLogout } from '../hooks/useLogout'
 const NavbarTop = () => {
   const { logout } = useLogout()
   const { user } = useAuthContext()
+  console.log('Navbar user: ', user)
   const handleClick = (e) => {
     logout()
   }
+
   return (
     <Navbar
       bg="dark"
@@ -23,33 +25,18 @@ const NavbarTop = () => {
           as={Link}
           to={'/'}
         >
+          <span class="material-symbols-outlined">emoji_transportation</span>
           Vehicle Expresso
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            {user && <Nav.Link onClick={handleClick}>Logout</Nav.Link>}
-            {!user && (
-              <Nav.Link
-                as={Link}
-                to={'/login'}
-              >
-                Login
-              </Nav.Link>
-            )}
-            {!user && (
-              <Nav.Link
-                as={Link}
-                to={'/signup'}
-              >
-                Signup
-              </Nav.Link>
-            )}
             <Nav.Link
               as={Link}
               to={'/searchparks'}
             >
-              Search Parks
+              <span className="material-symbols-outlined">Search</span>Search
+              Parks
             </Nav.Link>
             <NavDropdown
               title="Services"
@@ -60,7 +47,7 @@ const NavbarTop = () => {
                   as={Link}
                   to={'/addparkadmin'}
                 >
-                  Add Park
+                  <span class="material-symbols-outlined">nature</span>Add Park
                 </NavDropdown.Item>
               )}
               {user && user.id < 100 && <NavDropdown.Divider />}
@@ -69,7 +56,8 @@ const NavbarTop = () => {
                   as={Link}
                   to={'/addvehicle'}
                 >
-                  Add Vehicle
+                  <span class="material-symbols-outlined">add_to_queue</span>Add
+                  Vehicle
                 </NavDropdown.Item>
               )}
               {user && <NavDropdown.Divider />}
@@ -79,7 +67,8 @@ const NavbarTop = () => {
                   as={Link}
                   to={'/vehicleentryexit'}
                 >
-                  Vehicle Entry Exit
+                  <span class="material-symbols-outlined">upload</span>Vehicle
+                  Entry Exit
                 </NavDropdown.Item>
               )}
               {user && user.parkAdmin > 0 && (
@@ -87,6 +76,9 @@ const NavbarTop = () => {
                   as={Link}
                   to={'/addrentinfo'}
                 >
+                  <span class="material-symbols-outlined">
+                    security_update_good
+                  </span>
                   Add Rent Info
                 </NavDropdown.Item>
               )}
@@ -124,10 +116,28 @@ const NavbarTop = () => {
               {user && <NavDropdown.Divider />}
               {user && (
                 <NavDropdown.Item href="#action/3.4">
+                  <span class="material-symbols-outlined">mail</span>
                   {user.email}
                 </NavDropdown.Item>
               )}
             </NavDropdown>
+            {user && <Nav.Link onClick={handleClick}>Logout</Nav.Link>}
+            {!user && (
+              <Nav.Link
+                as={Link}
+                to={'/login'}
+              >
+                Login
+              </Nav.Link>
+            )}
+            {!user && (
+              <Nav.Link
+                as={Link}
+                to={'/signup'}
+              >
+                Signup
+              </Nav.Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -164,38 +164,51 @@ const AddParkAdmin = () => {
           value={status}
         />
         <br />
-        <button>Add</button>
+        <button>
+          <span class="material-symbols-outlined">nature</span>Add Park
+        </button>
         {error && <div className="error">{error}</div>}
       </form>
       <div>
         <div className="parks">
           {email && (
             <div>
-              <h3>Such parks where {email} is admin</h3>
+              <h4>Such parks where {email} is admin</h4>
               <hr />
               {parks && parks.map((park) => <ParkDetails park={park} />)}
             </div>
           )}
-          {!email && <h3>EMPTY EMAIL</h3>}
+          {!email && <h4>EMPTY EMAIL</h4>}
         </div>
-        <div className="emailsForPark">
-          {emailsForPark.length > 0 && (
+        {emailsForPark.length > 0 && (
+          <div className="emailsForPark">
             <div>
-              <h3>Admin of the park</h3>
+              <h4>Admin of the park</h4>
               <hr />
               {emailsForPark.map((email) => (
                 <div className="adminList">
                   <strong>
-                    Username: {email.NAME}
+                    <span
+                      class="material-symbols-outlined"
+                      style={{ color: '#142d4c' }}
+                    >
+                      verified_user
+                    </span>
+                    {email.NAME}
                     <br />
-                    Email: {email.EMAIL}
+                    <span
+                      class="material-symbols-outlined"
+                      style={{ color: '#142d4c' }}
+                    >
+                      mail
+                    </span>
+                    {email.EMAIL}
                   </strong>
-                  <hr />
                 </div>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )
