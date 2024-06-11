@@ -58,7 +58,10 @@ const AddParkAdmin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('address: ', country, city, area, name)
+    if (!area || !city || !country) {
+      setError('All field must be filled')
+      return
+    }
 
     const address = `${area}, ${city}, ${country}`
 
@@ -123,49 +126,77 @@ const AddParkAdmin = () => {
         className="serachParkForm"
         onSubmit={handleSubmit}
       >
-        <label>Park Administrator Email: </label>
-        <input
-          type="text"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-        />
-        <br />
         <h4>Insert Park</h4>
         <hr />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">alternate_email</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Park Owner Email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
+        </div>
 
-        <label>Country:</label>
-        <input
-          type="text"
-          onChange={(e) => setCountry(e.target.value)}
-          value={country}
-        />
-        <label>City:</label>
-        <input
-          type="text"
-          onChange={(e) => setCity(e.target.value)}
-          value={city}
-        />
-        <label>Area:</label>
-        <input
-          type="text"
-          onChange={(e) => setArea(e.target.value)}
-          value={area}
-        />
-        <label>Park Name:</label>
-        <input
-          type="text"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-        />
-        <label>Status:</label>
-        <input
-          type="text"
-          onChange={(e) => setStatus(e.target.value)}
-          value={status}
-        />
-        <br />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">
+              integration_instructions
+            </span>
+          </label>
+          <input
+            type="text"
+            placeholder="Country"
+            onChange={(e) => setCountry(e.target.value)}
+            value={country}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">home_pin</span>
+          </label>
+          <input
+            type="text"
+            placeholder="City"
+            onChange={(e) => setCity(e.target.value)}
+            value={city}
+          />
+        </div>
+        <div className="input_box">
+          <span className="material-symbols-outlined">my_location</span>
+          <input
+            type="text"
+            placeholder="Area"
+            onChange={(e) => setArea(e.target.value)}
+            value={area}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">park</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Park Name"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">flag</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Status"
+            onChange={(e) => setStatus(e.target.value)}
+            value={status}
+          />
+        </div>
         <button>
-          <span class="material-symbols-outlined">nature</span>Add Park
+          <span className="material-symbols-outlined">nature</span>Add Park
         </button>
         {error && <div className="error">{error}</div>}
       </form>
@@ -189,7 +220,7 @@ const AddParkAdmin = () => {
                 <div className="adminList">
                   <strong>
                     <span
-                      class="material-symbols-outlined"
+                      className="material-symbols-outlined"
                       style={{ color: '#142d4c' }}
                     >
                       verified_user
@@ -197,7 +228,7 @@ const AddParkAdmin = () => {
                     {email.NAME}
                     <br />
                     <span
-                      class="material-symbols-outlined"
+                      className="material-symbols-outlined"
                       style={{ color: '#142d4c' }}
                     >
                       mail

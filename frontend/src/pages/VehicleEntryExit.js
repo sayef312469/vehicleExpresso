@@ -1,3 +1,5 @@
+import { jsPDF } from 'jspdf'
+import 'jspdf-autotable'
 import { useEffect, useState } from 'react'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useParksContext } from '../hooks/useParksContext'
@@ -204,6 +206,33 @@ const VehicleEntryExit = () => {
     if (response.ok) {
       setErrorExit(null)
       setMsgExit('Exit Success')
+      const doc = new jsPDF()
+
+      doc.setFontSize(18)
+      doc.text('Vehicle Expresso', 20, 20)
+      doc.setFontSize(14)
+      doc.text('Vehicle Exit', 20, 30)
+
+      doc.text(' ', 20, 40)
+
+      const rows = [
+        ['Owner', exitData.NAME],
+        ['Vehicle Type', exitData.VEHICLETYPE],
+        ['Service Type', exitData.SERVICETYPE],
+        ['Start Time', exitData.ST_TIME],
+        ['End Time', exitData.END_TIME],
+        ['Per Unit Cost', exitData.PER_UNIT_COST],
+        ['Total Amout', exitData.PAID + exitData.COST],
+        ['Paid', Number(exitAmount) + exitData.PAID],
+        ['Due', exitData.COST - Number(exitAmount)],
+      ]
+
+      doc.autoTable({
+        body: rows,
+        startY: 40,
+      })
+
+      doc.save('details.pdf')
     } else {
       setErrorExit(data.error)
       setMsgExit(null)
@@ -217,61 +246,86 @@ const VehicleEntryExit = () => {
         onSubmit={handleSubmit}
       >
         <h3>Vehicle Entry</h3>
-        <label>Garage Name:</label>
-        <select
-          value={gid}
-          onChange={(e) => setGid(e.target.value)}
-        >
-          <option value="">Select Garage</option>
-          {parks &&
-            parks.map((park) => (
-              <option value={park.GARAGEID}>
-                {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
-              </option>
-            ))}
-        </select>
-
-        <label>Vehicle No:</label>
-        <input
-          type="text"
-          onChange={(e) => setVehicleNo(e.target.value)}
-          value={vehicleNo}
-        />
-        <label>Vehicle Type:</label>
-        <input
-          type="text"
-          onChange={(e) => setVehicleType(e.target.value)}
-          value={vehicleType}
-          disabled="disabled"
-        />
-        <label>Service Type:</label>
-        <select
-          value={stype}
-          onChange={(e) => setStype(e.target.value)}
-        >
-          <option value="">Select Service</option>
-          <option
-            value="SHORT"
-            disabled={!lshort ? 'disables' : ''}
+        <hr />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">park</span>
+          </label>
+          <select
+            value={gid}
+            onChange={(e) => setGid(e.target.value)}
           >
-            SHORT, Left({lshort}), Price({srentCost})
-          </option>
-          <option
-            value="LONG"
-            disabled={!llong ? 'disables' : ''}
+            <option value="">Select Garage</option>
+            {parks &&
+              parks.map((park) => (
+                <option value={park.GARAGEID}>
+                  {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
+                </option>
+              ))}
+          </select>
+        </div>
+
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">bike_scooter</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vehicle No"
+            onChange={(e) => setVehicleNo(e.target.value)}
+            value={vehicleNo}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">transportation</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vehicle Type"
+            onChange={(e) => setVehicleType(e.target.value)}
+            value={vehicleType}
+            disabled="disabled"
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">
+              security_update_good
+            </span>
+          </label>
+          <select
+            value={stype}
+            onChange={(e) => setStype(e.target.value)}
           >
-            LONG, Left({llong}), Price({lrentCost})
-          </option>
-        </select>
+            <option value="">Select Service</option>
+            <option
+              value="SHORT"
+              disabled={!lshort ? 'disables' : ''}
+            >
+              SHORT, Left({lshort}), Price({srentCost})
+            </option>
+            <option
+              value="LONG"
+              disabled={!llong ? 'disables' : ''}
+            >
+              LONG, Left({llong}), Price({lrentCost})
+            </option>
+          </select>
+        </div>
 
-        <label>Pay Amount:</label>
-        <input
-          type="text"
-          onChange={(e) => setEntryAmount(e.target.value)}
-          value={entryAmount}
-        />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">payments</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Pay Amount"
+            onChange={(e) => setEntryAmount(e.target.value)}
+            value={entryAmount}
+          />
+        </div>
 
-        <br />
         <button disabled={!stype ? 'disables' : ''}>
           <span class="material-symbols-outlined">download</span>Entry Vehicle
         </button>
@@ -284,33 +338,47 @@ const VehicleEntryExit = () => {
         onSubmit={handleExit}
       >
         <h3>Vehicle Exit</h3>
-        <label>Garage Name:</label>
-        <select
-          value={gidExit}
-          onChange={(e) => setGidExit(e.target.value)}
-        >
-          <option value="">Select Garage</option>
-          {parks &&
-            parks.map((park) => (
-              <option value={park.GARAGEID}>
-                {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
-              </option>
-            ))}
-        </select>
-        <label>Vehicle No:</label>
-        <input
-          type="text"
-          onChange={(e) => setVehicleNoExit(e.target.value)}
-          value={vehicleNoExit}
-        />
+        <hr />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">park</span>
+          </label>
+          <select
+            value={gidExit}
+            onChange={(e) => setGidExit(e.target.value)}
+          >
+            <option value="">Select Garage</option>
+            {parks &&
+              parks.map((park) => (
+                <option value={park.GARAGEID}>
+                  {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
+                </option>
+              ))}
+          </select>
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">bike_scooter</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vehicle No"
+            onChange={(e) => setVehicleNoExit(e.target.value)}
+            value={vehicleNoExit}
+          />
+        </div>
 
-        <label>Pay Amount:</label>
-        <input
-          type="text"
-          onChange={(e) => setExitAmount(e.target.value)}
-          value={exitAmount}
-        />
-        <br />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">credit_card</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Pay Amount"
+            onChange={(e) => setExitAmount(e.target.value)}
+            value={exitAmount}
+          />
+        </div>
         <button>
           <span class="material-symbols-outlined">upload</span>Exit Vehicle
         </button>

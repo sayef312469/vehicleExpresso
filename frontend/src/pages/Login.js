@@ -1,28 +1,48 @@
-import { useState } from "react";
-import { useLogin } from "../hooks/useLogin";
+import { useState } from 'react'
+import { useLogin } from '../hooks/useLogin'
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { login, error, isLoading } = useLogin();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const { login, error, isLoading } = useLogin()
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    await login(email, password);
-  };
+    await login(email, password)
+  }
 
   return (
-    <form className="login" onSubmit={handleSubmit}>
+    <form
+      className="login"
+      onSubmit={handleSubmit}
+    >
       <h3>Login</h3>
-      <label>Email: </label>
-      <input type="email" onChange={(e) => setEmail(e.target.value)} />
-      <label>Password: </label>
-      <input type="password" onChange={(e) => setPassword(e.target.value)} />
+      <hr />
+      <div className="input_box">
+        <label>
+          <span className="material-symbols-outlined">alternate_email</span>
+        </label>
+        <input
+          type="email"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+      <div className="input_box">
+        <label>
+          <span className="material-symbols-outlined">lock_open</span>
+        </label>
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
       <button disabled={isLoading}>Login</button>
       {error && <div className="error">{error}</div>}
     </form>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
