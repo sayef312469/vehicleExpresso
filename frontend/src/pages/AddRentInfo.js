@@ -5,6 +5,7 @@ import { useParksContext } from '../hooks/useParksContext'
 const AddRentInfo = () => {
   const { user } = useAuthContext()
   const [gid, setGid] = useState(null)
+  const [status, setStatus] = useState(null)
   const [vtype, setVtype] = useState(null)
   const [srentCost, setSRentCost] = useState(null)
   const [lrentCost, setLRentCost] = useState(null)
@@ -62,6 +63,7 @@ const AddRentInfo = () => {
       const data = await response.json()
       console.log(data)
       if (response.ok) {
+        setStatus(data.STATUS)
         setSRentCost(data.COSTSHORT)
         setLRentCost(data.COSTLONG)
         setLShort(data.LEFTSHORT)
@@ -75,6 +77,11 @@ const AddRentInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!gid || !vtype) {
+      setError('Select the garage and vehicle type')
+      setMsg(null)
+      return
+    }
 
     const response = await fetch(
       'http://localhost:4000/api/parking/setrentcost',
@@ -110,57 +117,93 @@ const AddRentInfo = () => {
         onSubmit={handleSubmit}
       >
         <h3>Set Costs & Abilities</h3>
-        <label>Select Garage:</label>
-        <select
-          value={gid}
-          onChange={(e) => setGid(e.target.value)}
-        >
-          <option value="">Select Garage</option>
-          {parks &&
-            parks.map((park) => (
-              <option value={park.GARAGEID}>
-                {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
-              </option>
-            ))}
-        </select>
-        <label>Vehicle type:</label>
-        <select
-          value={vtype}
-          onChange={(e) => setVtype(e.target.value)}
-        >
-          <option value="">Select Vehicle</option>
-          <option value="CAR">CAR</option>
-          <option value="JEEP">JEEP</option>
-          <option value="BIKE">BIKE</option>
-          <option value="MICRO">MICRO</option>
-        </select>
-        <label>Short Term Cost:</label>
-        <input
-          type="text"
-          onChange={(e) => setSRentCost(e.target.value)}
-          value={srentCost}
-        />
-        <label>Long Term Cost:</label>
-        <input
-          type="text"
-          onChange={(e) => setLRentCost(e.target.value)}
-          value={lrentCost}
-        />
-        <label>Left {vtype} (short):</label>
-        <input
-          type="text"
-          onChange={(e) => setLShort(e.target.value)}
-          value={lshort}
-        />
-        <label>Left {vtype} (long):</label>
-        <input
-          type="text"
-          onChange={(e) => setLLong(e.target.value)}
-          value={llong}
-        />
-        <br />
+        <hr />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">park</span>
+          </label>
+          <select
+            value={gid}
+            onChange={(e) => setGid(e.target.value)}
+          >
+            <option value="">Select Garage</option>
+            {parks &&
+              parks.map((park) => (
+                <option value={park.GARAGEID}>
+                  {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
+                </option>
+              ))}
+          </select>
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">
+              format_list_numbered_rtl
+            </span>
+          </label>
+          <select
+            value={vtype}
+            onChange={(e) => setVtype(e.target.value)}
+          >
+            <option value="">Vehicle Type</option>
+            <option value="CAR">CAR</option>
+            <option value="JEEP">JEEP</option>
+            <option value="BIKE">BIKE</option>
+            <option value="MICRO">MICRO</option>
+          </select>
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">credit_card</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Short Term Cost"
+            onChange={(e) => setSRentCost(e.target.value)}
+            value={srentCost}
+            disabled={status === 1 ? 'disabled' : ''}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">payments</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Long Term Cost"
+            onChange={(e) => setLRentCost(e.target.value)}
+            value={lrentCost}
+            disabled={status === 0 ? 'disabled' : ''}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">car_crash</span>
+          </label>
+          <input
+            type="text"
+            placeholder={'Left ' + (vtype ? vtype : '') + ' (short)'}
+            onChange={(e) => setLShort(e.target.value)}
+            value={lshort}
+            disabled={status === 1 ? 'disabled' : ''}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">no_transfer</span>
+          </label>
+          <input
+            type="text"
+            placeholder={'Left ' + (vtype ? vtype : '') + ' (long)'}
+            onChange={(e) => setLLong(e.target.value)}
+            value={llong}
+            disabled={status === 0 ? 'disabled' : ''}
+          />
+        </div>
         <button>
-          <span class="material-symbols-outlined">security_update_good</span>
+          <span className="material-symbols-outlined">
+            security_update_good
+          </span>
           Update Cost
         </button>
         {error && <div className="error">{error}</div>}

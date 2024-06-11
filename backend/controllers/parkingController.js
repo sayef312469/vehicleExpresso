@@ -88,12 +88,9 @@ const addParkAdmin = async (req, res) => {
         },
       )
 
-      const set_rent = await runQuery(
-        `begin insert_rent_data( :garageid ); end;`,
-        {
-          garageid: park[0].GARAGEID,
-        },
-      )
+      await runQuery(`begin insert_rent_data( :garageid ); end;`, {
+        garageid: park[0].GARAGEID,
+      })
 
       res.status(200).json(park[0])
     }
@@ -129,7 +126,7 @@ const getRentCosts = async (req, res) => {
   const { garageid, vehicletype } = req.body
   try {
     const cost = await runQuery(
-      `select costshort, costlong, leftshort, leftlong from rent_info where garageid=:garageid and vehicletype=:vehicletype`,
+      `select status, costshort, costlong, leftshort, leftlong from garage g join rent_info r on g.garageid = r.garageid where r.garageid=:garageid and r.vehicletype=:vehicletype`,
       {
         garageid,
         vehicletype,
@@ -298,7 +295,7 @@ const entryVehicle = async (req, res) => {
   try {
     vehicleno = vehicleno.toUpperCase()
     await runQuery(
-      `begin entryvehicle(:vehicleno, :garageid, :payment_amount, :servicetype); end;`,
+      `begin entryvehicle(upper(:vehicleno), :garageid, :payment_amount, :servicetype); end;`,
       {
         vehicleno,
         garageid,
@@ -348,7 +345,7 @@ const exitVehicle = async (req, res) => {
   const { vehicleno, garageid, servicetype, total_amount, paid } = req.body
   try {
     await runQuery(
-      `begin exitvehicle(:vehicleno, :garageid, :servicetype, :total_amount, :paid); end;`,
+      `begin exitvehicle(upper(:vehicleno), :garageid, :servicetype, :total_amount, :paid); end;`,
       {
         vehicleno,
         garageid,

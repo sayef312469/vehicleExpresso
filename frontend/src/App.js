@@ -76,21 +76,27 @@ function App() {
               {user && (
                 <Route
                   path="/addvehicle"
-                  element={user ? <AddVehicle /> : <Navigate to="/login" />}
+                  element={<AddVehicle />}
                 />
               )}
               {user && (
                 <Route
                   path="/vehicleentryexit"
                   element={
-                    user ? <VehicleEntryExit /> : <Navigate to="/login" />
+                    user.parkAdmin ? (
+                      <VehicleEntryExit />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
               )}
               {user && (
                 <Route
                   path="/addrentinfo"
-                  element={user ? <AddRentInfo /> : <Navigate to="/login" />}
+                  element={
+                    user.parkAdmin ? <AddRentInfo /> : <Navigate to="/login" />
+                  }
                 />
               )}
             </Routes>

@@ -47,49 +47,78 @@ const AddVehicle = () => {
         className="serachParkForm"
         onSubmit={handleSubmit}
       >
-        <label>Vechicle Owner Email: </label>
-        <input
-          type="text"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-        />
-        <br />
         <h4>Insert Vehicle</h4>
         <hr />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">alternate_email</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vechicle Owner Email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
+        </div>
 
-        <label>Vehicle No:</label>
-        <input
-          type="text"
-          onChange={(e) => setVehicleNo(e.target.value)}
-          value={vehicleNo}
-        />
-        <label>Vehicle Type:</label>
-        <input
-          type="text"
-          onChange={(e) => setVehicleType(e.target.value)}
-          value={vehicleType}
-        />
-        <label>Vehicle Model:</label>
-        <input
-          type="text"
-          onChange={(e) => setVehicleModel(e.target.value)}
-          value={vehicleModel}
-        />
-        <label>Vehicle Company:</label>
-        <input
-          type="text"
-          onChange={(e) => setVehicleCompany(e.target.value)}
-          value={vehicleCompany}
-        />
-        <label>Vehicle Color:</label>
-        <input
-          type="text"
-          onChange={(e) => setVehicleColor(e.target.value)}
-          value={vehicleColor}
-        />
-        <br />
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">bike_scooter</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vehicle No"
+            onChange={(e) => setVehicleNo(e.target.value)}
+            value={vehicleNo}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">transportation</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vehicle Type"
+            onChange={(e) => setVehicleType(e.target.value)}
+            value={vehicleType}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">tram</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vehicle Model"
+            onChange={(e) => setVehicleModel(e.target.value)}
+            value={vehicleModel}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">factory</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vehicle Company"
+            onChange={(e) => setVehicleCompany(e.target.value)}
+            value={vehicleCompany}
+          />
+        </div>
+        <div className="input_box">
+          <label>
+            <span className="material-symbols-outlined">palette</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Vehicle Color"
+            onChange={(e) => setVehicleColor(e.target.value)}
+            value={vehicleColor}
+          />
+        </div>
         <button>
-          <span class="material-symbols-outlined">add_to_queue</span>Add Vehicle
+          <span className="material-symbols-outlined">add_to_queue</span>Add
+          Vehicle
         </button>
         {error && <div className="error">{error}</div>}
         {msg && <div className="msg">{msg}</div>}

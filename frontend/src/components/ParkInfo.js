@@ -23,7 +23,7 @@ const ParkDetails = ({ park }) => {
               style={{ color: '#142d4c' }}
             >
               local_taxi
-            </span>{' '}
+            </span>
             {park.VEHICLETYPE}
           </strong>
 
