@@ -8,6 +8,7 @@ const SearchForm = () => {
   const [vehicletyp, setVehicletyp] = useState('')
   const [lon, setLon] = useState(null)
   const [lat, setLat] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const [curLoc, setCurLoc] = useState(false)
   const [error, setError] = useState(null)
   const { dispatch } = useParksContext()
@@ -39,8 +40,10 @@ const SearchForm = () => {
           dispatch({ type: 'SET_PARKS', payload: json })
           setLon(null)
           setLat(null)
+          setIsLoading(false)
         } else {
           setError(json.error)
+          setIsLoading(false)
         }
       }
     }
@@ -49,6 +52,7 @@ const SearchForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsLoading(true)
 
     if (curLoc) {
       navigator.geolocation.getCurrentPosition(
@@ -60,6 +64,7 @@ const SearchForm = () => {
         },
         () => {
           setError('Something went wrong')
+          setIsLoading(false)
           setLon(null)
           setLat(null)
         },
@@ -67,6 +72,7 @@ const SearchForm = () => {
     } else {
       if (!area || !city || !country) {
         setError('All field must be filled')
+        setIsLoading(false)
         setLon(null)
         setLat(null)
         return
@@ -100,7 +106,6 @@ const SearchForm = () => {
     >
       <h4>Search Parks With Vehicle Type</h4>
       <br />
-
       <div className="input_option">
         <input
           type="checkbox"
@@ -110,7 +115,6 @@ const SearchForm = () => {
         Nearyby your location
       </div>
       <hr />
-
       <div className="input_box">
         <label>
           <span className="material-symbols-outlined">
@@ -164,9 +168,15 @@ const SearchForm = () => {
           <option value="MICRO">MICRO</option>
         </select>
       </div>
-
       <button>
-        <span className="material-symbols-outlined">Search</span>
+        {isLoading && (
+          <span className="material-symbols-outlined">
+            youtube_searched_for
+          </span>
+        )}
+        {!isLoading && (
+          <span className="material-symbols-outlined">Search</span>
+        )}
         <span>Search</span>
       </button>
       {error && <div className="error">{error}</div>}

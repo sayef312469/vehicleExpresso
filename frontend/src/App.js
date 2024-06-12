@@ -1,24 +1,24 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import NavbarTop from './components/NavbarTop'
-import { useAuthContext } from './hooks/useAuthContext'
-import AddParkAdmin from './pages/AddParkAdmin'
-import AddRentInfo from './pages/AddRentInfo'
-import AddVehicle from './pages/AddVehicle'
-import CarInsuranceRenewal from './pages/CarInsuranceRenewal'
-import CarWashRepair from './pages/CarWashRepair'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import LongTermCare from './pages/LongTermCare'
-import PickupVanService from './pages/PickupVanService'
-import RentingCars from './pages/RentingCars'
-import SearchParking from './pages/SearchPaking'
-import Signup from './pages/Signup'
-import VehicleEntryExit from './pages/VehicleEntryExit'
+import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import NavbarTop from "./components/NavbarTop";
+import { useAuthContext } from "./hooks/useAuthContext";
+import AddParkAdmin from "./pages/AddParkAdmin";
+import AddRentInfo from "./pages/AddRentInfo";
+import AddVehicle from "./pages/AddVehicle";
+import CarInsuranceRenewal from "./pages/CarInsuranceRenewal";
+import CarWashRepair from "./pages/CarWashRepair";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import LongTermCare from "./pages/LongTermCare";
+import PickupVanService from "./pages/PickupVanService";
+import RentingCars from "./pages/RentingCars";
+import SearchParking from "./pages/SearchPaking";
+import Signup from "./pages/Signup";
+import VehicleEntryExit from "./pages/VehicleEntryExit";
 
 function App() {
-  const { user } = useAuthContext()
-  console.log('login user: ', user)
+  const { user } = useAuthContext();
+  console.log("login user: ", user);
 
   return (
     <div className="App">
@@ -27,10 +27,7 @@ function App() {
         <div className="pages">
           <main>
             <Routes>
-              <Route
-                path="/"
-                element={<Home />}
-              />
+              <Route path="/" element={<Home />} />
               <Route
                 path="/login"
                 element={!user ? <Login /> : <Navigate to="/" />}
@@ -39,10 +36,7 @@ function App() {
                 path="/signup"
                 element={!user ? <Signup /> : <Navigate to="/" />}
               />
-              <Route
-                path="/searchparks"
-                element={<SearchParking />}
-              />
+              <Route path="/searchparks" element={<SearchParking />} />
               <Route
                 path="/carwashrepair"
                 element={user ? <CarWashRepair /> : <Navigate to="/login" />}
@@ -73,12 +67,7 @@ function App() {
                   }
                 />
               )}
-              {user && (
-                <Route
-                  path="/addvehicle"
-                  element={<AddVehicle />}
-                />
-              )}
+              {user && <Route path="/addvehicle" element={<AddVehicle />} />}
               {user && (
                 <Route
                   path="/vehicleentryexit"
@@ -104,7 +93,7 @@ function App() {
         </div>
       </BrowserRouter>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

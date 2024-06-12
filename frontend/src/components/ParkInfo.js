@@ -50,7 +50,7 @@ const ParkDetails = ({ park }) => {
           <strong title="Short Term Cost">
             <span
               className="material-symbols-outlined"
-              style={{ color: '#142d4c' }}
+              style={park.COSTSHORT ? { color: '#142d4c' } : { color: 'red' }}
             >
               credit_card
             </span>
@@ -60,7 +60,7 @@ const ParkDetails = ({ park }) => {
           <strong title="Long Term Cost">
             <span
               className="material-symbols-outlined"
-              style={{ color: '#142d4c' }}
+              style={park.COSTLONG ? { color: '#142d4c' } : { color: 'red' }}
             >
               payments
             </span>

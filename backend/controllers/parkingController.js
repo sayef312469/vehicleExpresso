@@ -274,7 +274,7 @@ const getVehicle = async (req, res) => {
   const { vehicleno } = req.body
   try {
     const getVtype = await runQuery(
-      `select v.*, u.name from vehicle_info v join users u on v.vehicle_owner = u.userid where vehicleno=:vehicleno`,
+      `select v.*, u.name from vehicle_info v join users u on v.vehicle_owner = u.userid where vehicleno=upper(:vehicleno)`,
       {
         vehicleno,
       },
@@ -324,7 +324,7 @@ const getExitData = async (req, res) => {
       extract(hour from (CURRENT_TIMESTAMP - st_date)) +
       (extract(minute from (CURRENT_TIMESTAMP - st_date)) / 60)) * case h.servicetype when 'SHORT' then costshort else costlong end) - h.payment_amount COST, h.payment_amount PAID
       from has_payment h join vehicle_info v on v.vehicleno = h.vehicleno join rent_info r on r.garageid = h.garageid and r.vehicletype = v.vehicletype join users u on u.userid = v.vehicle_owner
-      where h.garageid=:garageid and v.vehicleno=:vehicleno`,
+      where h.garageid=:garageid and v.vehicleno=upper(:vehicleno)`,
       {
         garageid,
         vehicleno,
