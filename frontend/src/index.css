@@ -71,7 +71,7 @@ form button {
 .input_box{
   display: flex;
   justify-content: baseline;
-  align-items: baseline;
+  align-items: center;
   border: 1px solid #ddd;
   padding-left: 10px;
   border-radius: 4px;

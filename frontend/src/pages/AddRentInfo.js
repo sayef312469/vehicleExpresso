@@ -152,7 +152,10 @@ const AddRentInfo = () => {
             <option value="MICRO">MICRO</option>
           </select>
         </div>
-        <div className="input_box">
+        <div
+          className="input_box"
+          title="Short Term Cost"
+        >
           <label>
             <span className="material-symbols-outlined">credit_card</span>
           </label>
@@ -164,7 +167,10 @@ const AddRentInfo = () => {
             disabled={status === 1 ? 'disabled' : ''}
           />
         </div>
-        <div className="input_box">
+        <div
+          className="input_box"
+          title="Long Term Cost"
+        >
           <label>
             <span className="material-symbols-outlined">payments</span>
           </label>
@@ -176,7 +182,10 @@ const AddRentInfo = () => {
             disabled={status === 0 ? 'disabled' : ''}
           />
         </div>
-        <div className="input_box">
+        <div
+          className="input_box"
+          title="Short Term Ability"
+        >
           <label>
             <span className="material-symbols-outlined">car_crash</span>
           </label>
@@ -188,7 +197,10 @@ const AddRentInfo = () => {
             disabled={status === 1 ? 'disabled' : ''}
           />
         </div>
-        <div className="input_box">
+        <div
+          className="input_box"
+          title="Long Term Ability"
+        >
           <label>
             <span className="material-symbols-outlined">no_transfer</span>
           </label>
