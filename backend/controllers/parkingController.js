@@ -382,6 +382,83 @@ const isParkAdmin = async (req, res) => {
   }
 }
 
+const userParkHistory = async (req, res) => {
+  const { userid } = req.body
+  try {
+    const data = await runQuery(
+      `select ts.serviceid, ts.servicetype, initcap(to_char(ts.start_time, 'dd mon,yyyy hh24:mi')) start_time, initcap(to_char(ts.end_time, 'dd mon,yyyy hh24:mi')) end_time, ts.total_amount, ts.paid, g.country, g.city, g.area, g.name parkname, v.vehicle_company, v.vehicle_model, v.vehicle_color
+      from takes_service ts join garage g on ts.garageid = g.garageid join vehicle_info v on v.vehicleno = ts.vehicleno 
+      where v.vehicle_owner = :userid 
+      order by ts.end_time desc
+      fetch first 100 rows only`,
+      {
+        userid,
+      },
+    )
+    res.status(200).json(data)
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const allParksHistory = async (req, res) => {
+  const { userid } = req.body
+  try {
+    const data = await runQuery(
+      `select ts.serviceid, ts.servicetype, initcap(to_char(ts.start_time, 'dd mon,yyyy hh24:mi')) start_time, initcap(to_char(ts.end_time, 'dd mon,yyyy hh24:mi')) end_time, ts.total_amount, ts.paid, u.name username, u.email, g.country, g.city, g.area, g.name parkname, v.vehicle_company, v.vehicle_model, v.vehicle_color
+      from takes_service ts join garage g on ts.garageid = g.garageid join vehicle_info v on v.vehicleno = ts.vehicleno join users u on v.vehicle_owner = u.userid 
+      where g.ownerid = :userid
+      order by ts.end_time desc
+      fetch first 100 rows only`,
+      {
+        userid,
+      },
+    )
+    res.status(200).json(data)
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const parkHistory = async (req, res) => {
+  const { userid, garageid, vehicletype, servicetype, email } = req.body
+  try {
+    const params = {
+      userid,
+    }
+    if (garageid) {
+      params.garageid = garageid
+    }
+
+    if (email) {
+      params.email = email
+    }
+
+    if (vehicletype) {
+      params.vehicletype = vehicletype
+    }
+
+    if (servicetype) {
+      params.servicetype = servicetype
+    }
+
+    const data = await runQuery(
+      `select ts.serviceid, ts.servicetype, initcap(to_char(ts.start_time, 'dd mon,yyyy hh24:mi')) start_time, initcap(to_char(ts.end_time, 'dd mon,yyyy hh24:mi')) end_time, ts.total_amount, ts.paid, u.name username, u.email, g.country, g.city, g.area, g.name parkname, v.vehicle_company, v.vehicle_model, v.vehicle_color
+      from takes_service ts join garage g on ts.garageid = g.garageid join vehicle_info v on v.vehicleno = ts.vehicleno join users u on v.vehicle_owner = u.userid 
+      where g.ownerid = :userid ${garageid ? 'and ts.garageid = :garageid' : ''} ${email ? 'and email = :email' : ''} ${vehicletype ? 'and v.vehicletype = :vehicletype' : ''} ${servicetype ? 'and ts.servicetype = :servicetype' : ''} 
+      order by ts.end_time desc
+      fetch first 100 rows only`,
+      params,
+    )
+    res.status(200).json(data)
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
 module.exports = {
   searchParks,
   searchParksUsingEmail,
@@ -395,4 +472,7 @@ module.exports = {
   getExitData,
   exitVehicle,
   isParkAdmin,
+  userParkHistory,
+  allParksHistory,
+  parkHistory,
 }

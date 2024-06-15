@@ -169,14 +169,12 @@ const SearchForm = () => {
         </select>
       </div>
       <button>
-        {isLoading && (
-          <span className="material-symbols-outlined">
-            youtube_searched_for
-          </span>
-        )}
-        {!isLoading && (
-          <span className="material-symbols-outlined">Search</span>
-        )}
+        <span
+          className="material-symbols-outlined"
+          style={isLoading ? { color: 'purple' } : {}}
+        >
+          Search
+        </span>
         <span>Search</span>
       </button>
       {error && <div className="error">{error}</div>}
