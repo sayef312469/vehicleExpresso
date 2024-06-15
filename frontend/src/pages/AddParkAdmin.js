@@ -14,6 +14,10 @@ const AddParkAdmin = () => {
   const { parks, dispatch } = useParksContext()
 
   useEffect(() => {
+    dispatch({ type: 'CLEAR_PARKS' })
+  }, [dispatch])
+
+  useEffect(() => {
     console.log(email)
     const searchParksEmail = async () => {
       const response = await fetch(

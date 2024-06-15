@@ -47,7 +47,8 @@ const NavbarTop = () => {
                   as={Link}
                   to={'/addparkadmin'}
                 >
-                  <span class="material-symbols-outlined">nature</span>Add Park
+                  <span className="material-symbols-outlined">nature</span>Add
+                  Park
                 </NavDropdown.Item>
               )}
               {user && user.id < 100 && <NavDropdown.Divider />}
@@ -56,8 +57,19 @@ const NavbarTop = () => {
                   as={Link}
                   to={'/addvehicle'}
                 >
-                  <span class="material-symbols-outlined">add_to_queue</span>Add
-                  Vehicle
+                  <span className="material-symbols-outlined">
+                    add_to_queue
+                  </span>
+                  Add Vehicle
+                </NavDropdown.Item>
+              )}
+              {user && (
+                <NavDropdown.Item
+                  as={Link}
+                  to={'/userparkhistory'}
+                >
+                  <span className="material-symbols-outlined">history_edu</span>
+                  Your Park History
                 </NavDropdown.Item>
               )}
               {user && <NavDropdown.Divider />}
@@ -67,8 +79,8 @@ const NavbarTop = () => {
                   as={Link}
                   to={'/vehicleentryexit'}
                 >
-                  <span class="material-symbols-outlined">upload</span>Vehicle
-                  Entry Exit
+                  <span className="material-symbols-outlined">upload</span>
+                  Vehicle Entry Exit
                 </NavDropdown.Item>
               )}
               {user && user.parkAdmin > 0 && (
@@ -76,10 +88,19 @@ const NavbarTop = () => {
                   as={Link}
                   to={'/addrentinfo'}
                 >
-                  <span class="material-symbols-outlined">
+                  <span className="material-symbols-outlined">
                     security_update_good
                   </span>
                   Add Rent Info
+                </NavDropdown.Item>
+              )}
+              {user && user.parkAdmin > 0 && (
+                <NavDropdown.Item
+                  as={Link}
+                  to={'/parkhistory'}
+                >
+                  <span className="material-symbols-outlined">history</span>
+                  Garage History
                 </NavDropdown.Item>
               )}
               {user && user.parkAdmin > 0 && <NavDropdown.Divider />}
@@ -116,7 +137,7 @@ const NavbarTop = () => {
               {user && <NavDropdown.Divider />}
               {user && (
                 <NavDropdown.Item href="#action/3.4">
-                  <span class="material-symbols-outlined">mail</span>
+                  <span className="material-symbols-outlined">mail</span>
                   {user.email}
                 </NavDropdown.Item>
               )}

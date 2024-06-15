@@ -7,7 +7,7 @@ create table users(
     city varchar2(100),
     area varchar2(100),
     longitude number(12, 8),
-    latitude number(12, 8) not null,
+    latitude number(12, 8),
     constraint pk_users primary key (userid)
 );
 
@@ -136,7 +136,8 @@ begin
             park_row.costshort,
             park_row.costlong,
             park_row.leftshort,
-            park_row.leftlong);            
+            park_row.leftlong
+        );            
     end loop;
     return parks_array;
 end;
@@ -198,3 +199,5 @@ begin
     delete from has_payment
     where vehicleno=vno and garageid=gid;
 end;
+
+
