@@ -555,7 +555,9 @@ const getNotice = async (req, res) => {
     const data = await runQuery(
       `select NOTICEID, USERID, MESSAGE, to_char(NOTICE_TIME, 'dd Mon, yyyy hh24:mi') NOTICE_TIME
       from notice
-      where userid = :userid`,
+      where userid = :userid
+      order by NOTICE_TIME desc
+      fetch first 100 rows only`,
       {
         userid,
       },
