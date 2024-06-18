@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import NavDropdown from 'react-bootstrap/NavDropdown'
@@ -6,11 +6,12 @@ import Navbar from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useLogout } from '../hooks/useLogout'
+import { useNotificationContext } from '../hooks/useNotificationContext'
 
 const NavbarTop = () => {
   const { logout } = useLogout()
   const { user } = useAuthContext()
-  const [toalUnreadNotice, setTotalUnreadNotice] = useState(null)
+  const { totalUnreadNotice, dispatch } = useNotificationContext()
 
   const handleClick = (e) => {
     logout()
@@ -34,12 +35,14 @@ const NavbarTop = () => {
 
       const data = await response.json()
       if (response.ok) {
-        setTotalUnreadNotice(data.TOTAL_UNREAD)
+        console.log('unread', data.TOTAL_UNREAD)
+        dispatch({ type: 'UNREAD', payload: data.TOTAL_UNREAD })
       }
     }
     getNotice()
-  }, [user])
+  }, [user, dispatch])
 
+  console.log('total unread', totalUnreadNotice)
   return (
     <Navbar
       bg="dark"
@@ -72,7 +75,7 @@ const NavbarTop = () => {
               >
                 <span className="material-symbols-outlined">notifications</span>
                 Notifications
-                {toalUnreadNotice > 0 && <sup>{toalUnreadNotice}</sup>}
+                {totalUnreadNotice > 0 && <sup>{totalUnreadNotice}</sup>}
               </Nav.Link>
             )}
 
@@ -80,16 +83,6 @@ const NavbarTop = () => {
               title="Services"
               id="basic-nav-dropdown"
             >
-              {user && user.id < 100 && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/addparkadmin'}
-                >
-                  <span className="material-symbols-outlined">nature</span>Add
-                  Park
-                </NavDropdown.Item>
-              )}
-              {user && user.id < 100 && <NavDropdown.Divider />}
               {user && (
                 <NavDropdown.Item
                   as={Link}
@@ -111,6 +104,28 @@ const NavbarTop = () => {
                 </NavDropdown.Item>
               )}
               {user && <NavDropdown.Divider />}
+
+              {user && user.id < 100 && (
+                <NavDropdown.Item
+                  as={Link}
+                  to={'/addparkadmin'}
+                >
+                  <span className="material-symbols-outlined">nature</span>Add
+                  Park
+                </NavDropdown.Item>
+              )}
+              {user && user.id < 100 && (
+                <NavDropdown.Item
+                  as={Link}
+                  to={'/garageadminpay'}
+                >
+                  <span className="material-symbols-outlined">
+                    mode_of_travel
+                  </span>
+                  Garage Payment
+                </NavDropdown.Item>
+              )}
+              {user && user.id < 100 && <NavDropdown.Divider />}
 
               {user && user.parkAdmin > 0 && (
                 <NavDropdown.Item

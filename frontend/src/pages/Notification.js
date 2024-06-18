@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Notice from '../components/Notice'
 import { useAuthContext } from '../hooks/useAuthContext'
+import { useNotificationContext } from '../hooks/useNotificationContext'
 
 const UserParkHistory = () => {
   const { user } = useAuthContext()
   const [notices, setNotices] = useState(null)
+  const { totalUnreadNotice, dispatch } = useNotificationContext()
 
   useEffect(() => {
     if (!user) {
@@ -29,18 +31,18 @@ const UserParkHistory = () => {
     }
 
     const setReadNotice = async () => {
-      await fetch('http://localhost:4000/api/parking/setreadnotice', {
+      fetch('http://localhost:4000/api/parking/setreadnotice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userid: user.id,
         }),
-      })
+      }).then(() => dispatch({ type: 'READ' }))
     }
 
     getNotice()
     setReadNotice()
-  }, [user])
+  }, [user, dispatch])
   return (
     <div className="userParkHistory">
       <div className="histories">

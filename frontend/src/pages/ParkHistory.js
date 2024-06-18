@@ -136,7 +136,7 @@ const ParkHistory = () => {
 
   return (
     <div className="userParkHistory">
-      <div>
+      <div className="queryBoxHis">
         <form
           className="serachParkForm"
           onSubmit={handleSubmit}

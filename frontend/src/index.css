@@ -26,31 +26,25 @@ label {
 }
 select {
   padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 20px;
   width: 100%;
-  border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
+  background-color: transparent;
+  border: none;
 }
 input {
   padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 20px;
   width: 100%;
   border: none;
   outline: none;
   box-sizing: border-box;
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box;  
 }
 
 input:focus {
   border: none;
   outline: none;
-}
-
-select {
-  background-color: transparent;
-  border: none;
 }
 
 form button {
@@ -82,6 +76,9 @@ form button {
   padding-left: 10px;
   border-radius: 4px;
   margin-bottom: 20px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box; 
 }
 
 div.error {
@@ -132,6 +129,11 @@ div.msg {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
+.queryBoxHis{
+  margin: 0px auto;
+  padding: 20px;
+}
+
 .addParkAdmin, .addVehicle, .searchParking, .userParkHistory, .showDateAndData {
   display: flex;
   align-items: baseline;
@@ -157,7 +159,7 @@ div.msg {
 }
 
 .key {
-  width: 50%;
+  width: 60%;
 }
 
 .val::before {

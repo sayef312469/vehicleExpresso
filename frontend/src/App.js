@@ -120,7 +120,13 @@ function App() {
               {user && (
                 <Route
                   path="/garageadminpay"
-                  element={user ? <GarageAdminPay /> : <Navigate to="/login" />}
+                  element={
+                    user.id < 100 ? (
+                      <GarageAdminPay />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
                 />
               )}
               {user && (
