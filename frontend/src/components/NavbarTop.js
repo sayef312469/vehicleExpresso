@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import NavDropdown from 'react-bootstrap/NavDropdown'
@@ -9,10 +10,35 @@ import { useLogout } from '../hooks/useLogout'
 const NavbarTop = () => {
   const { logout } = useLogout()
   const { user } = useAuthContext()
-  console.log('Navbar user: ', user)
+  const [toalUnreadNotice, setTotalUnreadNotice] = useState(null)
+
   const handleClick = (e) => {
     logout()
   }
+
+  useEffect(() => {
+    if (!user) {
+      return
+    }
+    const getNotice = async () => {
+      const response = await fetch(
+        'http://localhost:4000/api/parking/totalunread',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userid: user.id,
+          }),
+        },
+      )
+
+      const data = await response.json()
+      if (response.ok) {
+        setTotalUnreadNotice(data.TOTAL_UNREAD)
+      }
+    }
+    getNotice()
+  }, [user])
 
   return (
     <Navbar
@@ -38,6 +64,18 @@ const NavbarTop = () => {
               <span className="material-symbols-outlined">Search</span>Search
               Parks
             </Nav.Link>
+
+            {user && (
+              <Nav.Link
+                as={Link}
+                to={'/notification'}
+              >
+                <span className="material-symbols-outlined">notifications</span>
+                Notifications
+                {toalUnreadNotice > 0 && <sup>{toalUnreadNotice}</sup>}
+              </Nav.Link>
+            )}
+
             <NavDropdown
               title="Services"
               id="basic-nav-dropdown"

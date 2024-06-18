@@ -1,7 +1,7 @@
-const oracledb = require('oracledb')
-const { runQuery, runQueryOutBinds } = require('../connection')
+/* eslint-disable no-undef */
+
+const { runQuery } = require('../connection')
 const oracleErrorHandler = require('../oracleErrorHandler')
-const OracleDB = require('oracledb')
 
 const searchParks = async (req, res) => {
   const { longitude, latitude, vehicletype } = req.body
@@ -231,7 +231,7 @@ const addVehicle = async (req, res) => {
       )
 
       if (isExists.length) {
-        uname = await runQuery(
+        const uname = await runQuery(
           `select name from users where userid=:vehicle_owner`,
           {
             vehicle_owner: isExists[0].VEHICLE_OWNER,
@@ -376,7 +376,11 @@ const isParkAdmin = async (req, res) => {
         userid,
       },
     )
-    res.status(200).json(data[0])
+    if (data.length) {
+      res.status(200).json(data[0])
+    } else {
+      res.status(400).json({ error: 'No Data' })
+    }
   } catch (e) {
     oracleErrorHandler(e, res)
   }
@@ -389,26 +393,6 @@ const userParkHistory = async (req, res) => {
       `select ts.serviceid, ts.servicetype, initcap(to_char(ts.start_time, 'dd mon,yyyy hh24:mi')) start_time, initcap(to_char(ts.end_time, 'dd mon,yyyy hh24:mi')) end_time, ts.total_amount, ts.paid, g.country, g.city, g.area, g.name parkname, v.vehicle_company, v.vehicle_model, v.vehicle_color
       from takes_service ts join garage g on ts.garageid = g.garageid join vehicle_info v on v.vehicleno = ts.vehicleno 
       where v.vehicle_owner = :userid 
-      order by ts.end_time desc
-      fetch first 100 rows only`,
-      {
-        userid,
-      },
-    )
-    res.status(200).json(data)
-  } catch (e) {
-    console.log(e)
-    oracleErrorHandler(e, res)
-  }
-}
-
-const allParksHistory = async (req, res) => {
-  const { userid } = req.body
-  try {
-    const data = await runQuery(
-      `select ts.serviceid, ts.servicetype, initcap(to_char(ts.start_time, 'dd mon,yyyy hh24:mi')) start_time, initcap(to_char(ts.end_time, 'dd mon,yyyy hh24:mi')) end_time, ts.total_amount, ts.paid, u.name username, u.email, g.country, g.city, g.area, g.name parkname, v.vehicle_company, v.vehicle_model, v.vehicle_color
-      from takes_service ts join garage g on ts.garageid = g.garageid join vehicle_info v on v.vehicleno = ts.vehicleno join users u on v.vehicle_owner = u.userid 
-      where g.ownerid = :userid
       order by ts.end_time desc
       fetch first 100 rows only`,
       {
@@ -459,6 +443,213 @@ const parkHistory = async (req, res) => {
   }
 }
 
+const datyData = async (req, res) => {
+  const { garageid, hisDay } = req.body
+  try {
+    const data = await runQuery(
+      `select initcap(to_char(end_time, 'dd mon, yyyy')) end_time, sum(total_amount) total_amount, sum(paid) paid, count(case servicetype when 'SHORT' then 1 end) short_service, count(case servicetype when 'LONG' then 1 end) long_service  from takes_service 
+      where garageid = :garageid and end_time >= to_date(:hisDay, 'yyyy-mm-dd') and end_time < to_date(:hisDay, 'yyyy-mm-dd') + 1
+      group by initcap(to_char(end_time, 'dd mon, yyyy'))`,
+      {
+        garageid,
+        hisDay,
+      },
+    )
+    if (data.length) {
+      res.status(200).json(data[0])
+    } else {
+      res.status(400).json({ error: 'No Data' })
+    }
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const getAllParks = async (req, res) => {
+  try {
+    const data = await runQuery(`select * from getallparks`, {})
+    if (data.length) {
+      res.status(200).json(data)
+    } else {
+      res.status(400).json({ error: 'No Park' })
+    }
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const paymentData = async (req, res) => {
+  const { garageid, payDay } = req.body
+  try {
+    const data = await runQuery(
+      `select sum(paid) * .15 total_pay from takes_service 
+      where garageid = :garageid and end_time >= to_date(:payDay, 'yyyy-mm-dd') and end_time < to_date(:payDay, 'yyyy-mm-dd') + 1`,
+      {
+        garageid,
+        payDay,
+      },
+    )
+    if (data.length) {
+      res.status(200).json(data[0])
+    } else {
+      res.status(400).json({ error: 'No Payment Record' })
+    }
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const givenAmount = async (req, res) => {
+  const { garageid, payDay } = req.body
+  try {
+    const data = await runQuery(
+      `select sum(amount) given_amount 
+      from garage_admin_pay 
+      where garageid = :garageid and payment_time >= to_date(:payDay, 'yyyy-mm-dd') and payment_time < to_date(:payDay, 'yyyy-mm-dd') + 1`,
+      {
+        garageid,
+        payDay,
+      },
+    )
+    if (data.length) {
+      res.status(200).json(data[0])
+    } else {
+      res.status(400).json({ error: 'No Payment Record' })
+    }
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const garageAdminPay = async (req, res) => {
+  const { garageid, paymentAmount, payDay } = req.body
+  if (!garageid || !paymentAmount || !payDay) {
+    res.status(400).json({ error: 'All field must be filled' })
+    return
+  }
+  try {
+    runQuery(
+      `insert into garage_admin_pay(garageid, amount, payment_time)
+      values (:garageid, :paymentAmount, to_date(:payDay, 'yyyy-mm-dd'))`,
+      {
+        garageid,
+        paymentAmount,
+        payDay,
+      },
+    )
+      .then(() => res.status(200).json({ msg: 'Payment Success' }))
+      .catch(() => res.status(400).json({ error: 'Payment Unsuccessfull' }))
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const getNotice = async (req, res) => {
+  const { userid } = req.body
+  try {
+    const data = await runQuery(
+      `select NOTICEID, USERID, MESSAGE, to_char(NOTICE_TIME, 'dd Mon, yyyy hh24:mi') NOTICE_TIME
+      from notice
+      where userid = :userid`,
+      {
+        userid,
+      },
+    )
+    if (data.length) {
+      res.status(200).json(data)
+    } else {
+      res.status(400).json({ error: 'No Notification' })
+    }
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const totalUnread = async (req, res) => {
+  const { userid } = req.body
+  try {
+    const data = await runQuery(
+      `select count(*) total_unread from notice
+      where userid = :userid and is_read = 0`,
+      {
+        userid,
+      },
+    )
+    if (data.length) {
+      res.status(200).json(data[0])
+    } else {
+      res.status(400).json({ error: 'No Notification' })
+    }
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const setReadNotice = async (req, res) => {
+  const { userid } = req.body
+  try {
+    runQuery(
+      `update notice
+      set is_read = 1
+      where userid = :userid and is_read = 0`,
+      {
+        userid,
+      },
+    )
+      .then(() => {
+        res.status(200).json({ msg: 'Mark as read' })
+      })
+      .catch(() => {
+        res.status(400).json({ error: 'Mark as not read' })
+      })
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const parksDueAdmin = async (req, res) => {
+  try {
+    const data = await runQuery(`select * from due_payment_to_admin_view`, {})
+    if (data.length) {
+      res.status(200).json(data)
+    } else {
+      res.status(400).json({ error: 'No park have due' })
+    }
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
+const notifyParkForDue = async (req, res) => {
+  const { garageid, due, da } = req.body
+  try {
+    runQuery(`begin notice_park_for_due( :garageid, :due, :da ); end;`, {
+      garageid,
+      due,
+      da,
+    })
+      .then(() => {
+        res.status(200).json({ msg: 'Notified' })
+      })
+      .catch((e) => {
+        console.log(e)
+        res.status(400).json({ error: 'Not send' })
+      })
+  } catch (e) {
+    console.log(e)
+    oracleErrorHandler(e, res)
+  }
+}
+
 module.exports = {
   searchParks,
   searchParksUsingEmail,
@@ -473,6 +664,15 @@ module.exports = {
   exitVehicle,
   isParkAdmin,
   userParkHistory,
-  allParksHistory,
   parkHistory,
+  datyData,
+  getAllParks,
+  paymentData,
+  givenAmount,
+  garageAdminPay,
+  getNotice,
+  totalUnread,
+  setReadNotice,
+  parksDueAdmin,
+  notifyParkForDue,
 }

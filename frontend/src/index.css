@@ -122,7 +122,8 @@ div.msg {
 .signup,
 .login,
 .emailsForPark, 
-.histories {
+.histories, 
+.dateSelect {
   width: 400px;
   margin: 40px auto;
   padding: 20px;
@@ -131,7 +132,7 @@ div.msg {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-.addParkAdmin, .addVehicle, .searchParking, .userParkHistory {
+.addParkAdmin, .addVehicle, .searchParking, .userParkHistory, .showDateAndData {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
@@ -152,4 +153,32 @@ div.msg {
 .historyInfo{
   display: flex;
   justify-content:flex-start;
+  padding-left: 10px;
+}
+
+.key {
+  width: 50%;
+}
+
+.val::before {
+  content: ': ';
+}
+
+.noticeTime {
+  display: flex;
+  justify-content:flex-end;
+  background-color: #f4f1f1;
+  margin: 10 auto;
+  line-height: 0.1em;
+}
+
+.noticeTime span{
+  font-size: 12px;
+  color: var(--primary);
+  background-color: rgb(255, 255, 255);
+  padding-left: 10px;
+}
+
+.dateLine{
+  margin: 10px auto;
 }

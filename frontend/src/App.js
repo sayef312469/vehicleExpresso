@@ -7,9 +7,11 @@ import AddRentInfo from './pages/AddRentInfo'
 import AddVehicle from './pages/AddVehicle'
 import CarInsuranceRenewal from './pages/CarInsuranceRenewal'
 import CarWashRepair from './pages/CarWashRepair'
+import GarageAdminPay from './pages/GarageAdminPay'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import LongTermCare from './pages/LongTermCare'
+import Notification from './pages/Notification'
 import ParkHistory from './pages/ParkHistory'
 import PickupVanService from './pages/PickupVanService'
 import RentingCars from './pages/RentingCars'
@@ -113,6 +115,18 @@ function App() {
                 <Route
                   path="/parkhistory"
                   element={user ? <ParkHistory /> : <Navigate to="/login" />}
+                />
+              )}
+              {user && (
+                <Route
+                  path="/garageadminpay"
+                  element={user ? <GarageAdminPay /> : <Navigate to="/login" />}
+                />
+              )}
+              {user && (
+                <Route
+                  path="/notification"
+                  element={user ? <Notification /> : <Navigate to="/login" />}
                 />
               )}
             </Routes>

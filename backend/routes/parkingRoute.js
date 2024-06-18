@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const express = require('express')
 const {
   searchParks,
@@ -13,8 +14,17 @@ const {
   exitVehicle,
   isParkAdmin,
   userParkHistory,
-  allParksHistory,
   parkHistory,
+  datyData,
+  getAllParks,
+  paymentData,
+  givenAmount,
+  garageAdminPay,
+  getNotice,
+  totalUnread,
+  setReadNotice,
+  parksDueAdmin,
+  notifyParkForDue,
 } = require('../controllers/parkingController')
 
 const router = express.Router()
@@ -32,7 +42,16 @@ router.post('/getexitdata', getExitData)
 router.post('/exitvehicle', exitVehicle)
 router.post('/isparkadmin', isParkAdmin)
 router.post('/userparkhistory', userParkHistory)
-router.post('/allparkshistory', allParksHistory)
 router.post('/parkhistory', parkHistory)
+router.post('/daydata', datyData)
+router.get('/getallparks', getAllParks)
+router.post('/paymentdata', paymentData)
+router.post('/givenamount', givenAmount)
+router.post('/garageadminpay', garageAdminPay)
+router.post('/getnotice', getNotice)
+router.post('/totalunread', totalUnread)
+router.post('/setreadnotice', setReadNotice)
+router.get('/parksdueadmin', parksDueAdmin)
+router.post('/notifyparkfordue', notifyParkForDue)
 
 module.exports = router
