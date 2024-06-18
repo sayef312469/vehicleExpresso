@@ -1,4 +1,5 @@
-import { useState } from 'react'
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react'
 
 const DuePark = ({ due }) => {
   const [error, setError] = useState(null)
@@ -29,7 +30,7 @@ const DuePark = ({ due }) => {
   }
   return (
     <div className="duePark">
-      <div class="dateLine">
+      <div className="dateLine">
         <div
           className="noticeTime"
           title="Due Time"

@@ -94,4 +94,5 @@ const oracleErrorHandler = (error, res) => {
     .json({ error: errorMessages[errorCode] || 'Something went wrong' })
 }
 
+// eslint-disable-next-line no-undef
 module.exports = oracleErrorHandler

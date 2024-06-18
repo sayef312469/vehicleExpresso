@@ -75,7 +75,7 @@ form button {
   border: 1px solid #ddd;
   padding-left: 10px;
   border-radius: 4px;
-  margin-bottom: 20px;
+  margin: 10px auto;
   box-sizing: border-box;
   -webkit-box-sizing: border-box; 
   -moz-box-sizing: border-box; 

@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useParksContext } from '../hooks/useParksContext'
 
@@ -258,7 +258,10 @@ const VehicleEntryExit = () => {
             <option value="">Select Garage</option>
             {parks &&
               parks.map((park) => (
-                <option value={park.GARAGEID}>
+                <option
+                  value={park.GARAGEID}
+                  key={park.GARAGEID}
+                >
                   {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
                 </option>
               ))}
@@ -327,7 +330,8 @@ const VehicleEntryExit = () => {
         </div>
 
         <button disabled={!stype ? 'disables' : ''}>
-          <span class="material-symbols-outlined">download</span>Entry Vehicle
+          <span className="material-symbols-outlined">download</span>Entry
+          Vehicle
         </button>
         {error && <div className="error">{error}</div>}
         {msg && <div className="msg">{msg}</div>}
@@ -350,7 +354,10 @@ const VehicleEntryExit = () => {
             <option value="">Select Garage</option>
             {parks &&
               parks.map((park) => (
-                <option value={park.GARAGEID}>
+                <option
+                  value={park.GARAGEID}
+                  key={park.GARAGEID}
+                >
                   {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
                 </option>
               ))}
@@ -380,7 +387,7 @@ const VehicleEntryExit = () => {
           />
         </div>
         <button>
-          <span class="material-symbols-outlined">upload</span>Exit Vehicle
+          <span className="material-symbols-outlined">upload</span>Exit Vehicle
         </button>
         {errorExit && <div className="error">{errorExit}</div>}
         {msgExit && <div className="msg">{msgExit}</div>}

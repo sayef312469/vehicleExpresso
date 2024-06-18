@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useParksContext } from '../hooks/useParksContext'
 
@@ -129,7 +129,10 @@ const AddRentInfo = () => {
             <option value="">Select Garage</option>
             {parks &&
               parks.map((park) => (
-                <option value={park.GARAGEID}>
+                <option
+                  value={park.GARAGEID}
+                  key={park.GARAGEID}
+                >
                   {park.NAME}, {park.AREA}, {park.CITY}, {park.COUNTRY}
                 </option>
               ))}

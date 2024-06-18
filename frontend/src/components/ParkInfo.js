@@ -1,3 +1,4 @@
+import React from 'react'
 const ParkDetails = ({ park }) => {
   return (
     <div className="parkDetails">

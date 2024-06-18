@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ParkDetails from '../components/ParkInfo'
 import { useParksContext } from '../hooks/useParksContext'
 
@@ -210,7 +210,13 @@ const AddParkAdmin = () => {
             <div>
               <h4>Such parks where {email} is admin</h4>
               <hr />
-              {parks && parks.map((park) => <ParkDetails park={park} />)}
+              {parks &&
+                parks.map((park) => (
+                  <ParkDetails
+                    park={park}
+                    key={park}
+                  />
+                ))}
             </div>
           )}
           {!email && <h4>EMPTY EMAIL</h4>}
@@ -221,7 +227,10 @@ const AddParkAdmin = () => {
               <h4>Admin of the park</h4>
               <hr />
               {emailsForPark.map((email) => (
-                <div className="adminList">
+                <div
+                  className="adminList"
+                  key={email}
+                >
                   <strong>
                     <span
                       className="material-symbols-outlined"

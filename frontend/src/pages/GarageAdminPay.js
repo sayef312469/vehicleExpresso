@@ -114,7 +114,7 @@ const GarageAdminPay = () => {
     const data = await response.json()
     if (response.ok) {
       setMsg(data.msg)
-      setGivenAmount(givenAmount + paymentAmount)
+      setGivenAmount(givenAmount + Number(paymentAmount))
       setError(null)
     } else {
       setMsg(null)
@@ -122,7 +122,7 @@ const GarageAdminPay = () => {
     }
   }
   return (
-    <div class="showDateAndData">
+    <div className="showDateAndData">
       <form
         className="dateSelect"
         onSubmit={handleSubmit}

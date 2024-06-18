@@ -1,5 +1,6 @@
 import { createContext, useEffect, useReducer } from 'react'
-
+/* eslint-disable react/prop-types */
+import React from 'react'
 export const AuthContext = createContext()
 
 export const authReducer = (state, action) => {

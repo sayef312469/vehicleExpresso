@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import NavDropdown from 'react-bootstrap/NavDropdown'
@@ -13,7 +13,7 @@ const NavbarTop = () => {
   const { user } = useAuthContext()
   const { totalUnreadNotice, dispatch } = useNotificationContext()
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     logout()
   }
 
@@ -54,7 +54,9 @@ const NavbarTop = () => {
           as={Link}
           to={'/'}
         >
-          <span class="material-symbols-outlined">emoji_transportation</span>
+          <span className="material-symbols-outlined">
+            emoji_transportation
+          </span>
           Vehicle Expresso
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

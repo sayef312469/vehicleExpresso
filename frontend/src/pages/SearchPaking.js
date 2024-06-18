@@ -1,5 +1,6 @@
 import { useParksContext } from '../hooks/useParksContext'
 
+import React from 'react'
 import ParkDetails from '../components/ParkInfo'
 import SearchForm from '../components/SearchForm'
 
@@ -10,7 +11,13 @@ const SearchParking = () => {
     <div className="searchParking">
       <SearchForm />
       <div className="parks">
-        {parks && parks.map((park) => <ParkDetails park={park} />)}
+        {parks &&
+          parks.map((park) => (
+            <ParkDetails
+              park={park}
+              key={park}
+            />
+          ))}
         {!parks && <h4>No Parks</h4>}
       </div>
     </div>

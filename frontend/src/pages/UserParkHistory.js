@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ShowUserParkHistory from '../components/ShowUserParkHistory'
 import { useAuthContext } from '../hooks/useAuthContext'
 
@@ -35,7 +35,12 @@ const UserParkHistory = () => {
         <h4>Your Park History</h4>
         <hr />
         {histories &&
-          histories.map((history) => <ShowUserParkHistory history={history} />)}
+          histories.map((history) => (
+            <ShowUserParkHistory
+              history={history}
+              key={history}
+            />
+          ))}
       </div>
     </div>
   )

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const oracledb = require('oracledb')
 
 const connection = async () => {

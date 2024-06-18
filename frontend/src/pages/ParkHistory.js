@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DayData from '../components/DayData'
 import ShowUserParkHistory from '../components/ShowUserParkHistory'
 import { useAuthContext } from '../hooks/useAuthContext'

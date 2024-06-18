@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParksContext } from '../hooks/useParksContext'
-
+/* eslint-disable react/prop-types */
+import React from 'react'
 const SearchForm = () => {
   const [country, setCountry] = useState('')
   const [city, setCity] = useState('')

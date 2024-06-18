@@ -6,7 +6,7 @@ import { useNotificationContext } from '../hooks/useNotificationContext'
 const UserParkHistory = () => {
   const { user } = useAuthContext()
   const [notices, setNotices] = useState(null)
-  const { totalUnreadNotice, dispatch } = useNotificationContext()
+  const { dispatch } = useNotificationContext()
 
   useEffect(() => {
     if (!user) {

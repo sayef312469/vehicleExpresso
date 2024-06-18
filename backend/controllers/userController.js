@@ -1,4 +1,4 @@
-const oracledb = require('oracledb')
+/* eslint-disable no-undef */
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const validator = require('validator')
@@ -64,7 +64,7 @@ const signUpUser = async (req, res) => {
         },
       )
       if (exists.length == 0) {
-        const ins = await runQuery(
+        runQuery(
           'insert into users(name, email, password) values(:username, :email, :hash)',
           {
             username,
@@ -72,13 +72,24 @@ const signUpUser = async (req, res) => {
             hash,
           },
         )
-        const data = await runQuery('select * from users where email=:email', {
-          email,
-        })
-        const user = data[0]
-        const usname = await user.NAME
-        const token = createToken(user.USERID)
-        res.status(200).json({ id: user.USERID, name: usname, email, token })
+          .then(async () => {
+            const data = await runQuery(
+              'select * from users where email=:email',
+              {
+                email,
+              },
+            )
+            const user = data[0]
+            const usname = await user.NAME
+            const token = createToken(user.USERID)
+            res
+              .status(200)
+              .json({ id: user.USERID, name: usname, email, token })
+          })
+          .catch((e) => {
+            console.log(e)
+            oracleErrorHandler(e, res)
+          })
       } else {
         console.log(exists)
         res.status(400).json({ error: 'Email already exists' })
