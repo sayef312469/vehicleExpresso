@@ -73,7 +73,27 @@ create table takes_service(
     constraint fk_vehicleno_takes_service foreign key (vehicleno) references vehicle_info(vehicleno)
 );
 
---  Functions & Procedures
+create table garage_admin_pay(	
+    payid number(*,0) generated always as identity (start with 1 increment by 1), 
+	garageid number(*,0) not null, 
+	amount number(12,4) default 0, 
+	payment_time date default current_timestamp, 
+	cur_time date default current_timestamp,
+    constraint pk_garage_admin_pay primary key (payid),
+    constraint fk_garageid_garage_admin_pay foreign key (garageid) references garage(garageid)
+);
+
+create table notice(	
+    noticeid number(*,0) generated always as identity (start with 1 increment by 1),
+	userid number(*,0) not null, 
+	message varchar2(4000 byte) not null, 
+	notice_time date default current_timestamp, 
+	is_read number(*,0) default 0,
+    constraint pk_notiy primary key (noticeid),
+    constraint fk_notify_userid foreign key (userid) references users(userid)
+)
+
+-- Procedures
 
 create or replace procedure insert_rent_data(gid in garage.garageid%type)
 as
@@ -86,60 +106,6 @@ begin
     values (gid, 'BIKE');
     insert into rent_info(garageid, vehicletype)
     values (gid, 'MICRO');
-end;
-
-create or replace type park_vehicle_price as object(
-    garageid integer,
-    ownerid integer,
-    country varchar2(30),
-    city varchar2(30),
-    area varchar2(30),
-    name varchar2(100),
-    longitude number(12, 8),
-    latitude number(12, 8),
-    status integer,
-    vehicletype varchar2(20),
-    costshort number(12, 4),
-    costlong number(12, 4),
-    leftshort integer,
-    leftlong integer
-);
-
-create or replace type park_vehicle_price_table as table of park_vehicle_price;
-
-create or replace function show_parks(vtype in rent_info.vehicletype%type, plon in garage.longitude%type, plat in garage.latitude%type)
-return park_vehicle_price_table
-as
-    parks_array park_vehicle_price_table;
-    cursor all_parks 
-    is 
-        select g.*, r.vehicletype, r.costshort, r.costlong, r.leftshort, r.leftlong
-        from garage g join rent_info r on g.garageid = r.garageid
-        where r.vehicletype=vtype 
-        order by abs(g.longitude - plon) + abs(g.latitude - plat) fetch first 20 rows only;
-begin
-    parks_array := park_vehicle_price_table();
-    for park_row in all_parks
-    loop
-        parks_array.extend;
-        parks_array(parks_array.count) := park_vehicle_price(
-            park_row.garageid,
-            park_row.ownerid,
-            park_row.country,
-            park_row.city,
-            park_row.area,
-            park_row.name,
-            park_row.longitude,
-            park_row.latitude,
-            park_row.status,
-            park_row.vehicletype,
-            park_row.costshort,
-            park_row.costlong,
-            park_row.leftshort,
-            park_row.leftlong
-        );            
-    end loop;
-    return parks_array;
 end;
 
 create or replace procedure entryvehicle(
@@ -199,5 +165,115 @@ begin
     delete from has_payment
     where vehicleno=vno and garageid=gid;
 end;
+
+create or replace procedure notice_park_for_due(
+    g in integer, 
+    tk in takes_service.paid%type, 
+    d in notice.message%type
+)
+as
+    usid integer;
+begin
+    select ownerid into usid
+    from garage 
+    where garageid = g;
+
+    insert into notice (userid, message)
+    values (usid, 'You have to send ' || tk || ' tk to admin for parking on ' || d);
+end;
+
+-- Functions
+
+create or replace type park_vehicle_price as object(
+    garageid integer,
+    ownerid integer,
+    country varchar2(30),
+    city varchar2(30),
+    area varchar2(30),
+    name varchar2(100),
+    longitude number(12, 8),
+    latitude number(12, 8),
+    status integer,
+    vehicletype varchar2(20),
+    costshort number(12, 4),
+    costlong number(12, 4),
+    leftshort integer,
+    leftlong integer
+);
+
+create or replace type park_vehicle_price_table as table of park_vehicle_price;
+
+create or replace function show_parks(vtype in rent_info.vehicletype%type, plon in garage.longitude%type, plat in garage.latitude%type)
+return park_vehicle_price_table
+as
+    parks_array park_vehicle_price_table;
+    cursor all_parks 
+    is 
+        select g.*, r.vehicletype, r.costshort, r.costlong, r.leftshort, r.leftlong
+        from garage g join rent_info r on g.garageid = r.garageid
+        where r.vehicletype=vtype 
+        order by abs(g.longitude - plon) + abs(g.latitude - plat) fetch first 20 rows only;
+begin
+    parks_array := park_vehicle_price_table();
+    for park_row in all_parks
+    loop
+        parks_array.extend;
+        parks_array(parks_array.count) := park_vehicle_price(
+            park_row.garageid,
+            park_row.ownerid,
+            park_row.country,
+            park_row.city,
+            park_row.area,
+            park_row.name,
+            park_row.longitude,
+            park_row.latitude,
+            park_row.status,
+            park_row.vehicletype,
+            park_row.costshort,
+            park_row.costlong,
+            park_row.leftshort,
+            park_row.leftlong
+        );            
+    end loop;
+    return parks_array;
+end;
+
+-- Views 
+
+create or replace force view due_payment_to_admin_view as 
+  with gap as(
+    select garageid, to_char(garage_admin_pay.payment_time, 'dd Mon, yyyy') payment_time, sum(amount) amount
+    from garage_admin_pay
+    group by garageid, to_char(garage_admin_pay.payment_time, 'dd Mon, yyyy')
+),
+ts as(
+    select garageid, to_char(end_time, 'dd Mon, yyyy') pay_day, round(sum(paid) * .15, 0) paid
+    from takes_service
+    group by garageid, to_char(end_time, 'dd Mon, yyyy')
+)
+select ts.garageid, ts.pay_day, g.name, g.area, g.city, g.country, ts.paid total_amount, ts.paid - nvl(gap.amount, 0) total_due
+from ts left join gap on ts.garageid = gap.garageid and ts.pay_day = gap.payment_time join garage g on ts.garageid = g.garageid
+where ts.paid - nvl(gap.amount, 0) > 0
+order by ts.paid - nvl(gap.amount, 0) desc;
+
+CREATE OR REPLACE FORCE VIEW GETALLPARKS AS 
+select "GARAGEID","OWNERID","COUNTRY","CITY","AREA","NAME","LONGITUDE","LATITUDE","STATUS" from garage;
+
+-- Triggers
+
+create or replace trigger notify_pay_to_admin
+before insert on garage_admin_pay
+for each row
+declare
+    usid integer;
+begin
+    select ownerid into usid
+    from garage 
+    where garageid = :new.garageid;
+
+    insert into notice (userid, message)
+    values (usid, 'You sent ' || :new.amount || ' tk to admin');
+end;
+
 
 
