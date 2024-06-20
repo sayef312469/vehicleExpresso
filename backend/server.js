@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const parkingRoute = require("./routes/parkingRoute");
 const userRoutes = require("./routes/userRoutes");
+const careRoute = require("./routes/careRoute");
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,4 @@ app.use((req, res, next) => {
 
 app.use("/api/parking", parkingRoute);
 app.use("/api/user", userRoutes);
-
-// some changes
-// another changes
+app.use("/api/care", careRoute);
