@@ -678,4 +678,3 @@ module.exports = {
   parksDueAdmin,
   notifyParkForDue,
 }
-module.exports = { searchParks };
