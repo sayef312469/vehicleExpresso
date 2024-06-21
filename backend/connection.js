@@ -36,4 +36,3 @@ const runQueryOutBinds = async (query, params) => {
 }
 
 module.exports = { runQuery, runQueryOutBinds }
-module.exports = { runQuery }
