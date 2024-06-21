@@ -127,6 +127,16 @@ const NavbarTop = () => {
                   Garage Payment
                 </NavDropdown.Item>
               )}
+
+              {user && user.id < 100 && (
+                <NavDropdown.Item
+                  as={Link}
+                  to={'/vehiclecare/admin'}
+                >
+                  <span className="material-symbols-outlined">token</span>
+                  Care & Management
+                </NavDropdown.Item>
+              )}
               {user && user.id < 100 && <NavDropdown.Divider />}
 
               {user && user.parkAdmin > 0 && (
@@ -161,8 +171,11 @@ const NavbarTop = () => {
               {user && user.parkAdmin > 0 && <NavDropdown.Divider />}
               <NavDropdown.Item
                 as={Link}
-                to={'/vehiclecare'}
+                to={'/vehiclecare/user'}
               >
+                <span className="material-symbols-outlined">
+                  child_friendly
+                </span>
                 Vehicle Care
               </NavDropdown.Item>
               <NavDropdown.Item
