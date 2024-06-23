@@ -77,7 +77,9 @@ const CareUser = () => {
           washtype: washtype,
         }),
       })
-      if (!response.ok) throw new Error('Failed to fetch data')
+      if (!response.ok) {
+        throw new Error('Failed to fetch data')
+      }
       const jsonData = await response.json()
       promise(jsonData.service_id)
     } catch (err) {
