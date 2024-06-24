@@ -1,0 +1,128 @@
+.user{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .user .popup{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    position:absolute;
+    margin-top: 250px;
+    box-shadow: 0px 10px 10px 5px #ccc;
+    border-radius: 20px;
+    background-color: #e7d4a6;
+    width: 500px;
+    height: 610px;
+    border: 1px solid #504e4e;
+  }
+  
+  .user .popup .exit{
+    position: absolute;
+    padding:3px 8px;
+    border-radius: 10px;
+    color:#000000;
+    margin: 2% 92.5%;
+    background-color: #d64444;
+    cursor: pointer;
+  }
+
+  .user .popup .submit{
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 10px;
+    padding:5px 10px;
+    display: inline-block;
+    color: #000000;
+    margin: -2% 82%;
+    background-color: #1aac83;
+    cursor: pointer;
+    box-shadow: 0px 5px 5px #ccc;
+    font-size: 16px;
+  }
+  
+  .user .popup .exit:hover{
+    background-color: #ff0000;
+    scale: 1.1;
+  }
+
+  .user .popup .submit:hover{
+    background-color: #18c594;
+    scale: 1.1;
+  }
+  
+  .user .popup .block{
+    display: flex;
+    margin-left: 60px;
+    justify-content: space-between;
+    align-items:baseline;
+  }
+  
+  .user .popup div input{
+    padding: 5px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    border: 1px solid #272424;
+    border-radius: 5px;
+    width:60%;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
+
+  input:invalid{
+    border-color: red;
+  }
+
+  input:invalid:focus{
+    outline: none;
+  }
+  
+  .user .popup div textarea{
+    padding: 5px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    border: 1px solid #272424;
+    border: 1px solid #272424;
+    border-radius: 5px;
+    width:40%;
+    height:10%;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    font-weight: bold;
+    resize: none;
+  }
+  
+  .user .popup fieldset legend{
+    margin-top: 10px;
+    margin-left: 30px;
+    padding-right: 10px;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .user .popup .check{
+    margin-left: 45px;
+   display: flex;
+   align-items: baseline;
+   justify-content: space-between;
+  } 
+
+  .user .popup .check input{
+    height:15px;
+    width: 15px;
+    cursor: pointer;
+   } 
+  
+  .description{
+    height:50px;
+  }
+  
+  @media (width<830px){
+    .user .popup{
+      margin-top: 300px;
+      width: 460px;
+    }
+  }

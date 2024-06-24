@@ -7,11 +7,11 @@ import AddParkAdmin from './pages/AddParkAdmin'
 import AddRentInfo from './pages/AddRentInfo'
 import AddVehicle from './pages/AddVehicle'
 import CarInsuranceRenewal from './pages/CarInsuranceRenewal'
-import CarWashRepair from './pages/CarWashRepair'
+import CareAdmin from './pages/CareAdmin'
+import CareUser from './pages/CareUser'
 import GarageAdminPay from './pages/GarageAdminPay'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import LongTermCare from './pages/LongTermCare'
 import Notification from './pages/Notification'
 import ParkHistory from './pages/ParkHistory'
 import PickupVanService from './pages/PickupVanService'
@@ -19,6 +19,7 @@ import RentingCars from './pages/RentingCars'
 import SearchParking from './pages/SearchPaking'
 import Signup from './pages/Signup'
 import UserParkHistory from './pages/UserParkHistory'
+import VehicleCare from './pages/VehicleCare'
 import VehicleEntryExit from './pages/VehicleEntryExit'
 
 function App() {
@@ -49,10 +50,6 @@ function App() {
                 element={<SearchParking />}
               />
               <Route
-                path="/carwashrepair"
-                element={user ? <CarWashRepair /> : <Navigate to="/login" />}
-              />
-              <Route
                 path="/pickupvanservice"
                 element={user ? <PickupVanService /> : <Navigate to="/login" />}
               />
@@ -61,8 +58,16 @@ function App() {
                 element={user ? <RentingCars /> : <Navigate to="/login" />}
               />
               <Route
-                path="/longtermcare"
-                element={user ? <LongTermCare /> : <Navigate to="/login" />}
+                path="/vehiclecare"
+                element={user ? <VehicleCare /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/vehiclecare/admin"
+                element={<CareAdmin />}
+              />
+              <Route
+                path="/vehiclecare/user"
+                element={<CareUser />}
               />
               <Route
                 path="/carinsurancerenewal"

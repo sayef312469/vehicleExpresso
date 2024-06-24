@@ -127,6 +127,16 @@ const NavbarTop = () => {
                   Garage Payment
                 </NavDropdown.Item>
               )}
+
+              {user && user.id < 100 && (
+                <NavDropdown.Item
+                  as={Link}
+                  to={'/vehiclecare/admin'}
+                >
+                  <span className="material-symbols-outlined">token</span>
+                  Care & Management
+                </NavDropdown.Item>
+              )}
               {user && user.id < 100 && <NavDropdown.Divider />}
 
               {user && user.parkAdmin > 0 && (
@@ -161,9 +171,12 @@ const NavbarTop = () => {
               {user && user.parkAdmin > 0 && <NavDropdown.Divider />}
               <NavDropdown.Item
                 as={Link}
-                to={'/carwashrepair'}
+                to={'/vehiclecare/user'}
               >
-                Car Wash & Repair
+                <span className="material-symbols-outlined">
+                  child_friendly
+                </span>
+                Vehicle Care
               </NavDropdown.Item>
               <NavDropdown.Item
                 as={Link}
@@ -176,12 +189,6 @@ const NavbarTop = () => {
                 to={'/rentingcars'}
               >
                 Renting Cars
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                as={Link}
-                to={'/longtermcare'}
-              >
-                Long Term Care
               </NavDropdown.Item>
               <NavDropdown.Item
                 as={Link}

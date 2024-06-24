@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 const ParkDetails = ({ park }) => {
   return (
@@ -5,7 +6,7 @@ const ParkDetails = ({ park }) => {
       <div className="park_name">
         <h4>{park.NAME}</h4>
       </div>
-      <div class="park_area">
+      <div className="park_area">
         <span
           className="material-symbols-outlined"
           style={{ color: 'green' }}

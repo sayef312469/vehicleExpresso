@@ -1,0 +1,65 @@
+
+.linechart-container{
+    width: 80%;
+    height: 400px;
+    margin-right: 50px;
+    padding-bottom: 40px;
+  }
+  
+  .option1, .option2{
+    padding-bottom: 5px;
+  }
+  
+  .piechart-container{
+    width:  50%;
+    height: 400px;
+    margin-left: 50px;
+    padding-bottom: 40px;
+  }
+  .piechart-container span, .linechart-container span{
+    color: orange;
+  }
+  
+  .select{
+    width: 70px;
+    padding: 5px;
+    border: 0.5px solid #000000; 
+    border-radius: 8px; 
+    background-color: #fff; 
+    font-size: 16px; 
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .select option{
+    background-color: #fff;
+    color: #333; 
+  }
+  
+  .chart-comps{
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 100px;
+  }
+  
+  
+  
+  @media (width<830px){
+    .admin{
+        align-items: center;
+        justify-content: center;
+    }
+    .admin .chart-comps{
+        padding-top: 5em;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .linechart-container{
+        object-fit: contain;
+    }
+    .piechart-container{
+        margin-top: 150px;
+        object-fit: contain;
+    }
+  }
