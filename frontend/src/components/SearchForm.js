@@ -25,6 +25,13 @@ const SearchForm = () => {
   }
 
   useEffect(() => {
+    if (!isLoading && toastLoad) {
+      toast.dismiss(toastLoad)
+      setToastLoad(null)
+    }
+  }, [isLoading, toastLoad])
+
+  useEffect(() => {
     const searchP = async () => {
       if (error == null && lon && lat) {
         console.log('lon, lat before fetch: ', lon, lat)
@@ -44,9 +51,7 @@ const SearchForm = () => {
           setLon(null)
           setLat(null)
           setIsLoading(false)
-          toast.dismiss(toastLoad)
           toast.success('Loaded')
-          setToastLoad(null)
         } else {
           setError(json.error)
           setIsLoading(false)

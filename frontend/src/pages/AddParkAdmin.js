@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
 import ParkDetails from '../components/ParkInfo'
 import { useParksContext } from '../hooks/useParksContext'
 
@@ -12,10 +13,19 @@ const AddParkAdmin = () => {
   const [error, setError] = useState(null)
   const [emailsForPark, setEmailsForPark] = useState([])
   const { parks, dispatch } = useParksContext()
+  const [toastLoad, setToastLoad] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     dispatch({ type: 'CLEAR_PARKS' })
   }, [dispatch])
+
+  useEffect(() => {
+    if (!isLoading && toastLoad) {
+      toast.dismiss(toastLoad)
+      setToastLoad(null)
+    }
+  }, [isLoading, toastLoad])
 
   useEffect(() => {
     console.log(email)
@@ -62,8 +72,12 @@ const AddParkAdmin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsLoading(true)
+    setToastLoad(toast.loading('Loading...'))
+
     if (!area || !city || !country) {
       setError('All field must be filled')
+      setIsLoading(false)
       return
     }
 
@@ -115,12 +129,21 @@ const AddParkAdmin = () => {
             if (response.ok) {
               console.log(dat)
               setEmailsForPark(dat)
+              setIsLoading(false)
+            } else {
+              setIsLoading(false)
             }
           }
           serachEmailsforPark()
         } else {
           setError(dt.error)
+          setIsLoading(false)
         }
+      })
+      .catch((e) => {
+        console.log(e)
+        setIsLoading(false)
+        setError('Network error occured')
       })
   }
 
@@ -130,6 +153,20 @@ const AddParkAdmin = () => {
         className="serachParkForm"
         onSubmit={handleSubmit}
       >
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={true}
+          newestOnTop={true}
+          closeOnClick
+          limit={1}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+
         <h4>Insert Park</h4>
         <hr />
         <div className="input_box">
