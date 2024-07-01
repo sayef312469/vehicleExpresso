@@ -136,7 +136,7 @@ const lineData = async(req,res)=>{
     }
 }
 
-const serviceUser = async(req,res)=>{
+const shortUser = async(req,res)=>{
     let {
         vehicleno,
         vehicleowner,
@@ -173,7 +173,7 @@ const serviceUser = async(req,res)=>{
             console.log('Already exists!!');
         }
 
-        const data=await runQueryOutBinds(`insert into care_transac (MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
+        const data=await runQueryOutBinds(`insert into care_transac(MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
         values('Not Selected','shortterm',0)
         returning SERVICE_ID INTO :service_id`,
         {
@@ -200,6 +200,94 @@ const serviceUser = async(req,res)=>{
         });
         console.log('Successful Insertion in takes_care!!');
 
+        res.status(200).json({"service_id": data.service_id[0]});
+
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error inserting the data');
+    }
+}
+
+
+const longUser = async(req,res)=>{
+    let {
+        vehicleno,
+        vehicleowner,
+        date,
+        main_category,
+        finaldate,
+        ins_prov,
+        ins_expdate,
+        odometer}=req.body;
+
+        vehicleno = vehicleno.toUpperCase();
+        // vehicletype = vehicletype.toUpperCase();
+        // vehiclecompany = vehiclecompany.toUpperCase();
+        // vehiclemodel = vehiclemodel.toUpperCase();
+        // vehiclecolor = vehiclecolor.toUpperCase();
+    try{
+        const exists=await runQuery(
+        `select * from vehicle_info 
+        where VEHICLENO = :vehicleno AND VEHICLE_OWNER = :vehicleowner`,{vehicleno,vehicleowner});
+        if(exists.length===0){
+            res.status(200).json("No vehicle Found!");
+            return;
+        }
+        // if(exists.length===0){
+        //     await runQuery(`insert into vehicle_info (VEHICLENO, VEHICLE_OWNER, VEHICLETYPE, VEHICLE_MODEL, VEHICLE_COMPANY, VEHICLE_COLOR)
+        //     values(:vehicleno,:vehicleowner,:vehicletype,:vehiclemodel,:vehiclecompany,:vehiclecolor)`,
+        //     {   vehicleno,
+        //         vehicleowner,
+        //         vehicletype,
+        //         vehiclemodel,
+        //         vehiclecompany,
+        //         vehiclecolor,
+        //     });
+        //     console.log('Successful Insertion in vehicle info!!');
+        // }else{
+        //     console.log('Already exists!!');
+        // }
+        console.log(finaldate);
+        const data=await runQueryOutBinds(`insert into care_transac (MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
+        values('Not Selected','longterm',0)
+        returning SERVICE_ID INTO :service_id`,
+        {
+                service_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        });
+        console.log('Successful Insertion in care_transac!!');
+
+        const serviceid=data.service_id[0];
+        const service_date=date;
+        await runQuery(`insert into Longtermcare (LONGTERM_ID,MAINTENANCE_CATEGORY,INSURANCE_PROVIDER,INSURANCE_EXP_DATE,ODOMETER_READING,FINAL_DATE)
+        values(:serviceid,:main_category,:ins_prov,TO_DATE(:ins_expdate,'yyyy-mm-dd'),:odometer,TO_DATE(:finaldate,'yyyy-mm-dd'))`,
+        {   
+            serviceid,
+            main_category,
+            ins_prov,
+            ins_expdate,
+            odometer,
+            finaldate
+        });
+        console.log('Successful Insertion in longtermcare!!');
+        await runQuery(`INSERT INTO takes_care (SERVICE_ID, VEHICLENO,SERVICE_DATE)
+        VALUES (:serviceid, :vehicleno, TO_DATE(:service_date,'yyyy-mm-dd'))`,
+        {   
+            serviceid,
+            vehicleno,
+            service_date
+        });
+        console.log('Successful Insertion in takes_care!!');
+
+        // await runQuery(`INSERT INTO Maintenance_info(MAINTENANCE_ID, BASIC_DESC,PREMIUM_DESC,FLAG,LAST_SERVICE_DATE,NEXT_SERVICE_DATE)
+        // VALUES (:serviceid,"Basic","Premium","flag" TO_DATE(:service_date,'yyyy-mm-dd'),TO_DATE(:service_date,'yyyy-mm-dd'))`,
+        // {   
+        //     serviceid,
+        //     service_date,
+        //     service_date
+        // });
+        // console.log('Successful Insertion in Maintenance_info!!');
+
+        //res.status(200).json("Inserted in Longterm");
         res.status(200).json({"service_id": data.service_id[0]});
 
     }catch(err){
@@ -280,7 +368,8 @@ const updateTable = async(req,res)=>{
 module.exports={
     pieData,
     lineData,
-    serviceUser,
+    shortUser,
+    longUser,
     tableFetch,
     updateTable
 }

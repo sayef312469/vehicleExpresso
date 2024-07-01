@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
 import { useParksContext } from '../hooks/useParksContext'
 /* eslint-disable react/prop-types */
 import React from 'react'
@@ -13,6 +14,7 @@ const SearchForm = () => {
   const [curLoc, setCurLoc] = useState(false)
   const [error, setError] = useState(null)
   const { dispatch } = useParksContext()
+  const [toastLoad, setToastLoad] = useState(null)
 
   useEffect(() => {
     dispatch({ type: 'CLEAR_PARKS' })
@@ -21,6 +23,13 @@ const SearchForm = () => {
   const handleCheck = () => {
     setCurLoc(!curLoc)
   }
+
+  useEffect(() => {
+    if (!isLoading && toastLoad) {
+      toast.dismiss(toastLoad)
+      setToastLoad(null)
+    }
+  }, [isLoading, toastLoad])
 
   useEffect(() => {
     const searchP = async () => {
@@ -42,9 +51,11 @@ const SearchForm = () => {
           setLon(null)
           setLat(null)
           setIsLoading(false)
+          toast.success('Loaded')
         } else {
           setError(json.error)
           setIsLoading(false)
+          toast.error('Search Error')
         }
       }
     }
@@ -54,6 +65,7 @@ const SearchForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
+    setToastLoad(toast.loading('Loading...'))
 
     if (curLoc) {
       navigator.geolocation.getCurrentPosition(
@@ -105,6 +117,20 @@ const SearchForm = () => {
       className="serachParkForm"
       onSubmit={handleSubmit}
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick
+        limit={1}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+
       <h4>Search Parks With Vehicle Type</h4>
       <br />
       <div className="input_option">

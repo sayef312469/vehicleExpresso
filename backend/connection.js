@@ -4,8 +4,8 @@ const oracledb = require('oracledb')
 const connection = async () => {
   try {
     const connectionData = await oracledb.getConnection({
-      user: 'vehicle',
-      password: 'vehicle',
+      user: 'ADMIN',
+      password: 'ADMIN',
       connectString: process.env.CONNECTION_STRING,
     })
     return connectionData
@@ -36,4 +36,3 @@ const runQueryOutBinds = async (query, params) => {
 }
 
 module.exports = { runQuery, runQueryOutBinds }
-module.exports = { runQuery };

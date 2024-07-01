@@ -96,32 +96,35 @@ const DoughnutChart = () => {
     },[label,values])
     return ( 
         <div className="piechart-container">
-            <div className='option1'>
-                <span>Select Year </span>
-                    <select className="select" value={year} onChange={handleselectChange}>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                </select>
+            <div className='option-container'>
+            <span>Year</span>
+                <div className='option1'>
+                        <select className="select" value={year} onChange={handleselectChange}>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <span>Month</span>
+                <div className='option2'>
+                        <select className="select" value={month} onChange={handleselectChange}>
+                        <option value="ALL">ALL</option>
+                        <option value="JAN">JAN</option>
+                        <option value="FEB">FEB</option>
+                        <option value="MAR">MAR</option>
+                        <option value="APR">APR</option>
+                        <option value="MAY">MAY</option>
+                        <option value="JUN">JUN</option>
+                        <option value="JUL">JUL</option>
+                        <option value="AUG">AUG</option>
+                        <option value="SEP">SEP</option>
+                        <option value="OCT">OCT</option>
+                        <option value="NOV">NOV</option>
+                        <option value="DEC">DEC</option>
+                    </select>
+                </div>
             </div>
-            <div className='option2'>
-                <span>Select Month </span>
-                    <select className="select" value={month} onChange={handleselectChange}>
-                    <option value="ALL">ALL</option>
-                    <option value="JAN">JAN</option>
-                    <option value="FEB">FEB</option>
-                    <option value="MAR">MAR</option>
-                    <option value="APR">APR</option>
-                    <option value="MAY">MAY</option>
-                    <option value="JUN">JUN</option>
-                    <option value="JUL">JUL</option>
-                    <option value="AUG">AUG</option>
-                    <option value="SEP">SEP</option>
-                    <option value="OCT">OCT</option>
-                    <option value="NOV">NOV</option>
-                    <option value="DEC">DEC</option>
-                </select>
-            </div>
+            <hr className='bar'/>
             <canvas ref={chartRef}/>
         </div>
      );

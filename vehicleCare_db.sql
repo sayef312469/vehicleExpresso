@@ -33,7 +33,7 @@ CREATE TYPE SHORT_CARE AS OBJECT(
     cost NUMBER
 )
 
-CREATE table Takes_Service(
+CREATE table Takes_Care(
     service_id INTEGER,
     vehicleno varchar2(100),
     service_date DATE,

@@ -7,6 +7,8 @@ import AddParkAdmin from './pages/AddParkAdmin'
 import AddRentInfo from './pages/AddRentInfo'
 import AddVehicle from './pages/AddVehicle'
 import CarInsuranceRenewal from './pages/CarInsuranceRenewal'
+import CareAdmin from './pages/CareAdmin'
+import CareUser from './pages/CareUser'
 import GarageAdminPay from './pages/GarageAdminPay'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -17,10 +19,8 @@ import RentingCars from './pages/RentingCars'
 import SearchParking from './pages/SearchPaking'
 import Signup from './pages/Signup'
 import UserParkHistory from './pages/UserParkHistory'
-import VehicleEntryExit from './pages/VehicleEntryExit'
-import CareAdmin from './pages/CareAdmin'
 import VehicleCare from './pages/VehicleCare'
-import CareUser from './pages/CareUser'
+import VehicleEntryExit from './pages/VehicleEntryExit'
 
 function App() {
   const { user } = useAuthContext()
@@ -63,11 +63,11 @@ function App() {
               />
               <Route
                 path="/vehiclecare/admin"
-                element={<CareAdmin />}
+                element={user ? <CareAdmin /> : <Navigate to="/login" />}
               />
               <Route
                 path="/vehiclecare/user"
-                element={<CareUser />}
+                element={user ? <CareUser /> : <Navigate to="/login" />}
               />
               <Route
                 path="/carinsurancerenewal"

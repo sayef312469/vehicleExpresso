@@ -1,10 +1,11 @@
-const express = require("express");
-const { loginUser, signUpUser } = require("../controllers/userController");
+/* eslint-disable no-undef */
+const express = require('express')
+const { loginUser, signUpUser } = require('../controllers/userController')
 
-const router = express.Router();
+const router = express.Router()
 
-router.post("/login", loginUser);
+router.post('/login', loginUser)
 
-router.post("/signup", signUpUser);
+router.post('/signup', signUpUser)
 
-module.exports = router;
+module.exports = router
