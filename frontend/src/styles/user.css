@@ -1,128 +1,197 @@
 .user{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.user .popup{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  position:absolute;
+  margin-top: 200px;
+  box-shadow: 0px 10px 10px 5px #ccc;
+  border-radius: 20px;
+  background-color: #C8E6C9;
+  width: 500px;
+  height: 600px;
+  border: 1px solid #504e4e;
+  z-index: 2;
+}
+.user .buttons{
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+}
+
+.user .buttons button{
+  background-color:  azure;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 30px 30px;
+  margin: 50px;
+}
+
+.user .buttons button:hover{
+  background-color: #ffebbd;
+  scale: 1.1;
+}
+
+.user .popup .exit{
+  position: absolute;
+  padding:4px 10px;
+  border-radius: 13px;
+  margin: 3% 91%;
+  background-color: #d64444;
+  cursor: pointer;
+}
+
+.user .popup .exit:hover{
+  background-color: #ad2020;
+  scale: 1.1;
+}
+
+.user .popup .submit{
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  padding:5px 10px;
+  display: inline-block;
+  margin: 2% 78%;
+  background-color: #1aac83;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.user .popup .submit:hover{
+  background-color: rgb(16, 139, 105);
+  scale: 1.1;
+}
+
+.user .popup .block,.user .popup .block .check-block{
+  padding:2px;
+  display: flex;
+  margin:0 30px;
+  justify-content: space-between;
+  align-items:baseline;
+}
+
+.user .popup div input{
+  padding: 5px;
+  margin-bottom: 10px;
+  margin-right: 20px;
+  border: 1px solid #272424;
+  border-radius: 5px;
+  width:60%;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+input:invalid{
+  border-color: red;
+}
+
+input:invalid:focus{
+  outline: none;
+}
+
+.user .popup h5{
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.user .popup div textarea{
+  padding: 5px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  border: 1px solid #272424;
+  border: 1px solid #272424;
+  border-radius: 5px;
+  width:40%;
+  height:10%;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+  resize: none;
+}
+
+.user .popup fieldset {
+  font-size: 15px;
+  font-weight:500;
+}
+
+.user .popup fieldset legend{
+  margin-top: 10px;
+  margin-left: 30px;
+  padding-right: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+.user .popup .check{
+  margin-left: 45px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+} 
+
+.user .popup .check input{
+  height:15px;
+  width: 15px;
+  cursor: pointer;
+ } 
+
+.description{
+  height:50px;
+}
+
+
+.vr{
+  width: 1px;
+  background-color: #272424;
+  height:40%;
+  top: 65%;
+}
+
+.title{
+  background-color: #1aac83;
+  padding: 10px;
+  border-radius: 8px;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+span{
+  margin: 0 auto;
+}
+
+.payment{
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.payment table{
+  overflow-x: auto;
+}
+
+.payment table thead{
+  width: 100%;
+}
+
+.payment table thead th{
+  padding: 0.6rem;
+}
+
+@media (width<830px){
   .user .popup{
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    position:absolute;
-    margin-top: 250px;
-    box-shadow: 0px 10px 10px 5px #ccc;
-    border-radius: 20px;
-    background-color: #e7d4a6;
-    width: 500px;
-    height: 610px;
-    border: 1px solid #504e4e;
+    margin-top: 300px;
+    width: 460px;
   }
-  
-  .user .popup .exit{
-    position: absolute;
-    padding:3px 8px;
-    border-radius: 10px;
-    color:#000000;
-    margin: 2% 92.5%;
-    background-color: #d64444;
-    cursor: pointer;
-  }
-
-  .user .popup .submit{
-    position: absolute;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 10px;
-    padding:5px 10px;
-    display: inline-block;
-    color: #000000;
-    margin: -2% 82%;
-    background-color: #1aac83;
-    cursor: pointer;
-    box-shadow: 0px 5px 5px #ccc;
-    font-size: 16px;
-  }
-  
-  .user .popup .exit:hover{
-    background-color: #ff0000;
-    scale: 1.1;
-  }
-
-  .user .popup .submit:hover{
-    background-color: #18c594;
-    scale: 1.1;
-  }
-  
-  .user .popup .block{
-    display: flex;
-    margin-left: 60px;
-    justify-content: space-between;
-    align-items:baseline;
-  }
-  
-  .user .popup div input{
-    padding: 5px;
-    margin-bottom: 10px;
-    margin-right: 20px;
-    border: 1px solid #272424;
-    border-radius: 5px;
-    width:60%;
-    font-size: 16px;
-    background-color: #f9f9f9;
-    font-weight: bold;
-  }
-
-  input:invalid{
-    border-color: red;
-  }
-
-  input:invalid:focus{
-    outline: none;
-  }
-  
-  .user .popup div textarea{
-    padding: 5px;
-    margin-bottom: 20px;
-    margin-right: 20px;
-    border: 1px solid #272424;
-    border: 1px solid #272424;
-    border-radius: 5px;
-    width:40%;
-    height:10%;
-    font-size: 16px;
-    background-color: #f9f9f9;
-    font-weight: bold;
-    resize: none;
-  }
-  
-  .user .popup fieldset legend{
-    margin-top: 10px;
-    margin-left: 30px;
-    padding-right: 10px;
-    font-size: 15px;
-    font-weight: bold;
-  }
-  .user .popup .check{
-    margin-left: 45px;
-   display: flex;
-   align-items: baseline;
-   justify-content: space-between;
-  } 
-
-  .user .popup .check input{
-    height:15px;
-    width: 15px;
-    cursor: pointer;
-   } 
-  
-  .description{
-    height:50px;
-  }
-  
-  @media (width<830px){
-    .user .popup{
-      margin-top: 300px;
-      width: 460px;
-    }
-  }
+}

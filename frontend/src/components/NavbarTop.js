@@ -105,6 +105,18 @@ const NavbarTop = () => {
                   Your Park History
                 </NavDropdown.Item>
               )}
+
+              {user && (
+                <NavDropdown.Item
+                  as={Link}
+                  to={'/vehiclecare/user'}
+                >
+                  <span className="material-symbols-outlined">
+                    child_friendly
+                  </span>
+                  Vehicle Care
+                </NavDropdown.Item>
+              )}
               {user && <NavDropdown.Divider />}
 
               {user && user.id < 100 && (
@@ -169,15 +181,7 @@ const NavbarTop = () => {
                 </NavDropdown.Item>
               )}
               {user && user.parkAdmin > 0 && <NavDropdown.Divider />}
-              <NavDropdown.Item
-                as={Link}
-                to={'/vehiclecare/user'}
-              >
-                <span className="material-symbols-outlined">
-                  child_friendly
-                </span>
-                Vehicle Care
-              </NavDropdown.Item>
+
               <NavDropdown.Item
                 as={Link}
                 to={'/pickupvanservice'}

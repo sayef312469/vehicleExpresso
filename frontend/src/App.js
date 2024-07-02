@@ -63,11 +63,11 @@ function App() {
               />
               <Route
                 path="/vehiclecare/admin"
-                element={<CareAdmin />}
+                element={user ? <CareAdmin /> : <Navigate to="/login" />}
               />
               <Route
                 path="/vehiclecare/user"
-                element={<CareUser />}
+                element={user ? <CareUser /> : <Navigate to="/login" />}
               />
               <Route
                 path="/carinsurancerenewal"

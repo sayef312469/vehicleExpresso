@@ -1,48 +1,35 @@
 .admin h3,.user h3{
-    margin-top: 0;
-    padding-left: 40px;
-  }
-  
-  .admin .buttons,.user .buttons{
-    display: flex;
-    display:flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .admin .buttons button,.user .buttons button{
-    background-color: #e7d4a6;
-    border-radius: 10px;
-    cursor: pointer;
-    padding:50px 40px ;
-    margin: 50px;
-  }
-  
-  .admin .buttons button:hover,.user .buttons button:hover{
-    background-color: #ffebbd;
-    scale: 1.1;
-  }
-  
-  .admin h2,.admin h4{
-    margin: 0;
-    margin-left: 100px;
-    color:#e17542;
-    font-weight: bold;
-  }
-  
-
-  .admin .chart-comps{
-    display: flex;
-    justify-content: space-between;
+  margin-top: 0;
+  padding-left: 40px;
 }
 
+.admin .buttons{
+  display:flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
-.admin h3{
-    margin: 0;
-    margin-left: 100px;
-    margin-bottom: 20px;
-    color:#e17542;
-    font-weight: bold;
-  }
+.admin .buttons button{
+  background-color: #e7d4a6;
+  border-radius: 10px;
+  cursor: pointer;
+  padding:50px 40px ;
+  margin: 50px;
+}
 
-  
+.admin .buttons button:hover,.user .buttons button:hover{
+  background-color: #ffebbd;
+  scale: 1.1;
+}
+
+.admin h2,.admin h4,.admin h3{
+  text-align: center;
+  color:#e17542;
+  font-weight: bold;
+}
+
+.admin .chart-comps{
+  display: flex;
+  justify-content: space-between;
+}
+
