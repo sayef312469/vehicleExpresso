@@ -21,6 +21,8 @@ import Signup from './pages/Signup'
 import UserParkHistory from './pages/UserParkHistory'
 import VehicleCare from './pages/VehicleCare'
 import VehicleEntryExit from './pages/VehicleEntryExit'
+import Profile from './pages/userProfile'
+import RecordHistory from './pages/record'
 
 function App() {
   const { user } = useAuthContext()
@@ -33,10 +35,7 @@ function App() {
         <div className="pages">
           <main>
             <Routes>
-              <Route
-                path="/"
-                element={<Home />}
-              />
+              <Route path="/" element={<Home />} />
               <Route
                 path="/login"
                 element={!user ? <Login /> : <Navigate to="/" />}
@@ -45,10 +44,7 @@ function App() {
                 path="/signup"
                 element={!user ? <Signup /> : <Navigate to="/" />}
               />
-              <Route
-                path="/searchparks"
-                element={<SearchParking />}
-              />
+              <Route path="/searchparks" element={<SearchParking />} />
               <Route
                 path="/pickupvanservice"
                 element={user ? <PickupVanService /> : <Navigate to="/login" />}
@@ -83,12 +79,7 @@ function App() {
                   }
                 />
               )}
-              {user && (
-                <Route
-                  path="/addvehicle"
-                  element={<AddVehicle />}
-                />
-              )}
+              {user && <Route path="/addvehicle" element={<AddVehicle />} />}
               {user && (
                 <Route
                   path="/vehicleentryexit"
@@ -139,6 +130,18 @@ function App() {
                 <Route
                   path="/notification"
                   element={user ? <Notification /> : <Navigate to="/login" />}
+                />
+              )}
+              {user && (
+                <Route
+                  path="/profile"
+                  element={user ? <Profile /> : <Navigate to="/login" />}
+                />
+              )}
+              {user && (
+                <Route
+                  path="/record"
+                  element={user ? <RecordHistory /> : <Navigate to="/login" />}
                 />
               )}
             </Routes>

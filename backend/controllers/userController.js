@@ -3,7 +3,10 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const validator = require('validator')
 const { runQuery } = require('../connection')
+const path = require('path')
 const oracleErrorHandler = require('../oracleErrorHandler')
+const { BlobServiceClient } = require('@azure/storage-blob')
+const { autoCommit } = require('oracledb')
 
 const createToken = (ID) => {
   return jwt.sign({ ID }, process.env.SECRET, { expiresIn: '30d' })
@@ -61,7 +64,7 @@ const signUpUser = async (req, res) => {
         'select userid id from users where email=:email',
         {
           email,
-        },
+        }
       )
       if (exists.length == 0) {
         runQuery(
@@ -70,14 +73,14 @@ const signUpUser = async (req, res) => {
             username,
             email,
             hash,
-          },
+          }
         )
           .then(async () => {
             const data = await runQuery(
               'select * from users where email=:email',
               {
                 email,
-              },
+              }
             )
             const user = data[0]
             const usname = await user.NAME
@@ -101,4 +104,92 @@ const signUpUser = async (req, res) => {
   }
 }
 
-module.exports = { loginUser, signUpUser }
+const profileUser = async (req, res) => {
+  let userid = req.params.id
+  try {
+    console.log('Data fetched from database')
+    const result = await runQuery('SELECT * FROM users where userid=:userid', {
+      userid,
+    })
+    if (result.length) {
+      res.status(200).json(result[0])
+    } else {
+      res.status(400).json({ error: 'No user found' })
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+const profilePicture = async (req, res) => {
+  const id = req.params.id
+  const blobServiceClient = BlobServiceClient.fromConnectionString(
+    process.env.AZURE_STORAGE_CONNECTION_STRING
+  )
+  const containerClient = blobServiceClient.getContainerClient('images')
+  const file = req.file
+  if (!file) {
+    return res.status(400).send('No file uploaded')
+  }
+
+  const blobName = path.basename(file.path)
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName)
+
+  try {
+    const uploadBlobResponse = await blockBlobClient.uploadFile(file.path)
+    console.log(
+      `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
+    )
+
+    const imageUrl = blockBlobClient.url
+
+    const result = await runQuery(
+      `UPDATE users SET pro_url=:imageUrl where userid=:id`,
+      {
+        id,
+        imageUrl,
+      },
+      { autoCommit: true }
+    )
+    console.log('URL stored in database', result)
+    res.status(200).json({ PRO_URL: imageUrl })
+  } catch (err) {
+    console.error('Error during upload:', err)
+    res.status(500).json({ message: 'Upload failed', error: err })
+  }
+}
+
+const profileParking = async (req, res) => {
+  let userid = req.params.id
+  try {
+    console.log('Data fetched from database')
+    const result = await runQuery(
+      `SELECT GARAGE.GARAGEID, GARAGE.COUNTRY, GARAGE.CITY, 
+      GARAGE.AREA, VEHICLE_INFO.VEHICLENO, VEHICLE_INFO.VEHICLETYPE, VEHICLE_INFO.VEHICLE_MODEL, 
+      VEHICLE_INFO.VEHICLE_COMPANY, VEHICLE_INFO.VEHICLE_COLOR 
+      FROM USERS, GARAGE, VEHICLE_INFO, HAS_PAYMENT 
+      WHERE VEHICLE_INFO.VEHICLENO = HAS_PAYMENT.VEHICLENO
+      AND GARAGE.GARAGEID = HAS_PAYMENT.GARAGEID
+      AND VEHICLE_INFO.VEHICLE_OWNER = USERS.USERID
+      AND USERS.USERID = :userid`,
+      {
+        userid,
+      }
+    )
+    if (result.length) {
+      res.status(200).json(result)
+    } else {
+      res.status(400).json({ error: 'No user found' })
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+module.exports = {
+  loginUser,
+  signUpUser,
+  profileUser,
+  profilePicture,
+  profileParking,
+}

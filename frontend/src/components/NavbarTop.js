@@ -30,7 +30,7 @@ const NavbarTop = () => {
           body: JSON.stringify({
             userid: user.id,
           }),
-        },
+        }
       )
 
       const data = await response.json()
@@ -44,16 +44,9 @@ const NavbarTop = () => {
 
   console.log('total unread', totalUnreadNotice)
   return (
-    <Navbar
-      bg="dark"
-      variant="dark"
-      expand="lg"
-    >
+    <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
-        <Navbar.Brand
-          as={Link}
-          to={'/'}
-        >
+        <Navbar.Brand as={Link} to={'/'}>
           <span className="material-symbols-outlined">
             emoji_transportation
           </span>
@@ -62,34 +55,22 @@ const NavbarTop = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link
-              as={Link}
-              to={'/searchparks'}
-            >
+            <Nav.Link as={Link} to={'/searchparks'}>
               <span className="material-symbols-outlined">Search</span>Search
               Parks
             </Nav.Link>
 
             {user && (
-              <Nav.Link
-                as={Link}
-                to={'/notification'}
-              >
+              <Nav.Link as={Link} to={'/notification'}>
                 <span className="material-symbols-outlined">notifications</span>
                 Notifications
                 {totalUnreadNotice > 0 && <sup>{totalUnreadNotice}</sup>}
               </Nav.Link>
             )}
 
-            <NavDropdown
-              title="Services"
-              id="basic-nav-dropdown"
-            >
+            <NavDropdown title="Services" id="basic-nav-dropdown">
               {user && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/addvehicle'}
-                >
+                <NavDropdown.Item as={Link} to={'/addvehicle'}>
                   <span className="material-symbols-outlined">
                     add_to_queue
                   </span>
@@ -97,20 +78,14 @@ const NavbarTop = () => {
                 </NavDropdown.Item>
               )}
               {user && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/userparkhistory'}
-                >
+                <NavDropdown.Item as={Link} to={'/userparkhistory'}>
                   <span className="material-symbols-outlined">history_edu</span>
                   Your Park History
                 </NavDropdown.Item>
               )}
 
               {user && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/vehiclecare/user'}
-                >
+                <NavDropdown.Item as={Link} to={'/vehiclecare/user'}>
                   <span className="material-symbols-outlined">
                     child_friendly
                   </span>
@@ -120,19 +95,13 @@ const NavbarTop = () => {
               {user && <NavDropdown.Divider />}
 
               {user && user.id < 100 && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/addparkadmin'}
-                >
+                <NavDropdown.Item as={Link} to={'/addparkadmin'}>
                   <span className="material-symbols-outlined">nature</span>Add
                   Park
                 </NavDropdown.Item>
               )}
               {user && user.id < 100 && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/garageadminpay'}
-                >
+                <NavDropdown.Item as={Link} to={'/garageadminpay'}>
                   <span className="material-symbols-outlined">
                     mode_of_travel
                   </span>
@@ -141,10 +110,7 @@ const NavbarTop = () => {
               )}
 
               {user && user.id < 100 && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/vehiclecare/admin'}
-                >
+                <NavDropdown.Item as={Link} to={'/vehiclecare/admin'}>
                   <span className="material-symbols-outlined">token</span>
                   Care & Management
                 </NavDropdown.Item>
@@ -152,19 +118,13 @@ const NavbarTop = () => {
               {user && user.id < 100 && <NavDropdown.Divider />}
 
               {user && user.parkAdmin > 0 && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/vehicleentryexit'}
-                >
+                <NavDropdown.Item as={Link} to={'/vehicleentryexit'}>
                   <span className="material-symbols-outlined">upload</span>
                   Vehicle Entry Exit
                 </NavDropdown.Item>
               )}
               {user && user.parkAdmin > 0 && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/addrentinfo'}
-                >
+                <NavDropdown.Item as={Link} to={'/addrentinfo'}>
                   <span className="material-symbols-outlined">
                     security_update_good
                   </span>
@@ -172,37 +132,25 @@ const NavbarTop = () => {
                 </NavDropdown.Item>
               )}
               {user && user.parkAdmin > 0 && (
-                <NavDropdown.Item
-                  as={Link}
-                  to={'/parkhistory'}
-                >
+                <NavDropdown.Item as={Link} to={'/parkhistory'}>
                   <span className="material-symbols-outlined">history</span>
                   Garage History
                 </NavDropdown.Item>
               )}
               {user && user.parkAdmin > 0 && <NavDropdown.Divider />}
 
-              <NavDropdown.Item
-                as={Link}
-                to={'/pickupvanservice'}
-              >
+              <NavDropdown.Item as={Link} to={'/pickupvanservice'}>
                 Pickup Van Service
               </NavDropdown.Item>
-              <NavDropdown.Item
-                as={Link}
-                to={'/rentingcars'}
-              >
+              <NavDropdown.Item as={Link} to={'/rentingcars'}>
                 Renting Cars
               </NavDropdown.Item>
-              <NavDropdown.Item
-                as={Link}
-                to={'/carinsurancerenewal'}
-              >
+              <NavDropdown.Item as={Link} to={'/carinsurancerenewal'}>
                 Car Insurance Renewal
               </NavDropdown.Item>
               {user && <NavDropdown.Divider />}
               {user && (
-                <NavDropdown.Item href="#action/3.4">
+                <NavDropdown.Item as={Link} to={'/profile'}>
                   <span className="material-symbols-outlined">mail</span>
                   {user.email}
                 </NavDropdown.Item>
@@ -210,18 +158,12 @@ const NavbarTop = () => {
             </NavDropdown>
             {user && <Nav.Link onClick={handleClick}>Logout</Nav.Link>}
             {!user && (
-              <Nav.Link
-                as={Link}
-                to={'/login'}
-              >
+              <Nav.Link as={Link} to={'/login'}>
                 Login
               </Nav.Link>
             )}
             {!user && (
-              <Nav.Link
-                as={Link}
-                to={'/signup'}
-              >
+              <Nav.Link as={Link} to={'/signup'}>
                 Signup
               </Nav.Link>
             )}
