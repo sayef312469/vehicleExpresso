@@ -65,20 +65,20 @@ const LineCharts = () => {
     }
   }, [error, linedata])
 
-  const mdata = {
-    labels: labels,
-    datasets: [
-      {
-        label: title,
-        data: values,
-        fill: true,
-        borderColor: 'rgba(144, 238, 144, 1)',
-        backgroundColor: 'rgba(144, 238, 144, 0.2)',
-        tension: 0.4,
-      },
-    ],
-  }
   useEffect(() => {
+    const mdata = {
+      labels: labels,
+      datasets: [
+        {
+          label: title,
+          data: values,
+          fill: true,
+          borderColor: 'rgba(144, 238, 144, 1)',
+          backgroundColor: 'rgba(144, 238, 144, 0.2)',
+          tension: 0.4,
+        },
+      ],
+    }
     if (chartInstance.current) {
       chartInstance.current.destroy()
     }
@@ -102,7 +102,7 @@ const LineCharts = () => {
         chartInstance.current.destroy()
       }
     }
-  }, [values, labels, mdata])
+  }, [values, labels, title])
   return (
     <div className="linechart-container">
       <div className="option-container">
