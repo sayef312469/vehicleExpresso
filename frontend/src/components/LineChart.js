@@ -39,7 +39,7 @@ const LineCharts = () => {
       }
     }
     fetchData()
-  }, [month, year])
+  }, [month, year, url])
 
   useEffect(() => {
     if (!error && linedata.monthCost && Array.isArray(linedata.monthCost)) {
@@ -65,77 +65,86 @@ const LineCharts = () => {
     }
   }, [error, linedata])
 
-    const mdata = {
-        labels: labels,
-        datasets: [{
-            label: title,
-            data: values,
-            fill: true,
-            borderColor: 'rgba(144, 238, 144, 1)',
-            backgroundColor: 'rgba(144, 238, 144, 0.2)',
-            tension: 0.4
-        }]
-    };
-    useEffect(()=>{
-        if(chartInstance.current){
-            chartInstance.current.destroy();
-        }
-        const mychartRef = chartRef.current.getContext("2d");
+  const mdata = {
+    labels: labels,
+    datasets: [
+      {
+        label: title,
+        data: values,
+        fill: true,
+        borderColor: 'rgba(144, 238, 144, 1)',
+        backgroundColor: 'rgba(144, 238, 144, 0.2)',
+        tension: 0.4,
+      },
+    ],
+  }
+  useEffect(() => {
+    if (chartInstance.current) {
+      chartInstance.current.destroy()
+    }
+    const mychartRef = chartRef.current.getContext('2d')
 
-        chartInstance.current =new Chart(mychartRef,{
-            type: 'line',
-            data: mdata,
-            options:{
-                scale:{
-                    y:{
-                        min:0
-                    }
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                
-           }
-        })
-            return ()=>{
-                if(chartInstance.current){
-                    chartInstance.current.destroy();
-                }
-            }
-        },[values,labels])
-    return (
-        <div className="linechart-container">
-            <div className='option-container'>
-            <span>Year</span>
-                <div className='option1'>
-                    <select className="select" value={year} onChange={handleselectChange}>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                    </select>
-                </div>
-                <span>Month</span>
-                <div className='option2'>
-                        <select className="select" value={month} onChange={handleselectChange}>
-                        <option value="ALL">ALL</option>
-                        <option value="JAN">JAN</option>
-                        <option value="FEB">FEB</option>
-                        <option value="MAR">MAR</option>
-                        <option value="APR">APR</option>
-                        <option value="MAY">MAY</option>
-                        <option value="JUN">JUN</option>
-                        <option value="JUL">JUL</option>
-                        <option value="AUG">AUG</option>
-                        <option value="SEP">SEP</option>
-                        <option value="OCT">OCT</option>
-                        <option value="NOV">NOV</option>
-                        <option value="DEC">DEC</option>
-                    </select>
-                </div>
-                </div>
-                <hr className='bar'/>
-            <canvas ref={chartRef}/>
+    chartInstance.current = new Chart(mychartRef, {
+      type: 'line',
+      data: mdata,
+      options: {
+        scale: {
+          y: {
+            min: 0,
+          },
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    })
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy()
+      }
+    }
+  }, [values, labels, mdata])
+  return (
+    <div className="linechart-container">
+      <div className="option-container">
+        <span>Year</span>
+        <div className="option1">
+          <select
+            className="select"
+            value={year}
+            onChange={handleselectChange}
+          >
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+          </select>
         </div>
-    )
+        <span>Month</span>
+        <div className="option2">
+          <select
+            className="select"
+            value={month}
+            onChange={handleselectChange}
+          >
+            <option value="ALL">ALL</option>
+            <option value="JAN">JAN</option>
+            <option value="FEB">FEB</option>
+            <option value="MAR">MAR</option>
+            <option value="APR">APR</option>
+            <option value="MAY">MAY</option>
+            <option value="JUN">JUN</option>
+            <option value="JUL">JUL</option>
+            <option value="AUG">AUG</option>
+            <option value="SEP">SEP</option>
+            <option value="OCT">OCT</option>
+            <option value="NOV">NOV</option>
+            <option value="DEC">DEC</option>
+          </select>
+        </div>
+      </div>
+      <hr className="bar" />
+      <canvas ref={chartRef} />
+    </div>
+  )
 }
- 
-export default LineCharts; 
+
+export default LineCharts

@@ -37,7 +37,7 @@ const DoughnutChart = () => {
       }
     }
     fetchData()
-  }, [month, year])
+  }, [month, year, url])
 
   useEffect(() => {
     if (!error && Array.isArray(piedata.slicedata)) {
