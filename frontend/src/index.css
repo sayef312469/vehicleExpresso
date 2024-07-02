@@ -142,9 +142,10 @@ div.msg {
 
 .idnumber {
   display: flex;
+  justify-content: center;
   align-items: center;
   justify-content: center;
-  margin: auto 100px;
+  margin: auto 10px;
   font-family: "Merriweather", serif;
   font-weight: 700;
   font-style: italic;
@@ -152,7 +153,7 @@ div.msg {
   color: var(--primary);
 }
 
-.historyInfo{
+.qHistoryInfo{
   display: flex;
   justify-content:flex-start;
   padding-left: 10px;

@@ -13,7 +13,7 @@ const DayData = ({ data }) => {
         </h5>
       </div>
       <div
-        className="historyInfo"
+        className="qHistoryInfo"
         title="Short Term Service"
       >
         <div className="key">
@@ -24,7 +24,7 @@ const DayData = ({ data }) => {
       </div>
 
       <div
-        className="historyInfo"
+        className="qHistoryInfo"
         title="Long Term Service"
       >
         <div className="key">
@@ -35,7 +35,7 @@ const DayData = ({ data }) => {
       </div>
 
       <div
-        className="historyInfo"
+        className="qHistoryInfo"
         title="Total Amount"
       >
         <div className="key">
@@ -46,7 +46,7 @@ const DayData = ({ data }) => {
       </div>
 
       <div
-        className="historyInfo"
+        className="qHistoryInfo"
         title="Total Paid"
       >
         <div className="key">
