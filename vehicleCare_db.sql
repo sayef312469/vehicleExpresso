@@ -37,8 +37,8 @@ CREATE table Takes_Care(
     service_id INTEGER,
     vehicleno varchar2(100),
     service_date DATE,
-    CONSTRAINT fk_service_id FOREIGN KEY (service_id) REFERENCES Care_Transac(service_id)
-    CONSTRAINT fk_vehicleno FOREIGN KEY (vehicleno) REFERENCES vehicle_info(vehicleno)//
+    CONSTRAINT fk_service_id FOREIGN KEY (service_id) REFERENCES Care_Transac(service_id), 
+    CONSTRAINT fk_vehicleno FOREIGN KEY (vehicleno) REFERENCES vehicle_info(vehicleno)
 )
 
 CREATE TABLE ShorttermCare(
