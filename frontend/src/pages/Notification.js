@@ -47,6 +47,7 @@ const UserParkHistory = () => {
     <div className="userParkHistory">
       <div className="histories">
         <h4>Your Notifications</h4>
+        <br />
         {notices &&
           notices.map((notice) => (
             <Notice
