@@ -22,6 +22,7 @@ import UserParkHistory from './pages/UserParkHistory'
 import VehicleCare from './pages/VehicleCare'
 import VehicleEntryExit from './pages/VehicleEntryExit'
 import Profile from './pages/userProfile'
+import ProfileTest from './pages/usertest'
 import RecordHistory from './pages/record'
 
 function App() {

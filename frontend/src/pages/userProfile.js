@@ -1,24 +1,10 @@
-import 'mdb-react-ui-kit/dist/css/mdb.min.css'
-import '@fortawesome/fontawesome-free/css/all.min.css'
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import {
-  MDBCol,
-  MDBContainer,
-  MDBRow,
-  MDBCard,
-  MDBCardText,
-  MDBCardBody,
-  MDBCardImage,
-  MDBBtn,
-  MDBTypography,
-  MDBIcon,
-} from 'mdb-react-ui-kit'
-import Card from 'react-bootstrap/Card'
+import { Card, Button, CardGroup } from 'react-bootstrap'
 import { useAuthContext } from '../hooks/useAuthContext'
 import defaultProfile from '../img/defaultProfile.png'
 
-export default function Profile() {
+export default function ProfileTest() {
   const [userDetail, setUserDetail] = useState('')
   const { user } = useAuthContext()
   const fileInputRef = useRef(null)
@@ -136,103 +122,186 @@ export default function Profile() {
   }
 
   return (
-    <div className="vh-100">
-      <MDBContainer className="container py-5 h-100">
-        <MDBRow className="justify-content-center align-items-center h-100">
-          <MDBCol md="12" xl="4">
-            <MDBCard style={{ borderRadius: '15px' }}>
-              <MDBCardBody className="text-center">
-                <div className="mt-3 mb-4">
-                  <MDBCardImage
-                    src={
-                      userDetail.PRO_URL ? userDetail.PRO_URL : defaultProfile
-                    }
-                    className="rounded-circle"
-                    fluid
-                    style={{ width: '100px', height: '100px' }}
-                  />
-                  <div onClick={changePic}>
-                    <span className="material-symbols-outlined addProfilePic">
-                      <span className="logo">edit</span>
-                      <span className="editPicture">
-                        Change Profile Picture
-                      </span>
-                    </span>
-                  </div>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                  />
-                </div>
-                <MDBTypography tag="h4" className="name">
-                  {userDetail.NAME}
-                </MDBTypography>
-                <MDBCardText className="text-muted mb-4">
-                  {userDetail.PHONE || 'Add Phone'}{' '}
-                  <span className="mx-2">|</span>{' '}
-                  <a href="#!">{userDetail.EMAIL}</a>
-                </MDBCardText>
-                <div className="mb-4 pb-2">
-                  <MDBBtn outline floating>
-                    <MDBIcon fab icon="facebook" size="lg" />
-                  </MDBBtn>
-                  <MDBBtn outline floating className="mx-1">
-                    <MDBIcon fab icon="twitter" size="lg" />
-                  </MDBBtn>
-                  <MDBBtn outline floating>
-                    <MDBIcon fab icon="skype" size="lg" />
-                  </MDBBtn>
-                </div>
-                <MDBBtn
-                  rounded
-                  size="lg"
-                  className="recordBtn"
-                  onClick={goRecord}
-                >
-                  History
-                </MDBBtn>
-                <div className="d-flex justify-content-between text-center mt-5 mb-2">
-                  <div>
-                    <MDBCardText className="mb-1 h5">8471</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">
-                      Wallets Balance
-                    </MDBCardText>
-                  </div>
-                  <div className="px-3">
-                    <MDBCardText className="mb-1 h5">8512</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">
-                      Followers
-                    </MDBCardText>
-                  </div>
-                  <div>
-                    <MDBCardText className="mb-1 h5">4751</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">
-                      Total Transactions
-                    </MDBCardText>
-                  </div>
-                </div>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-      <div className="cardContainer">
+    <div className="cardContainer">
+      <Card
+        style={{
+          width: '90%',
+          height: '30rem',
+          borderRadius: '16px',
+        }}
+      >
+        <Card.Img
+          variant="top"
+          src={userDetail.PRO_URL ? userDetail.PRO_URL : defaultProfile}
+          style={{
+            borderRadius: '50%',
+            objectFit: 'cover',
+            width: '120px',
+            height: '120px',
+            alignSelf: 'center',
+            marginTop: '30px',
+          }}
+        />
+        <Card.Body>
+          <Card.Text style={{ textAlign: 'center' }}>
+            <div onClick={changePic}>
+              <span
+                className="material-symbols-outlined addProfilePic hoverEffect"
+                style={{ position: 'relative', top: '-20px' }}
+              >
+                <span className="logo">edit</span>
+                <span className="editPicture">Change Profile Picture</span>
+              </span>
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+          </Card.Text>
+          <Card.Title
+            style={{
+              textAlign: 'center',
+              position: 'relative',
+              top: '-30px',
+            }}
+          >
+            <h4>{userDetail.NAME}</h4>
+          </Card.Title>
+          <Card.Text
+            style={{
+              textAlign: 'center',
+              position: 'relative',
+              top: '-30px',
+            }}
+          >
+            <a href="#!">{userDetail.EMAIL}</a>
+          </Card.Text>
+          <Card.Text
+            style={{
+              textAlign: 'center',
+              position: 'relative',
+              top: '-45px',
+            }}
+          >
+            <span
+              className={`material-symbols-outlined addProfilePic ${
+                !userDetail.PHONE ? 'hoverEffect' : ''
+              }`}
+              style={{
+                position: 'relative',
+                top: '-5px',
+              }}
+            >
+              <span className="logo">add</span>
+              <span className="editPicture">
+                {userDetail.PHONE || 'Add Phone'}{' '}
+              </span>
+            </span>
+            <span style={{ color: 'rgb(169, 168, 168)' }}>|</span>{' '}
+            <span
+              className={`material-symbols-outlined addProfilePic ${
+                !userDetail.PHONE ? 'hoverEffect' : ''
+              }`}
+              style={{
+                position: 'relative',
+                top: '-5px',
+              }}
+            >
+              <span className="logo">add</span>
+              <span className="editPicture">
+                {userDetail.PHONE || 'Add Address'}{' '}
+              </span>
+            </span>
+          </Card.Text>
+          <span
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Button
+              variant="primary"
+              className="recordBtn"
+              onClick={goRecord}
+              style={{
+                position: 'relative',
+                top: '-50px',
+                fontSize: '0.9rem',
+              }}
+            >
+              History
+            </Button>
+          </span>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              position: 'relative',
+              top: '-25px',
+            }}
+          >
+            <Card.Text style={{ textAlign: 'center' }}>
+              <h5>123</h5>
+              <text
+                style={{
+                  fontSize: '14px',
+                  color: 'gray',
+                  position: 'relative',
+                  top: '-5px',
+                }}
+              >
+                Active Parking
+              </text>
+            </Card.Text>
+            <Card.Text style={{ textAlign: 'center' }}>
+              <h5>123</h5>
+              <text
+                style={{
+                  fontSize: '14px',
+                  color: 'gray',
+                  position: 'relative',
+                  top: '-5px',
+                }}
+              >
+                Active Services
+              </text>
+            </Card.Text>
+            <Card.Text style={{ textAlign: 'center' }}>
+              <h5>123</h5>
+              <text
+                style={{
+                  fontSize: '14px',
+                  color: 'gray',
+                  position: 'relative',
+                  top: '-5px',
+                }}
+              >
+                Active Rents
+              </text>
+            </Card.Text>
+          </div>
+        </Card.Body>
+      </Card>
+
+      <CardGroup style={{ borderRadius: '16px', width: '90%' }}>
         <Card
           border="dark"
           className="hide-scrollbar show-scrollbar"
           style={{
             width: '25.5rem',
             height: '20rem',
-            borderRadius: '16px',
             overflow: 'auto',
           }}
         >
           <Card.Header>
             <h4>Parking Info</h4>
+            <br />
           </Card.Header>
           <Card.Body>
+            <Card.Title>Active Parking</Card.Title>
             {loading ? (
               <p>Loading...</p>
             ) : error ? (
@@ -243,11 +312,21 @@ export default function Profile() {
               <Card.Text>
                 {parkingInfo.map((carInfo, index) => (
                   <React.Fragment key={index}>
-                    <li>Car Number: {carInfo.VEHICLENO}</li>
-                    <li>Car Type: {carInfo.VEHICLETYPE}</li>
-                    <li>Car Color: {carInfo.VEHICLE_COLOR}</li>
-                    <li>Car Model: {carInfo.VEHICLE_MODEL}</li>
-                    <li>Car Parking Slot: {carInfo.GARAGEID}</li>
+                    <li>
+                      Car Number: <i>{' ' + carInfo.VEHICLENO}</i>
+                    </li>
+                    <li>
+                      Car Type: <i>{' ' + carInfo.VEHICLETYPE}</i>
+                    </li>
+                    <li>
+                      Car Color: <i>{' ' + carInfo.VEHICLE_COLOR}</i>
+                    </li>
+                    <li>
+                      Car Model: <i>{' ' + carInfo.VEHICLE_MODEL}</i>
+                    </li>
+                    <li>
+                      Car Parking Slot: <i>{' ' + carInfo.GARAGEID}</i>
+                    </li>
                     <br />
                   </React.Fragment>
                 ))}
@@ -255,14 +334,12 @@ export default function Profile() {
             )}
           </Card.Body>
         </Card>
-        <br />
         <Card
           border="dark"
           className="hide-scrollbar show-scrollbar"
           style={{
             width: '25.5rem',
             height: '20rem',
-            borderRadius: '16px',
             overflow: 'auto',
           }}
         >
@@ -277,14 +354,12 @@ export default function Profile() {
             </Card.Text>
           </Card.Body>
         </Card>
-        <br />
         <Card
           border="dark"
           className="hide-scrollbar show-scrollbar"
           style={{
             width: '25.5rem',
             height: '20rem',
-            borderRadius: '16px',
             overflow: 'auto',
           }}
         >
@@ -299,19 +374,18 @@ export default function Profile() {
             </Card.Text>
           </Card.Body>
         </Card>
-        <br />
         <Card
           border="dark"
           className="hide-scrollbar show-scrollbar"
           style={{
             width: '25.5rem',
             height: '20rem',
-            borderRadius: '16px',
             overflow: 'auto',
           }}
         >
           <Card.Header>
-            <h5>Rented Car</h5>
+            <h4>Rented Car</h4>
+            <br />
           </Card.Header>
           <Card.Body>
             <Card.Title>Active Rents</Card.Title>
@@ -321,8 +395,8 @@ export default function Profile() {
             </Card.Text>
           </Card.Body>
         </Card>
-        <br />
-      </div>
+      </CardGroup>
+      <br />
     </div>
   )
 }

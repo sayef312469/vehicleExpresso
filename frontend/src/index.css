@@ -188,10 +188,10 @@ div.msg {
 .addProfilePic {
   color: gray;
   position: relative;
-  top: 10px;
+  top: -15px;
 }
 
-.addProfilePic:hover {
+.addProfilePic.hoverEffect:hover {
   color: rgba(14, 106, 234, 0.849);
   cursor: pointer;
 }
@@ -233,39 +233,40 @@ div.msg {
 
 .cardContainer {
   display: grid;
-  grid-template-columns: 1fr; /* Create a single column grid */
-  grid-gap: 10px; /* Space between cards */
+  grid-template-columns: 1fr;
+  grid-gap: 40px;
   justify-items: center;
+  padding-top: 50px;
 }
 
-/* Define a class to hide the scrollbar */
+
 .hide-scrollbar {
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
-  overflow-y: scroll; /* Hide vertical scrollbar */
-  overflow-x: hidden; /* Hide horizontal scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+  display: none;
 }
 
-/* Define a class to show the scrollbar on hover */
+
 .show-scrollbar:hover {
-  scrollbar-width: thin; /* For Firefox */
+  scrollbar-width: thin;
 }
 
 .show-scrollbar:hover::-webkit-scrollbar {
-  display: block; /* For Chrome, Safari, and Opera */
-  width: 8px; /* Width of the scrollbar */
+  display: block;
+  width: 8px;
 }
 
 .show-scrollbar:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.5); /* Scrollbar thumb color */
-  border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
 }
 
 .show-scrollbar:hover::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1); /* Scrollbar track color */
+  background: rgba(0, 0, 0, 0.1);
 }
 
