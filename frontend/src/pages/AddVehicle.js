@@ -74,14 +74,18 @@ const AddVehicle = () => {
         </div>
         <div className="input_box">
           <label>
-            <span className="material-symbols-outlined">transportation</span>
+            <span className="material-symbols-outlined">directions_car</span>
           </label>
-          <input
-            type="text"
-            placeholder="Vehicle Type"
-            onChange={(e) => setVehicleType(e.target.value)}
+          <select
             value={vehicleType}
-          />
+            onChange={(e) => setVehicleType(e.target.value)}
+          >
+            <option value="">Select Vehicle Type</option>
+            <option value="CAR">CAR</option>
+            <option value="JEEP">JEEP</option>
+            <option value="BIKE">BIKE</option>
+            <option value="MICRO">MICRO</option>
+          </select>
         </div>
         <div className="input_box">
           <label>
