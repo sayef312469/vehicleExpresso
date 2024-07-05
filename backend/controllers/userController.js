@@ -186,10 +186,34 @@ const profileParking = async (req, res) => {
   }
 }
 
+const updateContact = async (req, res) => {
+  const id = req.params.id
+  const { phone, area, city, country } = req.body
+  try {
+    const result = await runQuery(
+      `UPDATE users SET phone=:phone, area=:area, city=:city, country=:country where userid=:id`,
+      {
+        id,
+        phone,
+        area,
+        city,
+        country,
+        id,
+      },
+      { autoCommit: true }
+    )
+    console.log('Contact updated', result)
+    res.status(200).json({ message: 'Contact updated successfully' })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
 module.exports = {
   loginUser,
   signUpUser,
   profileUser,
   profilePicture,
   profileParking,
+  updateContact,
 }

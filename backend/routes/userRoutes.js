@@ -6,6 +6,7 @@ const {
   profileUser,
   profilePicture,
   profileParking,
+  updateContact,
 } = require('../controllers/userController')
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
@@ -21,5 +22,7 @@ router.get('/profile/:id', profileUser)
 router.post('/upload/:id', upload.single('file'), profilePicture)
 
 router.get('/profile-parking/:id', profileParking)
+
+router.put('/update/:id', updateContact)
 
 module.exports = router

@@ -4,8 +4,8 @@ const oracledb = require('oracledb')
 const connection = async () => {
   try {
     const connectionData = await oracledb.getConnection({
-      user: process.env.USR,
-      password: process.env.PASS,
+      user: 'vehicle',
+      password: 'vehicle',
       connectString: process.env.CONNECTION_STRING,
     })
     return connectionData
