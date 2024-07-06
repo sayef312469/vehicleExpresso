@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Playwrite+NL:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ga+Maamli&display=swap');
 :root {
   --primary: #1aac83;
   --error: #e7195a;
@@ -12,12 +13,6 @@ body {
 
 .navbar-dark span.navbar-toggler-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
-}
-
-.pages {
-  width: 90vw;
-  padding: 20px;
-  margin: 0 auto;
 }
 
 label,
@@ -273,5 +268,94 @@ div.msg {
 
 .show-scrollbar:hover::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.1);
+}
+
+.hero, .showServices {
+  width: 100%;
+  background-color: #fff;
+  animation: slideUp 2s ease-in-out forwards;
+  margin-bottom: 100px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.heroleft {
+  width: 50%;
+  min-width: 400px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+  padding: 20px;
+  background-image: url('./img/welcomeBack.gif');
+  background-size: cover;
+}
+
+.heroleft .welMsg {
+  font-size: 50px;
+  font-family: "Merriweather", serif;
+  color: var(--primary);
+  text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+}
+
+.heroleft .webName {
+  color:rgb(4, 102, 56);
+  font-family: "Ga Maamli", sans-serif;
+  font-weight: 800;
+  font-size: 70px;
+  font-style: normal;
+  text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+}
+
+.heroleft .text {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 1px solid black;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.heroright {
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  min-width: 400px;
+}
+
+.heroright img {
+  max-width: 70%;
+  max-height: 70%;
+}
+
+.showServices {
+  padding: 10px;
+}
+
+.showServices .tle {
+  font-size: large;
+  border-bottom: 1px solid #ddd;
+  color: var(--primary);
+  font-weight: bold;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+.slider_container {
+  width: 95%;
 }
 
