@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Slider from 'react-slick'
 import addVehicle from '../img/addVehicle.gif'
 import car2 from '../img/car2.gif'
@@ -13,6 +13,22 @@ import 'slick-carousel/slick/slick.css'
 import ServiceCard from '../components/ServiceCard'
 
 const Home = () => {
+  const [webName, setWebName] = useState('V')
+  const fullText = 'Vehicle Expresso'
+
+  useEffect(() => {
+    let currentIndex = 0
+
+    const interval = setInterval(() => {
+      setWebName(fullText.slice(0, currentIndex + 1))
+      currentIndex += 1
+      currentIndex %= fullText.length
+    }, 250)
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval)
+  }, [])
+
   var settings = {
     dots: true,
     infinite: false,
@@ -52,7 +68,7 @@ const Home = () => {
       <div className="hero">
         <div className="heroleft">
           <span className="welMsg">Welcome to</span> <br />
-          <span className="webName">Vehicle Expresso</span>
+          <span className="webName">{webName}</span>
           <div className="text">
             The Vehicle Expresso is a web-based platform designed to ease the
             burden on vehicle owners by simplifying parking and maintenance,

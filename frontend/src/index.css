@@ -289,7 +289,7 @@ div.msg {
   min-width: 400px;
   align-items: center;
   justify-content: center;
-  margin-top: 100px;
+  margin-top: 70px;
   padding: 20px;
   background-image: url('./img/welcomeBack.gif');
   background-size: cover;
@@ -330,17 +330,18 @@ div.msg {
   max-height: 70%;
 }
 
-.showServices {
-  padding: 10px;
-}
-
 .showServices .tle {
-  font-size: large;
-  border-bottom: 1px solid #ddd;
-  color: var(--primary);
-  font-weight: bold;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  padding-top:10px;
+  font-weight:bold;
+  padding-left:10px;
+  padding-right:20px;
+  position: absolute;
+  top: -45px;
+  background-color:var(--primary);
+  border-radius:0px 20px 0px 0px;
+  display:inline;
+  padding-bottom:5px;
+  font-size:20px;
 }
 
 @keyframes slideUp {
@@ -354,8 +355,19 @@ div.msg {
   }
 }
 
-
 .slider_container {
   width: 95%;
+  padding: 10px;
+}
+
+.cardStyle {
+  
+  width: 18rem;
+  border: none;
+  transition: 1s;
+}
+
+.cardStyle:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
