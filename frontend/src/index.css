@@ -11,6 +11,13 @@ body {
   font-family: "Poppins";
 }
 
+.pages {
+  width: 90vw;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+
 .navbar-dark span.navbar-toggler-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
 }
@@ -250,7 +257,6 @@ div.msg {
   display: none;
 }
 
-
 .show-scrollbar:hover {
   scrollbar-width: thin;
 }
@@ -272,7 +278,7 @@ div.msg {
 .hero-section {
   background: url('https://img.freepik.com/premium-photo/white-3d-model-car-with-white-background-idea-designing_593294-302.jpg') no-repeat center center;
   background-size: cover;
-  padding: 100px 0;
+  padding: 100px 10px;
 }
 
 .hero-section h1 {
