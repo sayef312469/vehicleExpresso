@@ -461,14 +461,11 @@ export default function ProfileTest() {
           >
             <Card.Header>
               <h4>Parking Info</h4>
-              <br />
             </Card.Header>
             <Card.Body>
               <Card.Title>Active Parking</Card.Title>
               {loading ? (
                 <p>Loading...</p>
-              ) : error ? (
-                <p>Error: {error}</p>
               ) : parkingInfo.length === 0 ? (
                 <p>No active parking available.</p>
               ) : (
@@ -508,7 +505,7 @@ export default function ProfileTest() {
             }}
           >
             <Card.Header>
-              <h4>Longterm Vehicle Care</h4>
+              <h4>Shorterm Care Services</h4>
             </Card.Header>
             <Card.Body>
               <Card.Title>Active Services</Card.Title>
@@ -518,6 +515,7 @@ export default function ProfileTest() {
               </Card.Text>
             </Card.Body>
           </Card>
+
           <Card
             className="hide-scrollbar show-scrollbar"
             style={{
@@ -529,7 +527,7 @@ export default function ProfileTest() {
             }}
           >
             <Card.Header>
-              <h4>Shorterm Vehicle Care</h4>
+              <h4>Longterm Care Services</h4>
             </Card.Header>
             <Card.Body>
               <Card.Title>Active Services</Card.Title>
@@ -539,6 +537,7 @@ export default function ProfileTest() {
               </Card.Text>
             </Card.Body>
           </Card>
+
           <Card
             className="hide-scrollbar show-scrollbar"
             style={{
@@ -552,7 +551,6 @@ export default function ProfileTest() {
           >
             <Card.Header>
               <h4>Rented Car</h4>
-              <br />
             </Card.Header>
             <Card.Body>
               <Card.Title>Active Rents</Card.Title>

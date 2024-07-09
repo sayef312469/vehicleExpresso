@@ -9,28 +9,18 @@ const Home = () => {
       <Container
         fluid
         className="hero-section text-white text-center"
-      >
-        
-      </Container>
+      ></Container>
 
       <Container className="my-5">
         <Carousel>
           <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src={pic1}
-              alt="First slide"
-            />
+            <img className="d-block w-100" src={pic1} alt="First slide" />
             <Carousel.Caption>
               <h3>Photo with TRUST ACMC authority</h3>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src={pic2}
-              alt="Second slide"
-            />
+            <img className="d-block w-100" src={pic2} alt="Second slide" />
             <Carousel.Caption>
               <h3>Interview with TRUST ACMC authority</h3>
             </Carousel.Caption>
@@ -42,7 +32,7 @@ const Home = () => {
         <h2 className="text-center">Services</h2>
         <Row>
           <Col md={4}>
-            <Card>
+            <Card className="card carSHover">
               <Card.Img
                 variant="top"
                 src="https://www.thenbs.com/-/media/uk/new-images/by-section/knowledge/knowledge-articles-hero/multi-storey-car-park.jpg"
@@ -57,7 +47,7 @@ const Home = () => {
             </Card>
           </Col>
           <Col md={4}>
-            <Card>
+            <Card className="card carSHover">
               <Card.Img
                 variant="top"
                 src="https://www.progressive.com/lifelanes/wp-content/uploads/2022/06/PN1305_HowOftenWashCar_Header-1.jpg"
@@ -72,7 +62,7 @@ const Home = () => {
             </Card>
           </Col>
           <Col md={4}>
-            <Card>
+            <Card className="card carSHover">
               <Card.Img
                 variant="top"
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuClmp-4G4NiabQ1Mk1u0iOJ-uTISiIqY8cA&s"

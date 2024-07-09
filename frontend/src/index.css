@@ -312,6 +312,6 @@ h1 span {
   transition: 1s;
 }
 
-.card:hover {
+.carSHover:hover {
   transform: scale(1.1);
 }
