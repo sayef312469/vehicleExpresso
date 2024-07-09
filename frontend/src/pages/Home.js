@@ -10,13 +10,7 @@ const Home = () => {
         fluid
         className="hero-section text-white text-center"
       >
-        <h1>
-          Welcome to <span>Vehicle Expresso</span>
-        </h1>
-        <p>
-          An web-based platform designed to ease the burden on vehicle owners by
-          simplifying parking and maintenance.
-        </p>
+        
       </Container>
 
       <Container className="my-5">
