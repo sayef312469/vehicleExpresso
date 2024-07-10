@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import NavbarTop from './components/NavbarTop'
+import SmallCardServices from './components/SmallCardServices'
 import { useAuthContext } from './hooks/useAuthContext'
 import AddParkAdmin from './pages/AddParkAdmin'
 import AddRentInfo from './pages/AddRentInfo'
@@ -21,8 +22,9 @@ import Signup from './pages/Signup'
 import UserParkHistory from './pages/UserParkHistory'
 import VehicleCare from './pages/VehicleCare'
 import VehicleEntryExit from './pages/VehicleEntryExit'
-import Profile from './pages/userProfile'
+import Wavy from './pages/Wavy'
 import RecordHistory from './pages/record'
+import Profile from './pages/userProfile'
 
 function App() {
   const { user } = useAuthContext()
@@ -32,10 +34,14 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <NavbarTop />
+        <Wavy />
         <div className="pages">
           <main>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route
+                path="/"
+                element={<Home />}
+              />
               <Route
                 path="/login"
                 element={!user ? <Login /> : <Navigate to="/" />}
@@ -44,7 +50,10 @@ function App() {
                 path="/signup"
                 element={!user ? <Signup /> : <Navigate to="/" />}
               />
-              <Route path="/searchparks" element={<SearchParking />} />
+              <Route
+                path="/searchparks"
+                element={<SearchParking />}
+              />
               <Route
                 path="/pickupvanservice"
                 element={user ? <PickupVanService /> : <Navigate to="/login" />}
@@ -79,7 +88,12 @@ function App() {
                   }
                 />
               )}
-              {user && <Route path="/addvehicle" element={<AddVehicle />} />}
+              {user && (
+                <Route
+                  path="/addvehicle"
+                  element={<AddVehicle />}
+                />
+              )}
               {user && (
                 <Route
                   path="/vehicleentryexit"
@@ -144,6 +158,10 @@ function App() {
                   element={user ? <RecordHistory /> : <Navigate to="/login" />}
                 />
               )}
+              <Route
+                path="/smallcardservices"
+                element={<SmallCardServices />}
+              />
             </Routes>
           </main>
         </div>
