@@ -229,7 +229,7 @@ div.msg {
   justify-content: flex-end;
   background-color: transparent;
   margin: 10 auto;
-  line-height: 0.1em;
+  border-bottom: 1px solid #ddd;
 }
 
 .noticeTime span {
@@ -361,29 +361,6 @@ div.msg {
       -0.03em -0.03em 0.03em #000;
     transform: translateY(-0.025em) translateX(0.04em);
   }
-}
-
-.my-5 img {
-  aspect-ratio: 16 / 9;
-  border-radius: 10px;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px;
-  justify-content: center;
-  padding: 20px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: 1s;
-}
-
-.cardSHover:hover {
-  transform: scale(1.1);
 }
 
 .heroServices {
