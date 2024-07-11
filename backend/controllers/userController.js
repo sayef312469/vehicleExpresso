@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const validator = require('validator')
@@ -64,7 +63,7 @@ const signUpUser = async (req, res) => {
         'select userid id from users where email=:email',
         {
           email,
-        }
+        },
       )
       if (exists.length == 0) {
         runQuery(
@@ -73,14 +72,14 @@ const signUpUser = async (req, res) => {
             username,
             email,
             hash,
-          }
+          },
         )
           .then(async () => {
             const data = await runQuery(
               'select * from users where email=:email',
               {
                 email,
-              }
+              },
             )
             const user = data[0]
             const usname = await user.NAME
@@ -124,7 +123,7 @@ const profileUser = async (req, res) => {
 const profilePicture = async (req, res) => {
   const id = req.params.id
   const blobServiceClient = BlobServiceClient.fromConnectionString(
-    process.env.AZURE_STORAGE_CONNECTION_STRING
+    process.env.AZURE_STORAGE_CONNECTION_STRING,
   )
   const containerClient = blobServiceClient.getContainerClient('images')
   const file = req.file
@@ -138,7 +137,7 @@ const profilePicture = async (req, res) => {
   try {
     const uploadBlobResponse = await blockBlobClient.uploadFile(file.path)
     console.log(
-      `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
+      `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`,
     )
 
     const imageUrl = blockBlobClient.url
@@ -149,7 +148,7 @@ const profilePicture = async (req, res) => {
         id,
         imageUrl,
       },
-      { autoCommit: true }
+      { autoCommit: true },
     )
     console.log('URL stored in database', result)
     res.status(200).json({ PRO_URL: imageUrl })
@@ -174,7 +173,7 @@ const profileParking = async (req, res) => {
       AND USERS.USERID = :userid`,
       {
         userid,
-      }
+      },
     )
     if (result.length) {
       res.status(200).json(result)
@@ -200,7 +199,7 @@ const updateContact = async (req, res) => {
         country,
         id,
       },
-      { autoCommit: true }
+      { autoCommit: true },
     )
     console.log('Contact updated', result)
     res.status(200).json({ message: 'Contact updated successfully' })

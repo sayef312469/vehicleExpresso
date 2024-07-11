@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 const { runQuery } = require('../connection')
 const oracleErrorHandler = require('../oracleErrorHandler')
 

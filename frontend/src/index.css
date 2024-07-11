@@ -375,6 +375,11 @@ div.msg {
   width: 7rem;
   padding: 10px;
   margin: auto 10px;
+  cursor: pointer;
+}
+
+.heroServices a {
+  text-decoration: none;
 }
 
 .heroServices .card img {
@@ -404,5 +409,5 @@ div.msg {
   align-items: center;
   width: 100%;
   text-align: center;
-  margin: 10px 0; /* Adjust as needed for spacing between rows */
+  margin: 10px 0; 
 }

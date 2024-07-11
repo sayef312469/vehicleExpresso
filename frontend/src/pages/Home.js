@@ -9,11 +9,11 @@ import s5 from '../img/s5.png'
 
 const Home = () => {
   const serviceArr = [
-    { im: s1, btn: 'Vehicle Parks' },
-    { im: s2, btn: 'Search Parks' },
-    { im: s3, btn: 'Care Vehicle' },
-    { im: s4, btn: 'Track Activity' },
-    { im: s5, btn: 'Add Vehicle' },
+    { im: s1, btn: 'Vehicle Parks', link: '/addparkadmin' },
+    { im: s2, btn: 'Search Parks', link: '/searchparks' },
+    { im: s3, btn: 'Care Vehicle', link: '/vehiclecare/user' },
+    { im: s4, btn: 'Track Activity', link: '/userparkhistory' },
+    { im: s5, btn: 'Add Vehicle', link: '/addvehicle' },
   ]
   return (
     <div className="home">
@@ -37,6 +37,7 @@ const Home = () => {
                   key={s.btn}
                   im={s.im}
                   btn={s.btn}
+                  link={s.link}
                 />
               ))}
           </div>
