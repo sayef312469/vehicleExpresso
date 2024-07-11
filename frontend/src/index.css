@@ -13,6 +13,11 @@ body {
   overflow-x: hidden;
 }
 
+main {
+  display: flex;
+  justify-content: center;
+}
+
 .ocean {
   height: 5%;
   width: 100%;
@@ -389,7 +394,7 @@ div.msg {
   transition: 0.3s;
   width: 7rem;
   padding: 10px;
-  margin: auto 10px;
+  margin: 10px;
   cursor: pointer;
 }
 
@@ -441,7 +446,7 @@ div.msg {
   border-radius: 50px 50px;
   border: 1px solid #254a4e;
   cursor: pointer;
-  transition: .5s;
+  transition: 0.5s;
 }
 
 .prevNextBtn div:hover {
