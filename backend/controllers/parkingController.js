@@ -548,16 +548,17 @@ const garageAdminPay = async (req, res) => {
 }
 
 const getNotice = async (req, res) => {
-  const { userid } = req.body
+  const { userid, offset } = req.body
   try {
     const data = await runQuery(
       `select NOTICEID, USERID, MESSAGE, to_char(NOTICE_TIME, 'dd Mon, yyyy hh24:mi') NOTICE_TIME
       from notice
       where userid = :userid
       order by NOTICE_TIME desc
-      fetch first 100 rows only`,
+      offset :offset rows fetch next 10 rows only`,
       {
         userid,
+        offset,
       },
     )
     if (data.length) {

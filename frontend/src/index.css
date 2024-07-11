@@ -172,13 +172,19 @@ div.msg {
 .login,
 .emailsForPark,
 .histories,
-.dateSelect {
+.dateSelect,
+.allNotices {
   width: 400px;
   margin: 40px auto;
   padding: 20px;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.allNotices {
+  max-width: 600px;
+  width: 100%;
 }
 
 .queryBoxHis {
@@ -337,8 +343,17 @@ div.msg {
 }
 
 .large span {
-  font-size: 4rem;
+  transition: 0.3s;
+}
+
+.large span:nth-child(1) {
+  font-size: 5rem;
   margin: 10px;
+}
+
+.large span:hover {
+  color: var(--primary);
+  cursor: pointer;
 }
 
 .rise {
@@ -409,5 +424,27 @@ div.msg {
   align-items: center;
   width: 100%;
   text-align: center;
-  margin: 10px 0; 
+  margin: 10px 0;
+}
+
+.prevNextBtn {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.prevNextBtn div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 50px 50px;
+  border: 1px solid #254a4e;
+  cursor: pointer;
+  transition: .5s;
+}
+
+.prevNextBtn div:hover {
+  background: #254a4e;
+  color: #fff;
 }

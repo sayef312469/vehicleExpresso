@@ -8,6 +8,7 @@ import s4 from '../img/s4.png'
 import s5 from '../img/s5.png'
 
 const Home = () => {
+  const webName = 'Vehicle Expresso';
   const serviceArr = [
     { im: s1, btn: 'Vehicle Parks', link: '/addparkadmin' },
     { im: s2, btn: 'Search Parks', link: '/searchparks' },
@@ -26,7 +27,7 @@ const Home = () => {
             <span className="material-symbols-outlined">
               emoji_transportation
             </span>
-            Vehicle Expresso
+            {webName.split('').map((c) => <span key={c}>{c}</span>)}
           </p>
         </div>
         <div className="rowServices">
