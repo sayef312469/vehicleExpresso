@@ -1,6 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Playwrite+NL:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ga+Maamli&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
 :root {
   --primary: #1aac83;
   --error: #e7195a;
@@ -8,11 +9,59 @@
 body {
   background: #f1f1f1;
   margin: 0;
-  font-family: "Poppins";
+  font-family: 'Poppins';
+  overflow-x: hidden;
 }
 
+main {
+  display: flex;
+  justify-content: center;
+}
 
+.ocean {
+  height: 5%;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #015871;
+  z-index: -1;
+}
 
+.wave {
+  background: url('./img/backAnim.svg') repeat-x;
+  position: absolute;
+  width: 6400px;
+  top: -198px;
+  left: 0;
+  height: 198px;
+  transform: translate(0, 0, 0);
+  animation: wave 7s ease infinite;
+}
+
+.wave:nth-of-type(2) {
+  top: -168px;
+  animation: swell 4s ease infinite;
+  opacity: 1;
+}
+
+@keyframes wave {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -1600px;
+  }
+}
+@keyframes swell {
+  0%,
+  100% {
+    transform: translate(0, -30px);
+  }
+  50% {
+    transform: translate(0, -5px);
+  }
+}
 
 .navbar-dark span.navbar-toggler-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
@@ -37,14 +86,20 @@ select {
 input {
   padding: 10px;
   width: 100%;
+  background-color: transparent;
   border: none;
   outline: none;
   box-sizing: border-box;
-  -webkit-box-sizing: border-box; 
-  -moz-box-sizing: border-box;  
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 input:focus {
+  border: none;
+  outline: none;
+}
+
+select:focus {
   border: none;
   outline: none;
 }
@@ -55,12 +110,12 @@ form button {
   color: #fff;
   padding: 10px;
   margin: 10px auto;
-  font-family: "Poppins";
+  font-family: 'Poppins';
   border-radius: 4px;
   cursor: pointer;
 }
 
-.input_option{ 
+.input_option {
   display: flex;
   margin-bottom: 0 0 20px 10px;
   padding-left: 10px;
@@ -70,17 +125,17 @@ form button {
   margin-right: 10px;
 }
 
-.input_box{
+.input_box {
   display: flex;
   justify-content: baseline;
   align-items: baseline;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   padding-left: 10px;
   border-radius: 4px;
   margin: 10px auto;
   box-sizing: border-box;
-  -webkit-box-sizing: border-box; 
-  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 div.error {
@@ -102,16 +157,16 @@ div.msg {
 }
 
 .material-symbols-outlined {
-  vertical-align: middle; 
-  line-height: 1; 
-  margin-right: 5px; 
+  vertical-align: middle;
+  line-height: 1;
+  margin-right: 5px;
 }
 
-.parkDetails{
+.parkDetails {
   margin-bottom: 20px;
 }
 
-.parks_info{
+.parks_info {
   display: flex;
   justify-content: space-between;
 }
@@ -120,26 +175,37 @@ div.msg {
 .parks,
 .signup,
 .login,
-.emailsForPark, 
-.histories, 
-.dateSelect {
+.emailsForPark,
+.histories,
+.dateSelect,
+.allNotices {
   width: 400px;
   margin: 40px auto;
   padding: 20px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-.queryBoxHis{
+.allNotices {
+  max-width: 600px;
+  width: 100%;
+}
+
+.queryBoxHis {
   margin: 0px auto;
   padding: 20px;
 }
 
-.addParkAdmin, .addVehicle, .searchParking, .userParkHistory, .showDateAndData {
+.addParkAdmin,
+.addVehicle,
+.searchParking,
+.userParkHistory,
+.showDateAndData {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
+  width: 90vw;
 }
 
 .idnumber {
@@ -148,16 +214,16 @@ div.msg {
   align-items: center;
   justify-content: center;
   margin: auto 10px;
-  font-family: "Merriweather", serif;
+  font-family: 'Merriweather', serif;
   font-weight: 700;
   font-style: italic;
   border-bottom: 1px solid #ddd;
   color: var(--primary);
 }
 
-.qHistoryInfo{
+.qHistoryInfo {
   display: flex;
-  justify-content:flex-start;
+  justify-content: flex-start;
   padding-left: 10px;
 }
 
@@ -171,20 +237,20 @@ div.msg {
 
 .noticeTime {
   display: flex;
-  justify-content:flex-end;
-  background-color: #f4f1f1;
+  justify-content: flex-end;
+  background-color: transparent;
   margin: 10 auto;
-  line-height: 0.1em;
+  border-bottom: 1px solid #ddd;
 }
 
-.noticeTime span{
+.noticeTime span {
   font-size: 12px;
   color: var(--primary);
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   padding-left: 10px;
 }
 
-.dateLine{
+.dateLine {
   margin: 10px auto;
 }
 
@@ -199,37 +265,37 @@ div.msg {
   cursor: pointer;
 }
 
-.name{
+.name {
   position: relative;
   top: -5px;
 }
 
-.recordBtn{
+.recordBtn {
   background: var(--primary);
   border: 0;
   color: #fff;
   padding: 10px;
   margin: 10px auto;
-  font-family: "Poppins";
+  font-family: 'Poppins';
   border-radius: 4px;
   cursor: pointer;
 }
 
-.recordBtn:hover{
+.recordBtn:hover {
   background: rgb(4, 102, 56);
   border: 0;
   color: #fff;
   padding: 10px;
   margin: 10px auto;
-  font-family: "Poppins";
+  font-family: 'Poppins';
   border-radius: 4px;
   cursor: pointer;
 }
-.editPicture{
+.editPicture {
   font-family: poppins;
   font-size: 15px;
 }
-.logo{
+.logo {
   vertical-align: middle;
   font-size: 20px;
 }
@@ -272,46 +338,120 @@ div.msg {
 }
 
 .hero-section {
-  background: url('./img/hero.jpg') no-repeat center center;
-  background-size: cover;
   padding: 100px 10px;
   height: 100vh;
 }
 
-.hero-section h1 {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  color: rgba(0, 0, 0, 0.5);
+.large {
+  font-size: 5rem;
+  font-family: 'Audiowide', cursive;
 }
 
-h1 span {
-  color: var(--primary);
+.large span {
+  transition: 0.3s;
 }
 
-.hero-section p {
-  font-size: 1.5rem;
-  color: rgba(0, 0, 0, 0.7);
-}
-
-.my-5 img {
-  aspect-ratio: 16 / 9;
-  border-radius: 10px;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.large span:nth-child(1) {
+  font-size: 5rem;
   margin: 10px;
-  justify-content: center;
-  padding: 20px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: 1s;
 }
 
+.large span:hover {
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.rise {
+  text-shadow: -0.01em -0.01em 0.01em #000;
+  animation: rise 2s ease-in-out 0.5s forwards;
+}
+
+@keyframes rise {
+  to {
+    text-shadow:
+      0em 0.01em var(--primary),
+      0em 0.02em var(--primary),
+      0em 0.02em 0.03em var(--primary),
+      -0.01em 0.01em #333,
+      -0.02em 0.02em #333,
+      -0.03em 0.03em #333,
+      -0.04em 0.04em #333,
+      -0.01em -0.01em 0.03em #000,
+      -0.02em -0.02em 0.03em #000,
+      -0.03em -0.03em 0.03em #000;
+    transform: translateY(-0.025em) translateX(0.04em);
+  }
+}
+
+.heroServices {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.heroServices .card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  width: 7rem;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.heroServices a {
+  text-decoration: none;
+}
+
+.heroServices .card img {
+  transition: 0.3s;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.heroServices .card img:hover {
+  transform: scale(1.15);
+}
+
+.heroServices .card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.heroServices .container {
+  font-size: 12px;
+  text-align: center;
+  height: 2rem;
+  overflow: hidden;
+}
+
+.rowServices {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.prevNextBtn {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.prevNextBtn div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 50px 50px;
+  border: 1px solid #254a4e;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.prevNextBtn div:hover {
+  background: #254a4e;
+  color: #fff;
 .carSHover:hover {
   transform: scale(1.1);
 }

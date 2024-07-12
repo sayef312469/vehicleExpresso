@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
 import Notice from '../components/Notice'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useNotificationContext } from '../hooks/useNotificationContext'
@@ -7,11 +8,30 @@ const UserParkHistory = () => {
   const { user } = useAuthContext()
   const [notices, setNotices] = useState(null)
   const { dispatch } = useNotificationContext()
+  const [offset, setOffset] = useState(0)
+
+  const handleOffsetR = (e) => {
+    e.preventDefault()
+    if (!notices) {
+      return
+    }
+    setOffset(offset + 10)
+    console.log('offset R: ', offset)
+  }
+
+  const handleOffsetL = (e) => {
+    e.preventDefault()
+    setOffset(Math.max(0, offset - 10))
+    console.log('offset L: ', offset)
+  }
 
   useEffect(() => {
     if (!user) {
       return
     }
+
+    console.log('offset Effect: ', offset)
+
     const getNotice = async () => {
       const response = await fetch(
         'http://localhost:4000/api/parking/getnotice',
@@ -20,6 +40,7 @@ const UserParkHistory = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             userid: user.id,
+            offset,
           }),
         },
       )
@@ -27,6 +48,8 @@ const UserParkHistory = () => {
       const data = await response.json()
       if (response.ok) {
         setNotices(data)
+      } else{
+        setNotices(null)
       }
     }
 
@@ -41,13 +64,15 @@ const UserParkHistory = () => {
     }
 
     getNotice()
-    setReadNotice()
-  }, [user, dispatch])
+    if (offset === 0) {
+      setReadNotice()
+    }
+  }, [user, dispatch, offset])
   return (
     <div className="userParkHistory">
-      <div className="histories">
+      <div className="allNotices">
         <h4>Your Notifications</h4>
-        <br />
+        <hr />
         {notices &&
           notices.map((notice) => (
             <Notice
@@ -55,6 +80,15 @@ const UserParkHistory = () => {
               notice={notice}
             />
           ))}
+
+        <div className="prevNextBtn">
+          <div onClick={handleOffsetL}>
+            <GrLinkPrevious />
+          </div>
+          <div onClick={handleOffsetR}>
+            <GrLinkNext />
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -177,6 +177,11 @@ const VehicleEntryExit = () => {
     if (response.ok) {
       setMsg('Vehicle entry done')
       setError(null)
+      if (stype === 'SHORT') {
+        setLShort(lshort - 1)
+      } else {
+        setLLong(llong - 1)
+      }
     } else {
       setMsg(null)
       setError(data.error)
@@ -206,12 +211,27 @@ const VehicleEntryExit = () => {
     if (response.ok) {
       setErrorExit(null)
       setMsgExit('Exit Success')
+
+      if (exitData.SERVICETYPE === 'SHORT') {
+        setLShort(lshort + 1)
+      } else {
+        setLLong(llong + 1)
+      }
+
+      let parkName = ''
+
+      parks.forEach((park) => {
+        if (park.GARAGEID === Number(gidExit)) {
+          parkName = park.NAME
+        }
+      })
+
       const doc = new jsPDF()
 
       doc.setFontSize(18)
-      doc.text('Vehicle Expresso', 20, 20)
+      doc.text(parkName, 70, 20)
       doc.setFontSize(14)
-      doc.text('Vehicle Exit', 20, 30)
+      doc.text('Vehicle exit details', 80, 30)
 
       doc.text(' ', 20, 40)
 
