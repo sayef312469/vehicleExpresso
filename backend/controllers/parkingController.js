@@ -554,7 +554,7 @@ const getNotice = async (req, res) => {
       `select NOTICEID, USERID, MESSAGE, to_char(NOTICE_TIME, 'dd Mon, yyyy hh24:mi') NOTICE_TIME
       from notice
       where userid = :userid
-      order by NOTICE_TIME desc
+      order by NOTICE_TIME asc
       offset :offset rows fetch next 10 rows only`,
       {
         userid,

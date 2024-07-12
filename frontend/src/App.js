@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import NavbarTop from './components/NavbarTop'
+import SmallCardServices from './components/SmallCardServices'
 import { useAuthContext } from './hooks/useAuthContext'
 import AddParkAdmin from './pages/AddParkAdmin'
 import AddRentInfo from './pages/AddRentInfo'
@@ -87,22 +88,10 @@ function App() {
                   }
                 />
               )}
-              {!user && (
-                <Route
-                  path="/addparkadmin"
-                  element={<Navigate to="/login" />}
-                />
-              )}
               {user && (
                 <Route
                   path="/addvehicle"
                   element={<AddVehicle />}
-                />
-              )}
-              {!user && (
-                <Route
-                  path="/addvehicle"
-                  element={<Navigate to="/login" />}
                 />
               )}
               {user && (
@@ -117,12 +106,6 @@ function App() {
                   }
                 />
               )}
-              {!user && (
-                <Route
-                  path="/vehicleentryexit"
-                  element={<Navigate to="/login" />}
-                />
-              )}
               {user && (
                 <Route
                   path="/addrentinfo"
@@ -131,34 +114,18 @@ function App() {
                   }
                 />
               )}
-              {!user && (
-                <Route
-                  path="/addrentinfo"
-                  element={<Navigate to="/login" />}
-                />
-              )}
               {user && (
                 <Route
                   path="/userparkhistory"
-                  element={<UserParkHistory />}
-                />
-              )}
-              {!user && (
-                <Route
-                  path="/userparkhistory"
-                  element={<Navigate to="/login" />}
+                  element={
+                    user ? <UserParkHistory /> : <Navigate to="/login" />
+                  }
                 />
               )}
               {user && (
                 <Route
                   path="/parkhistory"
-                  element={<ParkHistory />}
-                />
-              )}
-              {!user && (
-                <Route
-                  path="/parkhistory"
-                  element={<Navigate to="/login" />}
+                  element={user ? <ParkHistory /> : <Navigate to="/login" />}
                 />
               )}
               {user && (
@@ -176,39 +143,25 @@ function App() {
               {user && (
                 <Route
                   path="/notification"
-                  element={<Notification />}
-                />
-              )}
-              {!user && (
-                <Route
-                  path="/notification"
-                  element={<Navigate to="/login" />}
+                  element={user ? <Notification /> : <Navigate to="/login" />}
                 />
               )}
               {user && (
                 <Route
                   path="/profile"
-                  element={<Profile />}
-                />
-              )}
-              {!user && (
-                <Route
-                  path="/profile"
-                  element={<Navigate to="/login" />}
+                  element={user ? <Profile /> : <Navigate to="/login" />}
                 />
               )}
               {user && (
                 <Route
                   path="/record"
-                  element={<RecordHistory />}
+                  element={user ? <RecordHistory /> : <Navigate to="/login" />}
                 />
               )}
-              {!user && (
-                <Route
-                  path="/record"
-                  element={<Navigate to="/login" />}
-                />
-              )}
+              <Route
+                path="/smallcardservices"
+                element={<SmallCardServices />}
+              />
             </Routes>
           </main>
         </div>
