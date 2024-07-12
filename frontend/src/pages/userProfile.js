@@ -30,8 +30,8 @@ export default function ProfileTest() {
   const { user } = useAuthContext()
   const fileInputRef = useRef(null)
   const [parkingInfo, setParkingInfo] = useState([])
+  const [shortermInfo, setShortermInfo] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchParkingInfo = async () => {
@@ -46,13 +46,33 @@ export default function ProfileTest() {
         setParkingInfo(data)
       } catch (error) {
         console.error('Error fetching data:', error)
-        setError(error.message)
       } finally {
         setLoading(false)
       }
     }
 
     fetchParkingInfo()
+  }, [user])
+
+  useEffect(() => {
+    const fetchShortermInfo = async () => {
+      try {
+        const response = await fetch(
+          'http://localhost:4000/api/user/shorterm/' + user.id
+        )
+        if (!response.ok) {
+          throw new Error('Failed to fetch data')
+        }
+        const data = await response.json()
+        setShortermInfo(data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchShortermInfo()
   }, [user])
 
   async function handleUpdate(phone, area, city, country) {
@@ -301,6 +321,7 @@ export default function ProfileTest() {
                         handlePhone()
                       }
                     }}
+                    style={{ width: 'auto' }}
                   />
                 </InputGroup>
               </div>
@@ -396,8 +417,8 @@ export default function ProfileTest() {
             style={{ textAlign: 'center', position: 'relative', top: '-20px' }}
           >
             <Row>
-              <Col>
-                <h5>123</h5>
+              <Col style={{ width: '1000px' }}>
+                <h5>{parkingInfo.length > 0 ? parkingInfo[0].COUNTS : '0'}</h5>
                 <text
                   style={{
                     fontSize: '14px',
@@ -410,7 +431,9 @@ export default function ProfileTest() {
                 </text>
               </Col>
               <Col>
-                <h5>123</h5>
+                <h5>
+                  {shortermInfo.length > 0 ? shortermInfo[0].COUNTS : '0'}
+                </h5>
                 <text
                   style={{
                     fontSize: '14px',
@@ -509,10 +532,46 @@ export default function ProfileTest() {
             </Card.Header>
             <Card.Body>
               <Card.Title>Active Services</Card.Title>
-              <Card.Text>
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </Card.Text>
+              {loading ? (
+                <p>Loading...</p>
+              ) : shortermInfo.length === 0 ? (
+                <p>No active services available.</p>
+              ) : (
+                <Card.Text>
+                  {shortermInfo.map((carInfo, index) => (
+                    <React.Fragment key={index}>
+                      <li>
+                        Service Type: <i>{' ' + carInfo.SERVICE_TYPE}</i>
+                      </li>
+                      <li>
+                        Start Date: <i>{' ' + carInfo.SERVICE_DATE}</i>
+                      </li>
+                      <li>
+                        Car Number: <i>{' ' + carInfo.VEHICLENO}</i>
+                      </li>
+                      <li>
+                        Car Type: <i>{' ' + carInfo.VEHICLETYPE}</i>
+                      </li>
+                      <li>
+                        Car Color: <i>{' ' + carInfo.VEHICLE_COLOR}</i>
+                      </li>
+                      <li>
+                        Car Model: <i>{' ' + carInfo.VEHICLE_MODEL}</i>
+                      </li>
+                      <li>
+                        Mechanic Name: <i>{' ' + carInfo.MECHANIC_NAME}</i>
+                      </li>
+                      <li>
+                        Repair Type: <i>{' ' + carInfo.REPAIR.CARE_TYPE}</i>
+                      </li>
+                      <li>
+                        Wash Type: <i>{' ' + carInfo.WASH.CARE_TYPE}</i>
+                      </li>
+                      <br />
+                    </React.Fragment>
+                  ))}
+                </Card.Text>
+              )}
             </Card.Body>
           </Card>
 
