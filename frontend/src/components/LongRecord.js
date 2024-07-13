@@ -81,6 +81,7 @@ const LongRecord = () => {
                 closeModal={()=>{setModalOpen(false);}}/>}
               {maintInfoOpen && 
               <MaintenanceInfo row={row}
+                Update={[update,setUpdate]}
                 closeModal={()=>{setMaintInfoOpen(false);}}/>}
             </div>
     );

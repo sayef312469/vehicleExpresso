@@ -33,7 +33,7 @@
     position: relative;
     display: block;
     border-radius: 10px;
-    background-color:azure;
+    background-color: azure;
     width: 80%;
     height: 35em;
     overflow: auto;
@@ -45,26 +45,107 @@
     overflow: auto;
     height:400px;
     width:50%;
-    
 }
 
-.maintenanceinfo-modal .info .history{
-
+.info .history{
     margin: 5px 10px;
     padding: 30px;
     border-radius: 10px 0 ;
     border-bottom: 1px solid #ccc;
-    background-color:rgb(114, 225, 225);
+    background-color: #C8E6C9;
     width: 100%;
 }
 
-.maintenanceinfo-modal .info .add{
+.final .add{
     margin: 5px 10px;
     padding-left: 20px;
+    right:0;
+    top:0;
     border-bottom: 1px solid #ccc;
-    background-color:rgb(59, 133, 133);
     width: 50%;
 }
+
+.add .block{
+  display: flex;
+  margin:0 30px;
+  justify-content: space-between;
+  align-items:baseline;
+}
+
+
+
+.add .block input,.add .block select{
+  padding: 5px;
+  margin-bottom: 10px;
+  margin-right: 20px;
+  border: 1px solid #272424;
+  border-radius: 5px;
+  width:50%;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+
+.add .block textarea{
+  padding: 5px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  border: 1px solid #272424;
+  border: 1px solid #272424;
+  border-radius: 5px;
+  width:60%;
+  height:10%;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+  resize: none;
+  }
+
+
+.add .check{
+    border-radius: 5px;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+}
+
+.add .check .check-block{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 10px;
+  width: 98%;
+}
+
+.block1,.block2{
+    display: flex;
+    justify-content: left;
+    align-items: baseline;
+    width: 45%;
+    padding: 2px 2px;
+    
+}
+
+.add .check-block .block1 .tic{
+    margin-right: 5px;
+    height:15px;
+    width: 15px;
+    cursor: pointer;
+} 
+
+.check-block .block2 .cost{
+    padding: 5px;
+    margin-left: 5px;
+    border: 1px solid #272424;
+    border-radius: 5px;
+    width: 50%;
+    height: 30px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
 
 .form-group{
     display: flex;
@@ -99,6 +180,22 @@ h3{
     display: flex;
     justify-content: space-between;
 }
+
+.click{
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0 40%;
+    background-color: #1aac83;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* .click:hover{
+    background-color: rgb(16, 139, 105);
+    scale: 1.1;
+  } */
 
 @media (width<830px){
     h3{
