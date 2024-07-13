@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import useFetchTable from '../hooks/useFetchTable';
-import {BsFillTrashFill,BsFillPencilFill} from 'react-icons/bs';
+import {BsFillTrashFill,BsFillPencilFill,BsSearch} from 'react-icons/bs';
 import '../styles/table.css';
-import Modal from '../components/Modal';
+import ShortModal from './ShortModal';
 
 const ShortRecord = () => {
 
@@ -17,39 +17,45 @@ const ShortRecord = () => {
       setModalOpen(!modalOpen);
       setRow(row);
     }
-    const {data,error} = useFetchTable(update);
+    const {data,error} = useFetchTable("shorttable",update);
     const [rows,setRows] = useState([]);
 
     useEffect(() => {
       setRows(data.table);
+      console.log(data.table);
     }, [data]);
 
     return ( 
     <div className='shortrecord'>
+      <h2>Shorterm Record </h2>
+        <hr/>
+        Search
+        <BsSearch className='search-btn' onClick={()=>HandleDeleteRow()}/>
+        {/* <input type='text'></input> */}
         <table className='table'>
                 <thead>
+                  <th>Service ID</th>
                   <th>Owner Name</th>
                   <th>Vehicle No</th>
-                  <th>Service ID</th>
                   <th>Mechanic Name</th>
-                  <th>Repair</th>
-                  <th>Wash</th>
+                  <th>Repair-type,cost(tk))</th>
+                  <th>Wash-type,cost(tk)</th>
                   <th>Service Date</th>
                   <th>Labor Hours</th>
                   <th>Status</th>
-                  <th>Total Cost(Tk)</th>
+                  <th>TotalCost(Tk)</th>
                   <th>Actions</th>
                 </thead>
                 <tbody>
-                    {!error && Array.isArray(rows) && rows.map((row, key) => {
+                    {!error && rows?.map((row, key) => {
                       return <tr key={key} className='rows'>
+                        <td>{row.SERVICE_ID}</td>
                         <td>{row.NAME}</td>
                         <td>{row.VEHICLENO}</td>
-                        <td>{row.SERVICE_ID}</td>
                         <td>{row.MECHANIC_NAME}</td>
-                        <td>type :{row.REPAIR.TYPE} -- cost: {row.REPAIR.COST}</td>
-                        <td>type :{row.WASH.TYPE} -- cost: {row.WASH.COST}</td>
-                        <td>{row.SERVICE_DATE?.slice(0,10)}</td>
+                        <td>{row.REPAIR.TYPE!=null?row.REPAIR.TYPE:'-'}, {row.REPAIR.COST}</td>
+                        <td>{row.WASH.TYPE!=null?row.WASH.TYPE:'-'}, {row.WASH.COST}</td>
+                        <td>{row.SERVICE_DATE}</td>
                         <td>{row.LABOR_HOURS}</td>
                         <td>{row.COMPLETED}</td>
                         <td>{row.SERVICING_COST}</td>
@@ -63,7 +69,7 @@ const ShortRecord = () => {
                     })}
                 </tbody>
               </table>
-              {modalOpen && <Modal row={row} Update={[update,setUpdate]} closeModal={()=>{
+              {modalOpen && <ShortModal row={row} Update={[update,setUpdate]} closeModal={()=>{
                   setModalOpen(false);}}/> }
             </div>
     );

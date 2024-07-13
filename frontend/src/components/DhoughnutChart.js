@@ -1,56 +1,57 @@
-import { Chart } from 'chart.js/auto'
-import React, { useEffect, useRef, useState } from 'react'
 import '../styles/chart.css'
+import { Chart} from "chart.js/auto";
+import { useEffect, useRef, useState } from "react";
+
 
 const DoughnutChart = () => {
-  const chartRef = useRef(null)
-  const chartInstance = useRef(null)
-  const [values, setValues] = useState([])
-  const [label, setLabel] = useState([])
-  const [year, setYear] = useState('2022')
-  const [month, setMonth] = useState('ALL')
-  const url = `http://localhost:4000/api/care/piedata`
-  const [piedata, setPiedata] = useState([])
-  const [error, setError] = useState(null)
-  const handleselectChange = (event) => {
-    if (event.target.childElementCount === 13) setMonth(event.target.value)
-    else setYear(event.target.value)
-  }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ year: year, month: month }),
-        })
-        if (!response.ok) throw new Error('Failed to fetch data')
-        const jsonData = await response.json()
-        setPiedata(jsonData)
-        setError(null)
-      } catch (err) {
-        console.error('Error fetching data : ', err)
-        setError(err.message)
-      }
+    const years=[2021,2022,2023,2024];
+    const months=['ALL','JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const chartRef=useRef(null);
+    const chartInstance=useRef(null);
+    const [values,setValues]=useState([]);
+    const [label,setLabel]=useState([]);
+    const [year,setYear] = useState('2021');
+    const [month,setMonth] = useState('ALL');
+    const url=`http://localhost:4000/api/care/piedata`;
+    const [piedata,setPiedata]=useState([]);
+    const [error,setError]=useState(null);
+    const handleselectChange =(event)=>{
+        if(event.target.childElementCount===13) setMonth(event.target.value);
+        else setYear(event.target.value);
     }
-    fetchData()
-  }, [month, year, url])
 
-  useEffect(() => {
-    if (!error && Array.isArray(piedata.slicedata)) {
-      const PieLabel = piedata.slicedata.map((pie) => {
-        return Object.keys(pie)[0]
-      })
-      const PieData = piedata.slicedata.map((pie) => {
-        return Object.values(pie)[0]
-      })
-      setLabel(PieLabel)
-      setValues(PieData)
-    }
-  }, [error, piedata])
+    useEffect(()=>{
+        const fetchData = async () => {
+          try {
+            const response = await fetch(url,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':'application/json',
+                    },
+                    body: JSON.stringify({year:year,month:month})
+                }
+            );
+            if (!response.ok) throw new Error('Failed to fetch data');
+            const jsonData = await response.json();
+            setPiedata(jsonData);
+            setError(null);
+          }catch(err){
+            console.error('Error fetching data : ',err);
+            setError(err.message);
+          }
+        };
+        fetchData();
+      },[month,year]);
+
+    useEffect(()=>{
+        if(!error && Array.isArray(piedata.slicedata)){ 
+            const PieLabel=piedata.slicedata.map(pie=>{return Object.keys(pie)[0]});
+            const PieData=piedata.slicedata.map(pie=>{return Object.values(pie)[0]});
+            setLabel(PieLabel);
+            setValues(PieData);
+        }
+    },[error,piedata])
 
     useEffect(()=>{
         if(chartInstance.current){
@@ -100,28 +101,14 @@ const DoughnutChart = () => {
             <div className='option-container'>
             <span>Year</span>
                 <div className='option1'>
-                        <select className="select" value={year} onChange={handleselectChange}>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
+                    <select className="select" value={year} onChange={handleselectChange}>
+                        {years.map((year,key)=>{return <option key={key} >{year}</option>})}
                     </select>
                 </div>
                 <span>Month</span>
                 <div className='option2'>
-                        <select className="select" value={month} onChange={handleselectChange}>
-                        <option value="ALL">ALL</option>
-                        <option value="JAN">JAN</option>
-                        <option value="FEB">FEB</option>
-                        <option value="MAR">MAR</option>
-                        <option value="APR">APR</option>
-                        <option value="MAY">MAY</option>
-                        <option value="JUN">JUN</option>
-                        <option value="JUL">JUL</option>
-                        <option value="AUG">AUG</option>
-                        <option value="SEP">SEP</option>
-                        <option value="OCT">OCT</option>
-                        <option value="NOV">NOV</option>
-                        <option value="DEC">DEC</option>
+                    <select className="select" value={month} onChange={handleselectChange}>
+                        {months.map((month,key)=>{return <option key={key}>{month}</option>})}
                     </select>
                 </div>
             </div>
@@ -130,5 +117,5 @@ const DoughnutChart = () => {
         </div>
      );
 }
-
-export default DoughnutChart
+ 
+export default DoughnutChart;

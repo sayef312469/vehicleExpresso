@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-const useFetchTable = (update)=>{
+const useFetchTable = (name,update)=>{
     const [data,setData]=useState([]);
     const [error,setError]=useState(null);
     useEffect(()=>{
-        const url=`http://localhost:4000/api/care/table`;
+        const url=`http://localhost:4000/api/care/${name}`;
         const fetchTable=async()=>{
             try{
                 const response = await fetch(url,{

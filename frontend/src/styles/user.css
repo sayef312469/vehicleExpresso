@@ -1,8 +1,10 @@
 .user{
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  width: 100%;
+  min-height: 40vw;
 }
 
 .user .popup{
@@ -10,8 +12,7 @@
   justify-content: space-between;
   align-items: baseline;
   position:absolute;
-  margin-top: 200px;
-  box-shadow: 0px 10px 10px 5px #ccc;
+  box-shadow: 0px 2px 10px 2px #ccc;
   border-radius: 20px;
   background-color: #C8E6C9;
   width: 500px;
@@ -70,15 +71,14 @@
   scale: 1.1;
 }
 
-.user .popup .block,.user .popup .block .check-block{
-  padding:2px;
+.user .popup .block,.user .popup .block .check-block,.user .popup .block select{
   display: flex;
   margin:0 30px;
   justify-content: space-between;
   align-items:baseline;
 }
 
-.user .popup div input{
+.user .popup div input,.user .popup .block select{
   padding: 5px;
   margin-bottom: 10px;
   margin-right: 20px;
@@ -151,17 +151,18 @@ input:invalid:focus{
 
 
 .vr{
-  width: 1px;
+  width: 1.5px;
   background-color: #272424;
-  height:40%;
+  height:5px;
   top: 65%;
 }
 
 .title{
+  margin: 3px auto;
   background-color: #1aac83;
   padding: 10px;
   border-radius: 8px;
-  width: 80%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -171,27 +172,37 @@ span{
 }
 
 .payment{
-  width: 80%;
+  overflow: auto;
+  box-shadow: 0 2px 5px 2px ;
+  border: 1px solid #282626;
+  border-radius: 9px;
+  width: 35.5%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .payment table{
+  margin: auto;
+  width: 500px;
   overflow-x: auto;
+  table-layout: auto;
+  white-space: nowrap;
+  border-radius: 20px;
+  border-collapse: collapse;
 }
 
-.payment table thead{
-  width: 100%;
-}
-
-.payment table thead th{
-  padding: 0.6rem;
+.payment .table th, .table td{
+  padding: 0.9rem;
+  background-color: transparent;
 }
 
 @media (width<830px){
   .user .popup{
-    margin-top: 300px;
     width: 460px;
+  }
+  .user .buttons, .user .payment{
+    flex-direction: column;
   }
 }

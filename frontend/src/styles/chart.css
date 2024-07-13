@@ -1,11 +1,10 @@
-
 .linechart-container{
   width: 60%;
   height: 450px;
   border-radius: 15px;
   border: 1px solid #ccc;
   margin-right: 40px;
-  padding: 40px 20px;
+  padding: 40px 10px;
   background-color:azure;
 }
 
@@ -56,9 +55,10 @@
   color: #333; 
 }
 
+
 @media (width<830px){
   .admin{
-      align-items: center;
+      
       justify-content: center;
   }
   .admin .chart-comps{
