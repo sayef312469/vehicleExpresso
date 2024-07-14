@@ -272,7 +272,7 @@ const getVehicle = async (req, res) => {
   const { vehicleno } = req.body
   try {
     const getVtype = await runQuery(
-      `select v.*, u.name from vehicle_info v join users u on v.vehicle_owner = u.userid where vehicleno=upper(:vehicleno)`,
+      `select v.*, u.name, u.email from vehicle_info v join users u on v.vehicle_owner = u.userid where vehicleno=upper(:vehicleno)`,
       {
         vehicleno,
       },
@@ -317,7 +317,7 @@ const getExitData = async (req, res) => {
   const { garageid, vehicleno } = req.body
   try {
     const data = await runQuery(
-      `select u.name, v.vehicletype, h.servicetype, initcap(to_char(st_date, 'dd mon,yyyy hh24:mi')) st_time, initcap(to_char(CURRENT_TIMESTAMP, 'dd mon,yyyy hh24:mi')) end_time, case h.servicetype when 'SHORT' then costshort else costlong end PER_UNIT_COST,
+      `select u.name, u.email, v.vehicletype, h.servicetype, initcap(to_char(st_date, 'dd mon,yyyy hh24:mi')) st_time, initcap(to_char(CURRENT_TIMESTAMP, 'dd mon,yyyy hh24:mi')) end_time, case h.servicetype when 'SHORT' then costshort else costlong end PER_UNIT_COST,
       round((extract(day from (CURRENT_TIMESTAMP - st_date)) * 24 +
       extract(hour from (CURRENT_TIMESTAMP - st_date)) +
       (extract(minute from (CURRENT_TIMESTAMP - st_date)) / 60)) * case h.servicetype when 'SHORT' then costshort else costlong end) - h.payment_amount COST, h.payment_amount PAID
