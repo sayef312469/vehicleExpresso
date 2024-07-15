@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
+import socket from '../services/socket'
 
 const DuePark = ({ due }) => {
   const [error, setError] = useState(null)
@@ -22,6 +23,9 @@ const DuePark = ({ due }) => {
     const data = await response.json()
     if (response.ok) {
       setMsg(data.msg)
+
+      socket.emit('setNotify', { room: data.EMAIL })
+
       setError(null)
     } else {
       setMsg(null)

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import DuePark from '../components/DuePark'
 import { useParksContext } from '../hooks/useParksContext'
+import socket from '../services/socket'
 
 const GarageAdminPay = () => {
   const [gid, setGid] = useState(null)
@@ -114,6 +115,9 @@ const GarageAdminPay = () => {
     const data = await response.json()
     if (response.ok) {
       setMsg(data.msg)
+
+      socket.emit('setNotify', { room: data.EMAIL })
+
       setGivenAmount(givenAmount + Number(paymentAmount))
       setError(null)
     } else {
@@ -158,7 +162,7 @@ const GarageAdminPay = () => {
         </div>
         {totalAmount != null && (
           <div
-            className="historyInfo"
+            className="qHistoryInfo"
             title="Park have to pay"
           >
             <div className="key">
@@ -171,7 +175,7 @@ const GarageAdminPay = () => {
 
         {givenAmount != null && (
           <div
-            className="historyInfo"
+            className="qHistoryInfo"
             title="Park have to pay"
           >
             <div className="key">
@@ -207,7 +211,7 @@ const GarageAdminPay = () => {
       </form>
 
       <div className="histories">
-        <h4>Your Garage Histories</h4>
+        <h4>Payment Histories</h4>
         {dueParks &&
           dueParks.map((due) => (
             <DuePark

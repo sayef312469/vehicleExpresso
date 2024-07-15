@@ -28,6 +28,11 @@ const NavbarTop = () => {
       console.log('notify', data)
       dispatch({ type: 'UNREAD', payload: totalUnreadNotice + 1 })
     })
+
+    return () => {
+      socket.emit('leaveRoom', user.email)
+      socket.off('getNotify')
+    }
   }, [user, dispatch, totalUnreadNotice])
 
   useEffect(() => {

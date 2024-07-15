@@ -341,6 +341,9 @@ const getExitData = async (req, res) => {
 
 const exitVehicle = async (req, res) => {
   const { vehicleno, garageid, servicetype, total_amount, paid } = req.body
+  if (!vehicleno || !garageid) {
+    return res.status(400).json({ error: 'All fields must be filled' })
+  }
   try {
     await runQuery(
       `begin exitvehicle(upper(:vehicleno), :garageid, :servicetype, :total_amount, :paid); end;`,
@@ -539,7 +542,16 @@ const garageAdminPay = async (req, res) => {
         payDay,
       },
     )
-      .then(() => res.status(200).json({ msg: 'Payment Success' }))
+      .then(async () => {
+        const us = await runQuery(
+          `select u.email from users u join garage g on u.userid = g.ownerid where g.garageid = :garageid`,
+          {
+            garageid,
+          },
+        )
+
+        res.status(200).json({ msg: 'Payment Successfull', EMAIL: us[0].EMAIL })
+      })
       .catch(() => res.status(400).json({ error: 'Payment Unsuccessfull' }))
   } catch (e) {
     console.log(e)
@@ -554,7 +566,7 @@ const getNotice = async (req, res) => {
       `select NOTICEID, USERID, MESSAGE, to_char(NOTICE_TIME, 'dd Mon, yyyy hh24:mi') NOTICE_TIME
       from notice
       where userid = :userid
-      order by NOTICE_TIME asc
+      order by NOTICEID desc
       offset :offset rows fetch next 10 rows only`,
       {
         userid,
@@ -638,8 +650,15 @@ const notifyParkForDue = async (req, res) => {
       due,
       da,
     })
-      .then(() => {
-        res.status(200).json({ msg: 'Notified' })
+      .then(async () => {
+        const us = await runQuery(
+          `select u.email from users u join garage g on u.userid = g.ownerid where g.garageid = :garageid`,
+          {
+            garageid,
+          },
+        )
+
+        res.status(200).json({ msg: 'Notified', EMAIL: us[0].EMAIL })
       })
       .catch((e) => {
         console.log(e)

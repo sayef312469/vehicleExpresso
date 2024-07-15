@@ -39,6 +39,16 @@ io.on('connection', (socket) => {
     console.log('set notify', data.room)
     socket.to(data.room).emit('getNotify', 1)
   })
+
+  socket.on('leaveRoom', (room) => {
+    socket.leave(room)
+    console.log(`${socket.id} left room ${room}`)
+    socket.to(room).emit('message', `User ${socket.id} left room ${room}`)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected:', socket.id)
+  })
 })
 
 app.use('/api/parking', parkingRoute)
