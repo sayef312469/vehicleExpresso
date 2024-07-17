@@ -3,6 +3,7 @@ import 'jspdf-autotable'
 import React, { useEffect, useState } from 'react'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useParksContext } from '../hooks/useParksContext'
+import socket from '../services/socket'
 
 const VehicleEntryExit = () => {
   const { user } = useAuthContext()
@@ -16,6 +17,7 @@ const VehicleEntryExit = () => {
   const [stype, setStype] = useState(null)
   const [error, setError] = useState(null)
   const [msg, setMsg] = useState(null)
+  const [entryUserEmail, setEntryUserEmail] = useState('')
   const [entryAmount, setEntryAmount] = useState(0)
   const [gidExit, setGidExit] = useState(null)
   const [vehicleNoExit, setVehicleNoExit] = useState('')
@@ -31,6 +33,7 @@ const VehicleEntryExit = () => {
       if (!user) {
         return
       }
+
       const response = await fetch(
         'http://localhost:4000/api/parking/searchparksusingemail',
         {
@@ -111,6 +114,7 @@ const VehicleEntryExit = () => {
             ', Owner: ' +
             data.NAME,
         )
+        setEntryUserEmail(data.EMAIL)
         setVehicleType(data.VEHICLETYPE)
       } else {
         setError(data.error)
@@ -176,6 +180,9 @@ const VehicleEntryExit = () => {
     console.log(data)
     if (response.ok) {
       setMsg('Vehicle entry done')
+
+      socket.emit('setNotify', { room: entryUserEmail })
+
       setError(null)
       if (stype === 'SHORT') {
         setLShort(lshort - 1)
@@ -211,6 +218,8 @@ const VehicleEntryExit = () => {
     if (response.ok) {
       setErrorExit(null)
       setMsgExit('Exit Success')
+
+      socket.emit('setNotify', { room: exitData.EMAIL })
 
       if (exitData.SERVICETYPE === 'SHORT') {
         setLShort(lshort + 1)
