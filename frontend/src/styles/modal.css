@@ -13,19 +13,73 @@
 
 .maintenanceinfo-modal .Title{
     display: flex;
+    align-items: center;
     margin: 0 20%;
     justify-content: space-between;
+}
+
+.Title h3{
+    text-align: center;
+    width:30%;
+    font-size: 100%;
+    padding: 8px;
 }
 
 .modal{
     padding: 35px;
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     border-radius: 10px;
     background-color: azure;
     width: 28em;
     height: 30em;
     text-align: center;
+}
+
+.delwrn-modal{
+    padding: 35px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 15px;
+    background-color: azure;
+    border: 1px solid #ccc;
+    width: 28em;
+    height: 15em;
+    text-align: center;
+}
+
+.delwrn-modal .buttons{
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.delwrn-modal .buttons button{
+    padding: 5px;
+    border-radius: 10px;
+    width: 40%;
+    border: 1px solid #ccc;
+}
+.delwrn-modal .buttons .del{
+    background-color: crimson;
+    
+}
+
+.delwrn-modal .buttons .cncl{
+    background-color: #1aac83;
+}   
+
+
+
+.delwrn-modal h3{
+    width: 80%;
+    background-color: cadetblue;
 }
 
 .maintenanceinfo-modal{
@@ -192,13 +246,18 @@ h3{
     font-size: 16px;
 }
 
+.delwrn-modal .buttons button:hover{
+    scale: 1.1;
+}
+
 /* .click:hover{
     background-color: rgb(16, 139, 105);
     scale: 1.1;
   } */
 
-@media (width<830px){
-    h3{
+@media (width<900px){
+    .Title h3{
         font-size: small;
+        width: 100%;
     }
 }

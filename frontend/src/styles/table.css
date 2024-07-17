@@ -1,26 +1,70 @@
 .shortrecord,.longrecord{
-    box-shadow: 0 2px 5px 2px ;
-    border: 1px solid #282626;
+    box-shadow: 0 4px 10px 2px;
+    border: 1px solid #444;
     border-radius: 9px;
-    overflow: auto;
-    object-fit: contain;
     width:90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
   
+.filter-bar{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 90%;
+    height: 50px;
+    border-radius: 20px 0;
+    padding: 2px;
+}
+
+.search-input.active{
+   visibility: visible;
+   width: 70%;
+   height: 80%;
+   border-radius: 15px 0;
+   color: white;
+   margin: 5px;
+   background-color: #3a3c3c;
+}
+.search-input{
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.filter-option.active{
+  visibility: visible;
+  padding: 5px;
+  border: 1px solid #272424;
+  border-radius: 15px;
+  width:18%;
+  margin: 5px;
+  height: 75%;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+.filter-option{
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
 .table{
+    display: block;
     table-layout: auto;
     border-collapse: collapse;
-    box-shadow: 0px 10px 10px #ccc;
-    border-radius: 20px;
+    overflow: hidden;
+    border-radius: 15px;
     white-space: nowrap;
-    width: 89%;
+    width: 95%;
     overflow-x: auto;
 }
 
 
 .table thead{
     width:100%;
-    background-color: #e17115;
+    background-color:cadetblue;
     color: #222;
 }
 
@@ -32,7 +76,7 @@
 
 tbody .rows{
     border-top: 1.5px solid #353333;
-    overflow: hidden;
+    overflow: auto;
     text-overflow: ellipsis;
 }
 
@@ -40,8 +84,29 @@ tbody .rows:hover{
     background-color: #c4c2c2;
 }
 
+.page-buttons{
+    display: flex;
+    width: 20%;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.arrow-button{
+    width: 35px;
+    height: 35px;
+    color: green;
+    cursor: pointer;
+    
+}
+.arrow-button.disable{
+    width: 35px;
+    height: 35px;
+    color: crimson;
+    pointer-events: none;
+}
+
 .delete-btn{
-    color: #e10805;
+    color: crimson;
     margin-right: 10px;
     cursor: pointer;
 }
@@ -51,21 +116,27 @@ tbody .rows:hover{
     cursor: pointer;
 }
 
-h2{
-    text-align:center ;
-}
 .des-btn{
     color: #119639;
     margin-left: 10px;
     cursor: pointer;
 }
 
-.search-btn{
-    color: #260d94;
+.filter-btn{
+    color: cadetblue;
     margin-left: 10px;
     cursor: pointer;
+    margin-right: 10px;
+    min-width: 30px;
+    min-height: 30px;
 }
-
-.delete-btn:hover,.edit-btn:hover,.des-btn:hover,.search-btn:hover{
+.shortrecord h3,.longrecord h3{
+    background-color: cadetblue;
+    padding: 5px;
+    margin-top: 10px;
+    border-radius: 8px;
+    width: 40%;
+}
+.arrow-button:hover,.delete-btn:hover,.edit-btn:hover,.des-btn:hover,.filter-btn:hover{
     scale:1.2;
 }

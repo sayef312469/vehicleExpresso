@@ -151,10 +151,6 @@ const CareUser = () => {
                   body: JSON.stringify({
                     vehicleno: no,
                     vehicleowner: user.id,
-                    // vehicletype: type,
-                    // vehiclemodel: model,
-                    // vehiclecompany: company,
-                    // vehiclecolor: color,
                     date: date,
                     repairtype: repairtype,
                     washtype: washtype
@@ -231,7 +227,7 @@ const CareUser = () => {
         </div>
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -340,11 +336,10 @@ const CareUser = () => {
         </form>
         )}
         <div className="payment">
-        <div>
         <div className="title">
             <span>History</span>
-          </div>
-          <table className="history">
+        </div>
+          <table className="history-table">
             <thead>
               <th>Vehicle No.</th>
               <div className="vr"></div>
@@ -387,8 +382,6 @@ const CareUser = () => {
               })}
             </tbody>
           </table>
-
-          </div>
         </div>
     </div>
   );

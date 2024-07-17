@@ -2,10 +2,11 @@
   width: 60%;
   height: 450px;
   border-radius: 15px;
-  border: 1px solid #ccc;
+  box-shadow: 0 4px 10px 2px;
+  border: 1px solid #444;
   margin-right: 40px;
   padding: 40px 10px;
-  background-color:azure;
+  background-color: transparent;
 }
 
 .bar{
@@ -31,12 +32,13 @@
   width:  40%;
   height: 450px;
   border-radius: 15px;
-  border: 1px solid #ccc;
-  background-color:azure;
+  box-shadow: 0 4px 10px 2px;
+  border: 1px solid #444;
+  background-color: transparent;
   padding: 45px 10px;
 }
 .piechart-container span, .linechart-container span{
-  color: orange;
+  color: cadetblue;
 }
 
 .select{

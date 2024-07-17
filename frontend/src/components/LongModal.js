@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState } from "react"
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
+import { useAuthContext } from '../hooks/useAuthContext'
 
 const LongModal = ({row,Update,closeModal}) => {
-
+    const { user } = useAuthContext();
     const [update,setUpdate]=Update;
     const [mechanic,setMechanic]=useState(row.MECHANIC_NAME);
     const [insExpdate,setInsExpdate]=useState(row.INSURANCE_EXP_DATE);
@@ -33,14 +36,44 @@ const LongModal = ({row,Update,closeModal}) => {
             setErr(err.message);
         }
     }
+    const HandleGenerateBill = (e) => {
+        e.preventDefault()
+        const doc = new jsPDF()
+        const columns = ['Maintenance Type', 'Start Date', 'Final date']
+        const rows = [
+          [`${row.MAINTENANCE_CATEGORY}`, `${row.SERVICE_DATE}`, `${row.FINAL_DATE}`],
+        ]
+    
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(12)
+        doc.text(`LONGTERM CARE BILL`, 75, 20)
+        doc.text(`Owner Name:${user.name.toUpperCase()}`, 20, 30)
+        doc.text(`E-mail: ${user.email}`, 20, 40)
+        doc.text(`Vehicle no: ${row.VEHICLENO}`, 20, 50)
+    
+        doc.setFont('helvetica', 'normal')
+        doc.setFontSize(10)
+        doc.autoTable({
+          startY: 70,
+          head: [columns],
+          body: rows,
+          headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+          bodyStyles: { textColor: 50 },
+          alternateRowStyles: { fillColor: [245, 245, 245] },
+          columnStyles: { 2: { halign: 'right' } },
+          theme: 'grid',
+        })
+        doc.text(`Your Total Cost: ${row.SERVICING_COST} Tk`, 14, 130)
+        doc.save(`${row.VEHICLENO}.pdf`)
+      }
 
     const HandleSubmit = (e)=>{
         e.preventDefault();
         updateRow();
         closeModal();
     }
-    return ( <div className="modal-container"
-    onClick={(e)=>{if(e.target.className==='modal-container')closeModal();}}>
+    return ( 
+    <div className="modal-container"onClick={(e)=>{if(e.target.className==='modal-container')closeModal();}}>
         <div className="modal">
             <h3>Edit Record</h3>
             <hr/>
@@ -72,7 +105,7 @@ const LongModal = ({row,Update,closeModal}) => {
                         onChange={(e)=>{setOdometerRead(e.target.value)}}/>
                     </div>
                     <div>
-                        <button onClick={HandleSubmit}>Generate</button>
+                        <button onClick={HandleGenerateBill}>Generate</button>
                         <button onClick={HandleSubmit}>Submit</button>
                     </div>
                 </fieldset>

@@ -8,7 +8,6 @@ const pieData = async(req, res)=>{
         let count =[];
         let d=[];
         const {year,month} = req.body;
-        console.log(req.body);
         if(!month || month=="ALL"){
             d[0] = await runQuery(
             `select count(c.SERVICE_ID) AS "Only Basic"
@@ -144,7 +143,6 @@ const shortUser = async(req,res)=>{
             repairtype,
             washtype}=req.body;
             vehicleno = vehicleno.toUpperCase();
-            console.log(vehicleno);
         const data=await runQueryOutBinds(`insert into care_transac(MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
         values('Not Selected','shortterm',0)
         returning SERVICE_ID INTO :service_id`,
@@ -192,9 +190,7 @@ const longUser = async(req,res)=>{
             ins_prov,
             ins_expdate,
             odometer}=req.body;
-        //vehicleno = vehicleno.toUpperCase();
 
-        console.log(vehicleno);
         const exists=await runQuery(
         `select * from vehicle_info 
         where VEHICLENO = :vehicleno AND VEHICLE_OWNER = :vehicleowner`,{vehicleno,vehicleowner});
@@ -202,20 +198,7 @@ const longUser = async(req,res)=>{
             res.status(200).json("No vehicle Found!");
             return;
         }
-        // if(exists.length===0){
-        //     await runQuery(`insert into vehicle_info (VEHICLENO, VEHICLE_OWNER, VEHICLETYPE, VEHICLE_MODEL, VEHICLE_COMPANY, VEHICLE_COLOR)
-        //     values(:vehicleno,:vehicleowner,:vehicletype,:vehiclemodel,:vehiclecompany,:vehiclecolor)`,
-        //     {   vehicleno,
-        //         vehicleowner,
-        //         vehicletype,
-        //         vehiclemodel,
-        //         vehiclecompany,
-        //         vehiclecolor,
-        //     });
-        //     console.log('Successful Insertion in vehicle info!!');
-        // }else{
-        //     console.log('Already exists!!');
-        // }
+
         console.log(finaldate);
         const data=await runQueryOutBinds(`insert into care_transac (MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
         values('Not Selected','longterm',0)
@@ -253,16 +236,6 @@ const longUser = async(req,res)=>{
         });
         console.log('Successful Insertion in takes_care!!');
 
-        // await runQuery(`INSERT INTO Maintenance_info(MAINTENANCE_ID, BASIC_DESC,PREMIUM_DESC,FLAG,LAST_SERVICE_DATE,NEXT_SERVICE_DATE)
-        // VALUES (:serviceid,"Basic","Premium","flag" TO_DATE(:service_date,'yyyy-mm-dd'),TO_DATE(:service_date,'yyyy-mm-dd'))`,
-        // {   
-        //     serviceid,
-        //     service_date,
-        //     service_date
-        // });
-        // console.log('Successful Insertion in Maintenance_info!!');
-
-        //res.status(200).json("Inserted in Longterm");
         res.status(200).json({"service_id": data.service_id[0]});
 
     }catch(err){
@@ -282,7 +255,6 @@ const shortTableFetch = async(req,res)=>{
         tc.service_id=ct.service_id and
         ct.service_id=sc.shortterm_id
         order by completed,service_id`,{});
-        console.log(data);
         res.status(200).json({"table": data});
     }catch(err){
         console.error(err);
@@ -293,13 +265,14 @@ const shortTableFetch = async(req,res)=>{
 const longTableFetch =async(req,res)=>{
     try{
 
-        const data = await runQuery(`select u.name,ct.service_id,vi.vehicleno,to_char(tc.service_date,'yyyy-mm-dd') as service_date,to_char(lc.final_date,'yyyy-mm-dd') as final_date,
+        const data = await runQuery(`select distinct u.name,ct.service_id,vi.vehicleno,to_char(tc.service_date,'yyyy-mm-dd') as service_date,to_char(lc.final_date,'yyyy-mm-dd') as final_date,
         ct.mechanic_name,lc.odometer_reading,lc.maintenance_category,lc.insurance_provider,to_char(lc.insurance_exp_date,'yyyy-mm-dd') as insurance_exp_date,ct.servicing_cost
-        from users u,vehicle_info vi,takes_care tc,care_transac ct,longtermcare lc
+        from users u,vehicle_info vi,takes_care tc,care_transac ct,longtermcare lc,maintenance_info mi
         where u.userid=vi.vehicle_owner and
         vi.vehicleno=tc.vehicleno and
         tc.service_id=ct.service_id and
-        ct.service_id=lc.longterm_id
+        ct.service_id=lc.longterm_id and
+        ct.service_id=mi.maintenance_id 
         order by ct.service_id`,{});
 
         res.status(200).json({"table": data});
@@ -312,7 +285,6 @@ const longTableFetch =async(req,res)=>{
 const maintenanceinfoFetch =async(req,res)=>{
     try{
         const {service_id}=req.body;
-        console.log(service_id);
         const data = await runQuery(`select basic_desc,premium_desc,flag,to_char(last_service_date,'yyyy-mm-dd') as last_service_date,to_char(next_service_date,'yyyy-mm-dd') as next_service_date
         from maintenance_info where
         maintenance_id=:service_id
@@ -468,7 +440,7 @@ const updateMaintInfo=async(req,res)=>{
       from care_transac where service_id=:service_id`,{service_id});
 
       let updatedTotal=Number(data[0].SERVICING_COST)+totalcost;
-      //console.log(data[0].SERVICING_COST,totalcost,updatedTotal);
+      
       await runQuery(`update care_transac
       set servicing_cost=:updatedTotal where service_id=:service_id`,{updatedTotal,service_id});
 
@@ -477,6 +449,27 @@ const updateMaintInfo=async(req,res)=>{
     console.error(err);
     res.status(500).send('Failed to update Maintenance Info');
   }
+}
+
+const deleteMaintInfo =async(req,res)=>{
+    try{
+        const {service_id,
+        record}=req.body;
+        console.log(service_id,record);
+        if(record==='ShortTerm'){
+            console.log('done');
+            await runQuery(`delete from shorttermcare
+            where shortterm_id=:service_id`,{service_id});
+        }
+        else{
+            await runQuery(`delete from maintenance_info
+            where maintenance_id=:service_id`,{service_id});
+        }
+        res.status(200).json(`${service_id} deleted successfully!!`);
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Failed to delete Maintenance Info');
+    }
 }
 
 module.exports={
@@ -490,7 +483,8 @@ module.exports={
     updateShortTable,
     updateLongTable,
     availVehicle,
-    updateMaintInfo
+    updateMaintInfo,
+    deleteMaintInfo
 }
 
 
