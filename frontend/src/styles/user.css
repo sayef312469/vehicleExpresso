@@ -198,6 +198,18 @@ span{
   background-color: transparent;
 }
 
+.form-error{
+  background-color: #f8d7da;
+  border: 1px solid #df4759;
+  width: 50%;
+  margin: auto;
+  margin-top: 50px;
+  text-align: center;
+  color: #df4759;
+  border-radius: 5px;
+  padding: 5px;
+}
+
 @media (width<830px){
   .user .popup{
     width: 460px;

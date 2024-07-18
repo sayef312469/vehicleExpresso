@@ -32,6 +32,8 @@ const CareUser = () => {
     const [odometer,setOdometer]=useState('');
     const [shortBill,setShortBill]=useState([{}]);
     const [longBill,setLongBill]=useState([{}]);
+    const [formerr,setFormerr] = useState(false);
+    const [errname,setErrname] = useState('');
 
     useEffect(()=>{
       const getVehicleno = async()=>{
@@ -73,6 +75,7 @@ const CareUser = () => {
       setInsExp("");
       setInsProv("");
       setOdometer("");
+      setFormerr(false);
     }
 
     const promise =(id)=>{
@@ -103,10 +106,12 @@ const CareUser = () => {
     const HandleLongExit = ()=>{
       setVisible1(!visible1);
       setExit1(!exit1);
+      clear();
     }
     const HandleShortExit = ()=>{
       setVisible2(!visible2);
       setExit2(!exit2);
+      clear();
     }
 
 
@@ -134,7 +139,6 @@ const CareUser = () => {
           const jsonData = await response.json();
           console.log(jsonData);
           promise(jsonData.service_id);
-          clear();
         }catch(err){
           console.error('Error fetching data : ',err);
           warning(`Failure! Try again!`);
@@ -160,7 +164,6 @@ const CareUser = () => {
           if (!response.ok) throw new Error('Failed to fetch data');
           const jsonData = await response.json();
           promise(jsonData.service_id);
-          clear();
         }catch(err){
           console.error('Error fetching data : ',err);
           warning(`Failure! Try again!`);
@@ -171,18 +174,23 @@ const CareUser = () => {
       const HandleLongSubmit = (e)=>{
         e.preventDefault();
         if(!premium && !basic){
-          console.log('Select a category!');
+          setErrname('Select a category!');
+          setFormerr(true);
         }
         else if(!date){
-          console.log('Select the start date!');
+          setErrname('Select the start date!');
+          setFormerr(true);
         }
         else if(!odometer){
-          console.log('Odometer read is missing!');
+          setErrname('Odometer read is missing!');
+          setFormerr(true);
         }
         else if(!finaldate){
-          console.log('Select the final date!');
+          setErrname('Select the final date!');
+          setFormerr(true);
         }
         else{
+          setFormerr(false);
           insertLongData();
           HandleLongExit();
         }
@@ -191,20 +199,25 @@ const CareUser = () => {
       const HandleShortSubmit = (e)=>{
         e.preventDefault();
         if(!date){
-          console.log('Select a date!');
+          setErrname('Select a date!');
+          setFormerr(true);
         }
         else if(!repair && !wash){
-          console.log('Choose At least one service!');
+          setErrname('Choose At least one service!');
+          setFormerr(true);
         }
         else if(repair && !repairtype){
-          console.log('Describe the repair type!');
+          setErrname('Describe the repair type!');
+          setFormerr(true);
         }
         else if(wash && !washtype){
-          console.log('Describe the wash type!');
+          setErrname('Describe the wash type!');
+          setFormerr(true);
         }
         else{
-          HandleShortExit();
+          setFormerr(false);
           insertShortData();
+          HandleShortExit();
         }
       }
 
@@ -293,6 +306,7 @@ const CareUser = () => {
                 <input type="date" id="final-date" name="final-date" onChange={(e)=>{setFinaldate(e.target.value)}} value={finaldate}/>
               </div>
               <button type="submit" className="submit" onClick={HandleLongSubmit}>Submit</button>
+              {formerr && <div class='form-error'>{errname}</div>}
             </fieldset>
           </form>
         )}
@@ -332,6 +346,7 @@ const CareUser = () => {
               <textarea id="washtype" name="washtype" className="description" onChange={(e)=>{setWashtype(e.target.value)}} value={washtype}></textarea>
             </div>
             <button type="submit" className="submit" onClick={HandleShortSubmit}>Submit</button>
+            {formerr && <div class='form-error'>{errname}</div>}
           </fieldset>
         </form>
         )}
@@ -389,24 +404,3 @@ const CareUser = () => {
 
 export default CareUser;
 
-
-
-
-
-
-/* <div className="block">
-              <label htmlFor="vehicletype">Vehicle Type:</label>
-              <input type="text" id="vehicletype" name="vehicletype" onChange={(e)=>{setType(e.target.value)}} value={type}/>
-            </div>
-            <div className="block">
-            <label htmlFor="vehiclemodel">Vehicle Model:</label>
-            <input type="text" id="vehiclemodel" name="vehiclemodel" onChange={(e)=>{setModel(e.target.value)}} value={model}/>
-            </div>
-            <div className="block">
-              <label htmlFor="vehiclecompany">Vehicle Company:</label>
-              <input type="text" id="vehiclecompany" name="vehiclecompany" onChange={(e)=>{setCompany(e.target.value)}} value={company}/>
-            </div>
-            <div className="block">
-              <label htmlFor="vehiclecolor">Vehicle Color:</label>
-              <input type="text" id="vehiclecolor" name="vehiclecolor" onChange={(e)=>{setColor(e.target.value)}} value={color}/>
-            </div> */

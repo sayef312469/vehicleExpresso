@@ -21,7 +21,7 @@ const LongRecord = () => {
     const [filterTerm,setFilterTerm] = useState('');
     const [filterby,setFilterby] = useState(rowHead[0]);
     const [delWrnOpen,setDelWrnOpen] = useState(false);
-    const itemsperPage=5;
+    const itemsperPage=15;
     const [lowindx,setLowindx] = useState(0);
     const [highindx,setHighindx] = useState(itemsperPage);
     const [currentRows,setCurrentRows] = useState([]);
