@@ -369,30 +369,30 @@ const CareUser = () => {
             <tbody>
               {!error && shortBill?.map((bill,key)=>{
                 return( <tr key={key} className="rows">
-                  <td>{bill.VEHICLENO}</td>
+                  <td>{bill?.VEHICLENO}</td>
                   <div className="vr"></div>
-                  <td>{bill.SERVICE_TYPE}</td>
+                  <td>{bill?.SERVICE_TYPE}</td>
                   <div className="vr"></div>
-                  <td>{bill.REPAIR?bill.REPAIR.TYPE:'N/A'} {bill.WASH?bill.WASH.TYPE:'N/A'}</td>
+                  <td>{bill?.REPAIR?bill.REPAIR.TYPE:''} {bill.WASH?bill.WASH.TYPE:''}</td>
                   <div className="vr"></div>
-                  <td>{bill.SERVICE_DATE}</td>
+                  <td>{bill?.SERVICE_DATE}</td>
                   <div className="vr"></div>
-                  <td>{bill.SERVICING_COST}</td>
+                  <td>{bill?.SERVICING_COST}</td>
                 </tr>);
               })}
             </tbody>
             <tbody>
               {!error && longBill?.map((bill,key)=>{
                 return( <tr key={key} className="rows">
-                  <td>{bill.VEHICLENO}</td>
+                  <td>{bill?.VEHICLENO}</td>
                   <div className="vr"></div>
-                  <td>{bill.SERVICE_TYPE}</td>
+                  <td>{bill?.SERVICE_TYPE}</td>
                   <div className="vr"></div>
-                  <td>{bill.MAINTENANCE_CATEGORY}</td>
+                  <td>{bill?.MAINTENANCE_CATEGORY}</td>
                   <div className="vr"></div>
-                  <td>{bill.SERVICE_DATE}</td>
+                  <td>{bill?.SERVICE_DATE}</td>
                   <div className="vr"></div>
-                  <td>{bill.SERVICING_COST}</td>
+                  <td>{bill?.SERVICING_COST}</td>
                 </tr>);
               })}
             </tbody>
