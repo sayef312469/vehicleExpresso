@@ -20,7 +20,7 @@ const Modal = ({ row, Update, closeModal }) => {
 
   const updateData = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/care/update`, {
+      const response = await fetch(`http://localhost:4000/api/care/update-short`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,14 +28,14 @@ const Modal = ({ row, Update, closeModal }) => {
         body: JSON.stringify({
           service_id: row.SERVICE_ID,
           mechanic: mechanic,
-          repairCost: repairCost,
-          washCost: washCost,
-          labourHour: laborHour,
+          repairCost: Number(repairCost),
+          washCost: Number(washCost),
+          labourHour: Number(laborHour),
           laborCost: Number(laborCost),
           status: status,
         }),
       })
-      if (!response.ok) throw new Error('Error to update data')
+      if (!response.ok) throw new Error('Error to update short-table')
       const jsonData = await response.json()
       setUpdate(jsonData)
       console.log(jsonData)
@@ -44,6 +44,7 @@ const Modal = ({ row, Update, closeModal }) => {
       setErr(err.message)
     }
   }
+
   const HandleSubmit = () => {
     closeModal()
     updateData()
@@ -96,7 +97,9 @@ const Modal = ({ row, Update, closeModal }) => {
       <div className="modal">
         <form className="form-group">
           <fieldset>
-            <div>
+            <h3>Edit Record</h3>
+            <hr/>
+            <div className>
               <label htmlFor="mechanic">Mechanic:</label>
               <input
                 name="mechanic"

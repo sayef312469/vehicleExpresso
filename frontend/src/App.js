@@ -25,13 +25,16 @@ import VehicleEntryExit from './pages/VehicleEntryExit'
 import Wavy from './pages/Wavy'
 import RecordHistory from './pages/record'
 import Profile from './pages/userProfile'
+import ShortRecord from './components/ShortRecord'
+import LongRecord from './components/LongRecord'
+
 
 function App() {
   const { user } = useAuthContext()
   console.log('login user: ', user)
 
   return (
-    <div className="App">
+    <div>
       <BrowserRouter>
         <NavbarTop />
         <Wavy />
@@ -69,6 +72,14 @@ function App() {
               <Route
                 path="/vehiclecare/admin"
                 element={user ? <CareAdmin /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/vehiclecare/admin/short-record"
+                element={user ? <ShortRecord /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/vehiclecare/admin/long-record"
+                element={user ? <LongRecord /> : <Navigate to="/login" />}
               />
               <Route
                 path="/vehiclecare/user"

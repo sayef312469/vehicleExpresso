@@ -1,5 +1,12 @@
-.admin h3,.user h3{
-  margin-top: 0;
+.admin{
+  display: flex;
+  flex-direction: column;
+  padding: 0 40px;
+  width: 100%;
+  min-height: 40vw;
+}
+.admin h3,.user h3,.admin h2{
+  margin-top: 10px;
   padding-left: 40px;
 }
 
@@ -24,10 +31,21 @@
 
 .admin h2,.admin h4,.admin h3{
   text-align: center;
-  color:#e17542;
+  color: cadetblue;
   font-weight: bold;
 }
+.admin button{
+  background-color:  azure;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 30px 30px;
+  margin: 50px;
+}
 
+.admin button:hover{
+  background-color: #ffebbd;
+  scale: 1.1;
+}
 .admin .chart-comps{
   display: flex;
   justify-content: space-between;

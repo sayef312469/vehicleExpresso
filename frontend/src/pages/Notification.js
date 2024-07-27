@@ -7,7 +7,7 @@ import { useNotificationContext } from '../hooks/useNotificationContext'
 const UserParkHistory = () => {
   const { user } = useAuthContext()
   const [notices, setNotices] = useState(null)
-  const { dispatch } = useNotificationContext()
+  const { totalUnreadNotice, dispatch } = useNotificationContext()
   const [offset, setOffset] = useState(0)
 
   const handleOffsetR = (e) => {
@@ -48,7 +48,7 @@ const UserParkHistory = () => {
       const data = await response.json()
       if (response.ok) {
         setNotices(data)
-      } else{
+      } else {
         setNotices(null)
       }
     }
@@ -67,7 +67,7 @@ const UserParkHistory = () => {
     if (offset === 0) {
       setReadNotice()
     }
-  }, [user, dispatch, offset])
+  }, [user, totalUnreadNotice, dispatch, offset])
   return (
     <div className="userParkHistory">
       <div className="allNotices">

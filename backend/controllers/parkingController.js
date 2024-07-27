@@ -272,7 +272,7 @@ const getVehicle = async (req, res) => {
   const { vehicleno } = req.body
   try {
     const getVtype = await runQuery(
-      `select v.*, u.name from vehicle_info v join users u on v.vehicle_owner = u.userid where vehicleno=upper(:vehicleno)`,
+      `select v.*, u.name, u.email from vehicle_info v join users u on v.vehicle_owner = u.userid where vehicleno=upper(:vehicleno)`,
       {
         vehicleno,
       },
@@ -317,7 +317,7 @@ const getExitData = async (req, res) => {
   const { garageid, vehicleno } = req.body
   try {
     const data = await runQuery(
-      `select u.name, v.vehicletype, h.servicetype, initcap(to_char(st_date, 'dd mon,yyyy hh24:mi')) st_time, initcap(to_char(CURRENT_TIMESTAMP, 'dd mon,yyyy hh24:mi')) end_time, case h.servicetype when 'SHORT' then costshort else costlong end PER_UNIT_COST,
+      `select u.name, u.email, v.vehicletype, h.servicetype, initcap(to_char(st_date, 'dd mon,yyyy hh24:mi')) st_time, initcap(to_char(CURRENT_TIMESTAMP, 'dd mon,yyyy hh24:mi')) end_time, case h.servicetype when 'SHORT' then costshort else costlong end PER_UNIT_COST,
       round((extract(day from (CURRENT_TIMESTAMP - st_date)) * 24 +
       extract(hour from (CURRENT_TIMESTAMP - st_date)) +
       (extract(minute from (CURRENT_TIMESTAMP - st_date)) / 60)) * case h.servicetype when 'SHORT' then costshort else costlong end) - h.payment_amount COST, h.payment_amount PAID
@@ -341,6 +341,9 @@ const getExitData = async (req, res) => {
 
 const exitVehicle = async (req, res) => {
   const { vehicleno, garageid, servicetype, total_amount, paid } = req.body
+  if (!vehicleno || !garageid) {
+    return res.status(400).json({ error: 'All fields must be filled' })
+  }
   try {
     await runQuery(
       `begin exitvehicle(upper(:vehicleno), :garageid, :servicetype, :total_amount, :paid); end;`,
@@ -539,7 +542,16 @@ const garageAdminPay = async (req, res) => {
         payDay,
       },
     )
-      .then(() => res.status(200).json({ msg: 'Payment Success' }))
+      .then(async () => {
+        const us = await runQuery(
+          `select u.email from users u join garage g on u.userid = g.ownerid where g.garageid = :garageid`,
+          {
+            garageid,
+          },
+        )
+
+        res.status(200).json({ msg: 'Payment Successfull', EMAIL: us[0].EMAIL })
+      })
       .catch(() => res.status(400).json({ error: 'Payment Unsuccessfull' }))
   } catch (e) {
     console.log(e)
@@ -554,7 +566,7 @@ const getNotice = async (req, res) => {
       `select NOTICEID, USERID, MESSAGE, to_char(NOTICE_TIME, 'dd Mon, yyyy hh24:mi') NOTICE_TIME
       from notice
       where userid = :userid
-      order by NOTICE_TIME asc
+      order by NOTICEID desc
       offset :offset rows fetch next 10 rows only`,
       {
         userid,
@@ -638,8 +650,15 @@ const notifyParkForDue = async (req, res) => {
       due,
       da,
     })
-      .then(() => {
-        res.status(200).json({ msg: 'Notified' })
+      .then(async () => {
+        const us = await runQuery(
+          `select u.email from users u join garage g on u.userid = g.ownerid where g.garageid = :garageid`,
+          {
+            garageid,
+          },
+        )
+
+        res.status(200).json({ msg: 'Notified', EMAIL: us[0].EMAIL })
       })
       .catch((e) => {
         console.log(e)
