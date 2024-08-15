@@ -159,7 +159,7 @@ const NavbarTop = () => {
                 </NavDropdown.Item>
               )}
 
-              {user && user.name==='admin' && (
+              {user && user.id < 100 && (
                 <NavDropdown.Item
                   as={Link}
                   to={'/vehiclecare/admin'}
