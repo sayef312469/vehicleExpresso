@@ -3,6 +3,7 @@ import '../styles/user.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { FaTimes } from 'react-icons/fa';
 
 
 const CareUser = () => {
@@ -252,7 +253,7 @@ const CareUser = () => {
         />
         {visible1 && !exit1 && (
           <form ref={longtermRef} className="popup">
-            <button className="exit" onClick={HandleLongExit}>X</button>
+            <button className="exit" onClick={HandleLongExit}><FaTimes/></button>
             <fieldset>
             <h5>LONGTERM CARE</h5>
             <hr style={{ border: 'none', height: '2px', background: 'linear-gradient(to right, #000000, #1a1a1a, #333333, #4d4d4d, #666666, #4d4d4d, #333333, #1a1a1a, #000000)', width: '90%', margin: '20px ' }} />
@@ -306,13 +307,13 @@ const CareUser = () => {
                 <input type="date" id="final-date" name="final-date" onChange={(e)=>{setFinaldate(e.target.value)}} value={finaldate}/>
               </div>
               <button type="submit" className="submit" onClick={HandleLongSubmit}>Submit</button>
-              {formerr && <div class='form-error'>{errname}</div>}
+              {formerr && <div className='form-error'>{errname}</div>}
             </fieldset>
           </form>
         )}
         {visible2 && !exit2 && (
           <form ref={shorttermRef} className="popup">
-          <button className="exit" onClick={HandleShortExit}>X</button>
+          <button className="exit" onClick={HandleShortExit}><FaTimes/></button>
           <fieldset>
             <h5>SHORTERM CARE</h5>
             <hr style={{ border: 'none', height: '2px', background: 'linear-gradient(to right, #000000, #1a1a1a, #333333, #4d4d4d, #666666, #4d4d4d, #333333, #1a1a1a, #000000)', width: '90%', margin: '20px ' }} />
@@ -346,7 +347,7 @@ const CareUser = () => {
               <textarea id="washtype" name="washtype" className="description" onChange={(e)=>{setWashtype(e.target.value)}} value={washtype}></textarea>
             </div>
             <button type="submit" className="submit" onClick={HandleShortSubmit}>Submit</button>
-            {formerr && <div class='form-error'>{errname}</div>}
+            {formerr && <div className='form-error'>{errname}</div>}
           </fieldset>
         </form>
         )}

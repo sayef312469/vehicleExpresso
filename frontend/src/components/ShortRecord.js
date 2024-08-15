@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import useFetchTable from '../hooks/useFetchTable';
-import {BsFillTrashFill,BsFillPencilFill,BsFillFilterSquareFill, BsArrow90DegLeft, BsArrowBarLeft, BsArrowLeft, BsArrowRight} from 'react-icons/bs';
+import {BsFillTrashFill,BsFillPencilFill,BsFillFilterSquareFill, BsArrowLeft, BsArrowRight} from 'react-icons/bs';
 import '../styles/table.css';
 import ShortModal from './ShortModal';
 import DelWrnModal from './DelWrnModal';

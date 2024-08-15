@@ -23,15 +23,25 @@
 .user .buttons{
   display: flex;
   justify-content: center;
-  margin-top: 0;
+  align-items: center;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px 2px;
+  border: 1px solid #444;
+  background-color: transparent;
+  padding: 45px 10px;
+  width: 90%;
+  height: 250px;
+  gap: 20%;
+  margin-top: 10px;
 }
 
 .user .buttons button{
   background-color:  cadetblue;
-  border-radius: 10px;
+  border-radius: 10px 0 10px 0;
   cursor: pointer;
   padding: 30px 30px;
   margin: 50px;
+  border: 2px solid #333;
 }
 
 .user .buttons button:hover{
@@ -41,10 +51,10 @@
 
 .user .popup .exit{
   position: absolute;
-  padding:4px 10px;
+  padding:6px 10px;
   border-radius: 13px;
   margin: 3% 91%;
-  background-color: #d64444;
+  background-color: crimson;
   cursor: pointer;
 }
 
@@ -162,16 +172,18 @@ span{
 }
 
 .payment{
-  box-shadow: 0 2px 5px 2px ;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px 2px;
   border: 1px solid #444;
-  border-radius: 9px;
-  width: 40%;
+  background-color: transparent;
+  padding: 45px 10px;
+  width: 90%;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 10px;
 }
 
 .title{
@@ -188,14 +200,14 @@ span{
   width: 95%;
   table-layout: auto;
   white-space: nowrap;
-  border-radius: 20px;
   border-collapse: collapse;
   overflow-x: auto;
+  margin: auto;
 }
 
 .payment .history-table th, .history-table td{
   padding: 0.8rem;
-  background-color: transparent;
+  width: 20%;
 }
 
 .form-error{
