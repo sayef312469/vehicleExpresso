@@ -162,8 +162,7 @@ const Modal = ({ row, Update, closeModal }) => {
                 <option value="YES">Yes</option>
               </select>
             </div>
-            <span style={{ color: 'red' }}>
-              (Submit before generating the updated bill)
+            <span style={{ color: 'crimson' }}>Submit before generating the updated bill
             </span>
             <div>
               <button onClick={HandleGenerateBill}>Generate Bill</button>
