@@ -1,23 +1,33 @@
 .admin{
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 0 40px;
   width: 100%;
   min-height: 40vw;
 }
+hr{
+  margin: 10px auto;
+  width: 90%;
+}
 .header-container{
+  min-width: 400px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 10px;
+  width: 100%;
 }
 .admin h3,.user h3{
+  min-width: 350px;
   padding: 5px;
   width:40%;
   border-radius: 8px;
   background-color: cadetblue;
   text-align: center;
   font-weight: bold;
-  margin-top: 10px;
+  margin: auto;
   word-wrap: break-word;
 }
 
@@ -36,10 +46,10 @@
   border: 1px solid #444;
   background-color: transparent;
   padding: 45px 10px;
-  width: 100%;
-  height: 200px;
+  width: 98%;
+  height: auto;
   gap: 20%;
-  margin: 40px 0;
+  margin-top: 20px;
 }
 
 .admin .button-container button{
@@ -56,6 +66,21 @@
   scale: 1.1;
 }
 .admin .chart-comps{
+  margin-top: 10px;
   display: flex;
-  justify-content: space-between;
+  min-width:98%;
+  justify-content: center;
+  gap: 20px;
+}
+
+@media (width<830px){
+  .admin .button-container{
+    flex-direction: column;
+    gap:20px;
+  }
+  .admin .chart-comps{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 }

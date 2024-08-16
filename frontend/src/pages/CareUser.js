@@ -233,8 +233,10 @@ const CareUser = () => {
           console.log('clicked outside');
         }
       }}>
-        <h3>Book for your desired service now!</h3>
-        <hr style={{ border: 'none', height: '2px', background: 'linear-gradient(to right, #000000, #1a1a1a, #333333, #4d4d4d, #666666, #4d4d4d, #333333, #1a1a1a, #000000)', width: '90%', margin: '20px ' }} />
+        <div className='header-container'>
+          <h3>Book for your desired service now!</h3>
+          <hr/>
+        </div>
         <div className="buttons">
             <button onClick={HandleLongTerm}>Longterm Vehicle care</button>
             <button onClick={HandleShortTerm}>Shorterm Vehicle care</button>
@@ -352,9 +354,9 @@ const CareUser = () => {
         </form>
         )}
         <div className="payment">
-        <div className="title">
-            <span>History</span>
-        </div>
+          <div className="title">
+              <span>History</span>
+          </div>
           <table className="history-table">
             <thead>
               <th>Vehicle No.</th>

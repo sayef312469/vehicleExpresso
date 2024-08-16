@@ -11,8 +11,8 @@ const CareAdmin = () => {
         <div className='admin'>
             <div className='header-container'>
               <h3>Admin DashBoard <br/> (Care & Maintenance)</h3>
+              <hr/>
             </div>
-            <hr/>
             <div className='chart-comps'>
               <LineChart/>
               <DoughnutChart/>

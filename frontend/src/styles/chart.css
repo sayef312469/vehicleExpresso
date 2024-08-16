@@ -1,10 +1,11 @@
 .linechart-container{
-  width: 60%;
+  width: 58%;
   height: 450px;
+  min-width: 350px;
   border-radius: 15px;
   box-shadow: 0 4px 10px 2px;
   border: 1px solid #444;
-  margin-right: 40px;
+  margin: auto;
   padding: 40px 10px;
   background-color: transparent;
 }
@@ -30,12 +31,14 @@
 
 .piechart-container{
   width:  40%;
+  min-width: 350px;
   height: 450px;
   border-radius: 15px;
   box-shadow: 0 4px 10px 2px;
   border: 1px solid #444;
   background-color: transparent;
   padding: 45px 10px;
+  margin: auto;
 }
 .piechart-container span, .linechart-container span{
   color: cadetblue;
@@ -57,28 +60,3 @@
   color: #333; 
 }
 
-
-@media (width<830px){
-  .admin{
-      
-      justify-content: center;
-  }
-  .admin .chart-comps{
-      padding-top: 5em;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-  }
-  .option-container{
-    flex-direction: column;
-  }
-  .linechart-container{
-    overflow: auto;
-    object-fit: contain;
-  }
-  .piechart-container{
-      margin-top: 100px;
-      overflow: auto;
-      object-fit: contain;
-  }
-}
