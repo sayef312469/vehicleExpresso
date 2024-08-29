@@ -6,80 +6,39 @@ import '../styles/table.css';
 import LongModal from './LongModal';
 import MaintenanceInfo from './MaintenanceInfo';
 import DelWrnModal from './DelWrnModal';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 const LongRecord = () => {
-  const rowHead=['ServiceID','OwnerName','VehicleNo','StartDate','FinalDate','MechanicName','OdometerRead','Maint.Category','Ins.Provider','Ins.ExpDate','TotalCost(Tk)'];
+    const itemsperPage=15;
+    const rowHead=['ServiceID','OwnerName','VehicleNo','StartDate','FinalDate','MechanicName','OdometerRead','MaintCategory','InsProvider','InsExpDate','TotalCost'];
     const [modalOpen,setModalOpen]=useState(false);
     const [maintInfoOpen,setMaintInfoOpen]=useState(false);
     const [row,setRow]=useState([]);
     const [update,setUpdate]=useState(null);
-    const {data,error} = useFetchTable("longtable",update);
-    const [rows,setRows] = useState([]);
-    const [cprows,setCprows] = useState([]);
-    const [isFilterActive,setIsFilterActive] = useState(false);
-    const [filterTerm,setFilterTerm] = useState('');
-    const [filterby,setFilterby] = useState(rowHead[0]);
-    const [delWrnOpen,setDelWrnOpen] = useState(false);
-    const itemsperPage=15;
     const [lowindx,setLowindx] = useState(0);
+    const [filterTerm,setFilterTerm] = useState('');
+    const [filterBy,setFilterBy] = useState(rowHead[0]);
     const [highindx,setHighindx] = useState(itemsperPage);
+    const {data,error} = useFetchTable("longtable",
+    update,{
+      lowindx: lowindx, 
+      highindx: highindx,
+      filterby: filterBy,
+      filterterm: filterTerm
+    });
+    const [rows,setRows] = useState([]);
+    const [delWrnOpen,setDelWrnOpen] = useState(false);
     const [currentRows,setCurrentRows] = useState([]);
     const [disnxt,setDisnxt]=useState(false);
     const [disprev,setDisprev]=useState(false);
 
-    useEffect(() => {
-      setRows(data.table);
-      setCprows(data.table);
-    }, [data]);
-
     useEffect(()=>{
-      setLowindx(0);
-      setHighindx(itemsperPage);
-      if(filterTerm!==""){
-        const filteredRows=rows?.filter((row) => {        
-          switch(filterby){
-            case rowHead[0]:
-              return row.SERVICE_ID?.toString().toLowerCase().includes(filterTerm);
-            case rowHead[1]:
-              return row.NAME?.toLowerCase().includes(filterTerm);
-            case rowHead[2]:
-              return row.VEHICLENO?.toLowerCase().includes(filterTerm);
-            case rowHead[3]:
-              return row.SERVICE_DATE?.toLowerCase().includes(filterTerm);
-            case rowHead[4]:
-              return row.FINAL_DATE?.toLowerCase().includes(filterTerm);
-            case rowHead[5]:
-              return row.MECHANIC_NAME?.toLowerCase().includes(filterTerm);
-            case rowHead[6]:
-              return row.ODOMETER_READING?.toString().toLowerCase().includes(filterTerm);
-            case rowHead[7]:
-              return row.MAINTENANCE_CATEGORY?.toLowerCase().includes(filterTerm);
-            case rowHead[8]:
-              return row.INSURANCE_PROVIDER?.toLowerCase().includes(filterTerm);
-            case rowHead[9]:
-              return row.INSURANCE_EXP_DATE?.toLowerCase().includes(filterTerm);
-            case rowHead[10]:
-              return row.SERVICING_COST?.toString().includes(filterTerm);
-          }
-      });
-      setRows(filteredRows)}}
-    ,[filterTerm,filterby]);
+      setCurrentRows(data.table);
+      setDisnxt(highindx>=data?.size?true:false);
+      setDisprev(lowindx<=1?true:false);
+      console.log(data);
+    },[data])
 
-    useEffect(()=>{
-      setCurrentRows(rows?.slice(lowindx,highindx));
-      setDisnxt(highindx>=rows?.length?true:false);
-      setDisprev(lowindx<=0?true:false);
-      console.log(rows);
-    },[lowindx,highindx,rows])
-
-    const HandleFilterActive = (e)=>{
-      setRows(cprows);
-      setFilterTerm(e.target.value.toLowerCase());
-    }
-    const HandleFilterBy = ()=>{
-      setIsFilterActive(!isFilterActive);
-    }
     const HandleDeleteRow = (row)=>{
       setDelWrnOpen(!delWrnOpen);
       setRow(row);
@@ -93,11 +52,11 @@ const LongRecord = () => {
         setRow(row);
     }
     const HandlePrevious=()=>{
-      setHighindx(lowindx);
+      setHighindx(lowindx-1);
       setLowindx(Math.max((lowindx-itemsperPage),0));
     }
     const HandleNext=()=>{
-      setLowindx(highindx);
+      setLowindx(highindx+1);
       setHighindx(Math.min((highindx+itemsperPage),rows?.length));
     }
 
@@ -106,12 +65,21 @@ const LongRecord = () => {
         <h3>Longterm Record (Maintenance Info)</h3>
         <hr style={{ border: 'none', height: '2px', background: 'linear-gradient(to right, #000000, #1a1a1a, #333333, #4d4d4d, #666666, #4d4d4d, #333333, #1a1a1a, #000000)', width: '90%', margin: '20px ' }} />
         <div className='filter-bar'>
-          <BsFillFilterSquareFill className='filter-btn' onClick={()=>HandleFilterBy()}/>
-          <select className={`filter-option ${isFilterActive?'active':''}`} value={filterby} onChange={(e)=>{ setFilterby(e.target.value);
-                                                                                                              setRows(cprows);}}>
+          <BsFillFilterSquareFill className='filter-btn'/>
+          <select className='filter-option' value={filterBy} onChange={(e)=>
+            { 
+              setLowindx(0);
+              setHighindx(itemsperPage);
+              setFilterBy(e.target.value);
+            }}>
             {rowHead.map((head,key)=>{return (<option key={key} value={head}>{head}</option>);})}
           </select>
-          <input className={`search-input ${isFilterActive?'active':''}`} placeholder='Search'onChange={(e)=>HandleFilterActive(e)} />
+          <input className='search-input' placeholder='Search'onChange={(e)=>
+           {
+            setLowindx(0);
+            setHighindx(itemsperPage);
+            setFilterTerm(e.target.value)
+          }} />
         </div>
         <table className='table'>
                 <thead>

@@ -376,7 +376,7 @@ const CareUser = () => {
                   <div className="vr"></div>
                   <td>{bill?.SERVICE_TYPE}</td>
                   <div className="vr"></div>
-                  <td>{bill?.REPAIR?bill.REPAIR.TYPE:''} {bill.WASH?bill.WASH.TYPE:''}</td>
+                  <td>{bill?.REPAIRTYPE?bill.REPAIRTYPE:''} {bill.WASHTYPE?bill.WASHTYPE:''}</td>
                   <div className="vr"></div>
                   <td>{bill?.SERVICE_DATE}</td>
                   <div className="vr"></div>

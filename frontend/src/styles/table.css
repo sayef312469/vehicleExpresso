@@ -14,70 +14,72 @@
     align-items: center;
     justify-content: left;
     width: 90%;
-    height: 50px;
+    height: auto;
     border-radius: 20px 0;
-    padding: 2px;
+    border: 1px solid #333;
+    padding: 10px;
+    margin: 10px 0;
 }
 
-.search-input.active{
+.search-input{
    visibility: visible;
-   width: 70%;
-   height: 80%;
+   width: auto;
+   height: auto;
+   min-width: 65%;
    border-radius: 8px 0;
    color: white;
    margin: 5px;
    background-color: #3a3c3c;
 }
-.search-input{
+/* .search-input{
   visibility: hidden;
   transition: all 0.3s ease-in-out;
-}
+} */
 
-.filter-option.active{
+.filter-option{
   visibility: visible;
-  padding: 5px;
+  padding: 10px;
   border: 1px solid #272424;
   border-radius: 8px;
-  width:18%;
+  width:auto;
   margin: 5px;
-  height: 75%;
+  height: auto;
   font-size: 16px;
   background-color: #f9f9f9;
   font-weight: bold;
 }
-
+/* 
 .filter-option{
   visibility: hidden;
   transition: all 0.3s ease-in-out;
-}
+} */
 
 .table{
     display: block;
     table-layout: auto;
     border-collapse: collapse;
-    overflow: hidden;
-    border-radius: 15px;
     white-space: nowrap;
-    width: 95%;
+    border-radius: 4px;
+    width: auto;
+    max-width: 100%;
     overflow-x: auto;
+    box-sizing: border-box;
 }
 
 
 .table thead{
-    width:100%;
     background-color:cadetblue;
     color: #222;
 }
 
 .table th, .table td{
-    padding: 0.7rem;
+    padding: 0.8rem;
     background-color: transparent;
 }
 
 
 tbody .rows{
     border-top: 1.5px solid #353333;
-    overflow: auto;
     text-overflow: ellipsis;
 }
 
@@ -87,8 +89,9 @@ tbody .rows:hover{
 
 .page-buttons{
     display: flex;
-    width: 20%;
-    justify-content: space-between;
+    width: 100%;
+    justify-content: center;
+    gap: 50%;
     padding: 5px;
 }
 
@@ -145,3 +148,12 @@ tbody .rows:hover{
 .arrow-button:hover,.delete-btn:hover,.edit-btn:hover,.des-btn:hover,.filter-btn:hover{
     scale:1.2;
 }
+
+
+@media (width<830px){
+    .filter-bar{
+      flex-direction: column;
+    }
+  }
+
+

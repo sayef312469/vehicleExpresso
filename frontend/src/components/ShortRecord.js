@@ -5,77 +5,38 @@ import {BsFillTrashFill,BsFillPencilFill,BsFillFilterSquareFill, BsArrowLeft, Bs
 import '../styles/table.css';
 import ShortModal from './ShortModal';
 import DelWrnModal from './DelWrnModal';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 const ShortRecord = () => {
-    const rowHead=['ServiceID','OwnerName','VehicleNo','MechanicName','RepairType,Cost(tk)','WashType,Cost(tk)','ServiceDate','LaborHours','Status','TotalCost'];
+    const itemsperPage=15;
+    const rowHead=['ServiceID','OwnerName','VehicleNo','MechanicName','RepairType','RepairCost','WashType','WashCost','ServiceDate','LaborHours','Status','TotalCost'];
     const [modalOpen,setModalOpen]=useState(false);
     const [row,setRow]=useState([]);
     const [update,setUpdate]=useState(null);
-    const {data,error} = useFetchTable("shorttable",update);
-    const [rows,setRows] = useState([]);
-    const [cprows,setCprows] = useState([]);
-    const [isFilterActive,setIsFilterActive] = useState(false);
-    const [filterTerm,setFilterTerm] = useState('');
-    const [filterby,setFilterby] = useState(rowHead[0]);
-    const [delWrnOpen,setDelWrnOpen] = useState(false);
-    const itemsperPage=15;
     const [lowindx,setLowindx] = useState(0);
     const [highindx,setHighindx] = useState(itemsperPage);
+    const [filterBy,setFilterBy] = useState(rowHead[0]);
+    const [filterTerm, setFilterTerm] = useState('');
+    const {data,error} = useFetchTable("shorttable",
+    update,
+    {
+      lowindx: lowindx, 
+      highindx: highindx,
+      filterby: filterBy,
+      filterterm: filterTerm
+    });
+    const [delWrnOpen,setDelWrnOpen] = useState(false);
     const [currentRows,setCurrentRows] = useState([]);
     const [disnxt,setDisnxt]=useState(false);
     const [disprev,setDisprev]=useState(false);
 
-    useEffect(() => {
-      setRows(data.table);
-      setCprows(data.table);
-    }, [data]);
-
     useEffect(()=>{
-      setLowindx(0);
-      setHighindx(itemsperPage);
-      if(filterTerm!==""){
-        const filteredRows=rows?.filter((row) => {
-          switch(filterby){
-            case rowHead[0]:
-              return row.SERVICE_ID?.toString().toLowerCase().includes(filterTerm);
-            case rowHead[1]:
-              return row.NAME?.toLowerCase().includes(filterTerm);
-            case rowHead[2]:
-              return row.VEHICLENO?.toLowerCase().includes(filterTerm);
-            case rowHead[3]:
-              return row.MECHANIC_NAME?.toLowerCase().includes(filterTerm);
-            case rowHead[4]:
-              return (row.REPAIR.TYPE?.toLowerCase().includes(filterTerm) || row.REPAIR.COST?.toString().toLowerCase().includes(filterTerm));
-            case rowHead[5]:
-              return (row.WASH.TYPE?.toLowerCase().includes(filterTerm)|| row.WASH.COST?.toString().toLowerCase().includes(filterTerm));
-            case rowHead[6]:
-              return row.SERVICE_DATE?.toLowerCase().includes(filterTerm);
-            case rowHead[7]:
-              return row.LABOR_HOURS?.toString().toLowerCase().includes(filterTerm);
-            case rowHead[8]:
-              return row.COMPLETED.toLowerCase().includes(filterTerm);
-            case rowHead[9]:
-              return row.SERVICING_COST.toString().includes(filterTerm);
-          }
-      });
-      setRows(filteredRows)}}
-    ,[filterTerm,filterby]);
+      setCurrentRows(data.table);
+      setDisnxt(highindx>=data?.size?true:false);
+      setDisprev(lowindx<=1?true:false);
+      console.log(data);
+    },[data])
 
-    useEffect(()=>{
-      setCurrentRows(rows?.slice(lowindx,highindx));
-      setDisnxt(highindx>=rows?.length?true:false);
-      setDisprev(lowindx<=0?true:false);
-      console.log(rows);
-    },[lowindx,highindx,rows])
-
-    const HandleFilterActive = (e)=>{
-      setRows(cprows);
-      setFilterTerm(e.target.value.toLowerCase());
-    }
-    const HandleFilterBy = ()=>{
-      setIsFilterActive(!isFilterActive);
-    }
     const HandleDeleteRow = (row)=>{
       setDelWrnOpen(!delWrnOpen);
       setRow(row);
@@ -85,12 +46,12 @@ const ShortRecord = () => {
       setRow(row);
     }
     const HandlePrevious=()=>{
-      setHighindx(lowindx);
-      setLowindx(Math.max((lowindx-itemsperPage),0));
+      setHighindx(lowindx-1);
+      setLowindx(Math.max((lowindx-itemsperPage),1));
     }
     const HandleNext=()=>{
-      setLowindx(highindx);
-      setHighindx(Math.min((highindx+itemsperPage),rows?.length));
+      setLowindx(highindx+1);
+      setHighindx(Math.min((highindx+itemsperPage),data?.size));
     }
     
     return ( 
@@ -98,12 +59,21 @@ const ShortRecord = () => {
       <h3>Shorterm Record </h3>
       <hr style={{ border: 'none', height: '2px', background: 'linear-gradient(to right, #000000, #1a1a1a, #333333, #4d4d4d, #666666, #4d4d4d, #333333, #1a1a1a, #000000)', width: '90%', margin: '20px ' }} />
         <div className='filter-bar'>
-          <BsFillFilterSquareFill className='filter-btn' onClick={()=>HandleFilterBy()}/>
-          <select className={`filter-option ${isFilterActive?'active':''}`} value={filterby} onChange={(e)=>{ setFilterby(e.target.value);
-                                                                                                              setRows(cprows);}}>
-            {rowHead.map((head,key)=>{return (<option key={key} value={head}>{head}</option>);})}
+          <BsFillFilterSquareFill className='filter-btn'/>
+          <select className='filter-option' value={filterBy} onChange={(e)=>
+            { 
+              setLowindx(0);
+              setHighindx(itemsperPage);
+              setFilterBy(e.target.value);
+            }}>
+          {rowHead.map((head,key)=>{return (<option key={key} value={head}>{head}</option>);})}
           </select>
-          <input className={`search-input ${isFilterActive?'active':''}`} placeholder='Search'onChange={(e)=>HandleFilterActive(e)} />
+          <input className='search-input' placeholder='Search' onChange={(e)=>
+            {
+              setLowindx(0);
+              setHighindx(itemsperPage);
+              setFilterTerm(e.target.value)
+            }} />
         </div>
         <table className='table'>
                 <thead>
@@ -118,8 +88,10 @@ const ShortRecord = () => {
                         <td>{row.NAME}</td>
                         <td>{row.VEHICLENO}</td>
                         <td>{row.MECHANIC_NAME}</td>
-                        <td>{row.REPAIR.TYPE!=null?row.REPAIR.TYPE:null}| {row.REPAIR.COST}</td>
-                        <td>{row.WASH.TYPE!=null?row.WASH.TYPE:null}| {row.WASH.COST}</td>
+                        <td>{row.REPAIRTYPE}</td>
+                        <td>{row.REPAIRCOST}</td>
+                        <td>{row.WASHTYPE}</td>
+                        <td>{row.WASHCOST}</td>
                         <td>{row.SERVICE_DATE}</td>
                         <td>{row.LABOR_HOURS}</td>
                         <td>{row.COMPLETED}</td>
@@ -142,11 +114,13 @@ const ShortRecord = () => {
               <ShortModal row={row} 
               Update={[update,setUpdate]} 
               closeModal={()=>{setModalOpen(false);}}/>}
+
               {delWrnOpen && 
               <DelWrnModal row={row} 
               Update={[update,setUpdate]} 
               Record='ShortTerm' 
               closeModal={()=>{setDelWrnOpen(false);}}/>}
+
               <Toaster
               position="top-center"
               reverseOrder={false}

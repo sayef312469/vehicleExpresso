@@ -10,8 +10,8 @@ const Modal = ({ row, Update, closeModal }) => {
   // eslint-disable-next-line no-unused-vars
   const [update, setUpdate] = Update
   const [mechanic, setMechanic] = useState(row.MECHANIC_NAME)
-  const [repairCost, setRepairCost] = useState(row.REPAIR.COST)
-  const [washCost, setWashCost] = useState(row.WASH.COST)
+  const [repairCost, setRepairCost] = useState(row.REPAIRCOST)
+  const [washCost, setWashCost] = useState(row.WASHCOST)
   const [laborCost, setLaborCost] = useState(0)
   const [laborHour, setLaborHour] = useState(row.LABOR_HOURS)
   const [status, setStatus] = useState(row.COMPLETED)
@@ -54,13 +54,13 @@ const Modal = ({ row, Update, closeModal }) => {
     const doc = new jsPDF()
     const columns = ['Service Type', 'Description', 'Service Cost(Tk)']
     const rows = [
-      [`Repair`, `${row.REPAIR.TYPE}`, `${row.REPAIR.COST}`],
-      [`Wash`, `${row.WASH.TYPE}`, `${row.WASH.COST}`],
+      [`Repair`, `${row.REPAIRTYPE}`, `${row.REPAIRCOST}`],
+      [`Wash`, `${row.WASHTYPE}`, `${row.WASHCOST}`],
       [``, `Labor Hour:${row.LABOR_HOURS} hr`, ``],
       [
         ``,
         `Labor Cost`,
-        `${row.SERVICING_COST - (row.REPAIR.COST + row.WASH.COST)}`,
+        `${row.SERVICING_COST - (row.REPAIRCOST + row.WASHCOST)}`,
       ],
       [``, `Total Cost`, `${row.SERVICING_COST} `],
     ]
