@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Baskervville+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 .user{
   display: flex;
   flex-direction: column;
@@ -21,34 +23,6 @@
   width: 500px;
   height: 600px;
   z-index: 2;
-}
-.user .buttons{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px 2px;
-  border: 1px solid #444;
-  background-color: transparent;
-  padding: 45px 10px;
-  width: 90%;
-  height: auto;
-  gap: 20%;
-  margin-top: 10px;
-}
-
-.user .buttons button{
-  background-color:  cadetblue;
-  border-radius: 10px 0 10px 0;
-  cursor: pointer;
-  padding: 30px 30px;
-  margin: 50px;
-  border: 2px solid #333;
-}
-
-.user .buttons button:hover{
-  background-color: rgb(63, 111, 112);
-  scale: 1.1;
 }
 
 .user .popup .exit{
@@ -183,11 +157,13 @@ span{
   padding: 45px 10px;
   width: 90%;
   margin-top: 10px;
+  margin-bottom: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  font-family: "Special Elite", system-ui;
 }
 
 .title{
@@ -195,6 +171,9 @@ span{
   align-items: center;
   justify-content: center;
   background-color: cadetblue;
+  font-family: "Special Elite", system-ui;
+  font-weight: bold;
+  font-style: normal;
   padding: 10px;
   border-radius: 8px;
   width: 100%;
@@ -227,6 +206,106 @@ span{
   color: #df4759;
   border-radius: 5px;
   padding: 5px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 90%;
+  min-height: 40vw;
+  padding: 0 40px;
+  gap: 20px;
+}
+.buttons img {
+  width: 60%;
+}
+
+.buttons div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 40%;
+  gap: 40px;
+}
+
+.buttons div div {
+  --b: 3px;   /* border thickness */
+  --s: .45em; /* size of the corner */
+  --color: #373B44;
+  
+  padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+  color: var(--color);
+  --_p: var(--s);
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+  transition: .3s linear, color 0s, background-color 0s;
+  outline: var(--b) solid #0000;
+  outline-offset: .6em;
+  font-size: 16px;
+
+  border: 0;
+
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+}
+
+.buttons div div:hover {
+  --_p: 0px;
+  outline-color: var(--color);
+  outline-offset: .05em;
+}
+
+#or {
+  position: relative;
+  width: 300px;
+  height: 50px;
+  
+  line-height: 50px;
+  text-align: center;
+}
+
+#or::before,
+#or::after {
+  position: absolute;
+  width: 130px;
+  height: 2px;
+  
+  top: 24px;
+  
+  background-color: #78B7D0;
+  
+  content: '';
+}
+
+#or::before {
+  left: 0;
+}
+
+#or::after {
+  right: 0;
+}
+
+.buttons div div svg {
+  font-size: 30px;
+  color:  black;
+  font-weight: bold;
+  background-color: rgba(89, 255, 219, 0.2);
+  border-radius: 20px;
+}
+
+.buttons div div button {
+  background: transparent;
+  border: none;
+  font-size: 25px;
+  font-family: "Baskervville SC", serif;
+  font-weight: bold;
 }
 
 @media (width<830px){

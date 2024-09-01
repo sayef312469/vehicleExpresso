@@ -4,6 +4,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { FaTimes } from 'react-icons/fa';
+import carCare from '../img/carCare.svg'
+import { BiAnalyse } from "react-icons/bi";
+import { BiBadgeCheck } from "react-icons/bi";
 
 
 const CareUser = () => {
@@ -237,9 +240,26 @@ const CareUser = () => {
           <h3>Book for your desired service now!</h3>
           <hr/>
         </div>
-        <div className="buttons">
+        {/* <div className="buttons">
             <button onClick={HandleLongTerm}>Longterm Vehicle care</button>
             <button onClick={HandleShortTerm}>Shorterm Vehicle care</button>
+        </div> */}
+        <div className="buttons">
+            <img src={carCare} alt='Car Care' />
+
+          <div>
+            <div>
+            <BiAnalyse />
+            <button onClick={HandleLongTerm}>Longterm Vehicle care</button>
+            </div>
+            <span id="or">OR</span>
+            <div>
+            <BiBadgeCheck />
+            <button onClick={HandleShortTerm}>Shorterm Vehicle care</button>
+            </div>
+            
+            
+          </div>
         </div>
         <ToastContainer
           position="top-right"

@@ -83,7 +83,8 @@ function App() {
               />
               <Route
                 path="/vehiclecare/user"
-                element={user ? <CareUser /> : <Navigate to="/login" />}
+                // element={user ? <CareUser /> : <Navigate to="/login" />}
+                element={<CareUser />}
               />
               <Route
                 path="/carinsurancerenewal"
