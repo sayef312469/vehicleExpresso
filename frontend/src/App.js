@@ -1,7 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import LongRecord from './components/LongRecord'
 import NavbarTop from './components/NavbarTop'
+import ShortRecord from './components/ShortRecord'
 import SmallCardServices from './components/SmallCardServices'
 import { useAuthContext } from './hooks/useAuthContext'
 import AddParkAdmin from './pages/AddParkAdmin'
@@ -25,9 +27,6 @@ import VehicleEntryExit from './pages/VehicleEntryExit'
 import Wavy from './pages/Wavy'
 import RecordHistory from './pages/record'
 import Profile from './pages/userProfile'
-import ShortRecord from './components/ShortRecord'
-import LongRecord from './components/LongRecord'
-
 
 function App() {
   const { user } = useAuthContext()
@@ -83,8 +82,7 @@ function App() {
               />
               <Route
                 path="/vehiclecare/user"
-                // element={user ? <CareUser /> : <Navigate to="/login" />}
-                element={<CareUser />}
+                element={user ? <CareUser /> : <Navigate to="/login" />}
               />
               <Route
                 path="/carinsurancerenewal"
