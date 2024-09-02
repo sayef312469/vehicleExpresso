@@ -29,7 +29,7 @@ CREATE TABLE Maintenance_Info(
 );
 
 CREATE TYPE SHORT_CARE AS OBJECT(
-    type VARCHAR2(20),
+    type VARCHAR2(100),
     cost NUMBER
 )
 

@@ -137,10 +137,12 @@ const Maintenance_info = ({row,Update,closeModal}) => {
                         <div className='info'>
                                     {!err && Array.isArray(data) && data.map((val,key)=>{
                                         return <div className='history' key={key}>
-                                            Last service Date: {val.LAST_SERVICE_DATE} {val.FLAG && val.FLAG[0]==='B'?'(BASIC)':'(PREMIUM)'}<br/><br/>
-                                            Maintenance info:<br/>
-                                            {val.BASIC_DESC?val.BASIC_DESC:val.PREMIUM_DESC}<br/><br/>
-                                            Next service Date: {val.NEXT_SERVICE_DATE} {val.FLAG && val.FLAG[1]==='B'?'(BASIC)':'(PREMIUM)'}<br/><br/>
+                                            <ul>
+                                                <li>Last service Date: {val.LAST_SERVICE_DATE}</li>
+                                                <li>Maintenance Type: {val.FLAG && val.FLAG[0]==='B'?'BASIC':'PREMIUM'}</li>
+                                                <li>Maintenance info:<br/>{val.BASIC_DESC?val.BASIC_DESC:val.PREMIUM_DESC}</li>
+                                                <li>Next service Date: {val.NEXT_SERVICE_DATE} {val.FLAG && val.FLAG[1]==='B'?'(BASIC)':'(PREMIUM)'}</li>
+                                            </ul>
                                         </div>
                                     })}
                         </div>
@@ -339,10 +341,10 @@ const Maintenance_info = ({row,Update,closeModal}) => {
                                     name="nxt-service-date"
                                     value={nxtServDate}
                                     onChange={(e)=>{setNxtServDate(e.target.value)}}/>
-                                    <button className='click' onClick={HandleMaintInfo}>Submit</button>
                                 </div>
                              </fieldset>
                             </form>
+                            <button className='click' onClick={HandleMaintInfo}>Submit</button>
                         </div>
                         </div>
                     </fieldset>

@@ -1,53 +1,86 @@
 .admin{
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 0 40px;
   width: 100%;
   min-height: 40vw;
 }
-.admin h3,.user h3,.admin h2{
-  margin-top: 10px;
-  padding-left: 40px;
+hr{
+  margin: 10px auto;
+  width: 90%;
 }
-
-.admin .buttons{
-  display:flex;
+.header-container{
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   margin-top: 20px;
+  width: 100%;
+}
+.admin h3,.user h3{
+  min-width: 350px;
+  padding: 5px;
+  width:40%;
+  border-radius: 8px;
+  color: cadetblue;
+  text-align: center;
+  font-weight: bold;
+  margin: auto;
+  word-wrap: break-word;
 }
 
-.admin .buttons button{
-  background-color: #e7d4a6;
-  border-radius: 10px;
-  cursor: pointer;
-  padding:50px 40px ;
-  margin: 50px;
-}
-
-.admin .buttons button:hover,.user .buttons button:hover{
-  background-color: #ffebbd;
-  scale: 1.1;
-}
-
-.admin h2,.admin h4,.admin h3{
+.admin h4{
   text-align: center;
   color: cadetblue;
   font-weight: bold;
 }
-.admin button{
-  background-color:  azure;
-  border-radius: 10px;
-  cursor: pointer;
-  padding: 30px 30px;
-  margin: 50px;
+
+.admin .button-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px 2px;
+  border: 1px solid #444;
+  background-color: transparent;
+  padding: 45px 10px;
+  width: 98%;
+  height: auto;
+  gap: 20%;
+  margin-top: 20px;
 }
 
-.admin button:hover{
-  background-color: #ffebbd;
+.admin .button-container button{
+  background-color:  cadetblue;
+  border-radius: 10px 0 10px 0;
+  cursor: pointer;
+  padding: 35px;
+  border: 2px solid #333;
+  box-sizing: border-box;
+}
+
+.admin .button-container button:hover{
+  background-color: rgb(42, 94, 96);
   scale: 1.1;
 }
 .admin .chart-comps{
+  margin-top: 10px;
   display: flex;
-  justify-content: space-between;
+  min-width:98%;
+  justify-content: center;
+  gap: 20px;
 }
 
+@media (width<830px){
+  .admin .button-container{
+    flex-direction: column;
+    gap:20px;
+  }
+  .admin .chart-comps{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}

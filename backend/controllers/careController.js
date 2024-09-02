@@ -1,6 +1,6 @@
 const oracledb = require('oracledb')
-const {getDaysInMonth, ReversemonthMap, monthMap}  = require('../monthTonum')
-const {runQuery,runQueryOutBinds}=require('../connection')
+const {getDaysInMonth, ReversemonthMap, monthMap, columnMap}  = require('../monthTonum')
+const {runQuery,runQueryOutBinds}=require('../connection');
 
 
 const pieData = async(req, res)=>{
@@ -247,15 +247,58 @@ const longUser = async(req,res)=>{
 
 const shortTableFetch = async(req,res)=>{
     try{
-        const data = await runQuery(`select u.name,vi.vehicleno,ct.service_id,to_char(tc.service_date,'yyyy-mm-dd') as service_date,
-        sc.repair,sc.wash,ct.mechanic_name,ct.servicing_cost,sc.completed,sc.labor_hours
-        from users u,vehicle_info vi,takes_care tc,care_transac ct,shorttermcare sc
-        where u.userid=vi.vehicle_owner and
-        vi.vehicleno=tc.vehicleno and
-        tc.service_id=ct.service_id and
-        ct.service_id=sc.shortterm_id
-        order by completed,service_id`,{});
-        res.status(200).json({"table": data});
+        const {lowindx, highindx, filterby, filterterm} = req.body;
+
+        console.log(columnMap[filterby]);
+        const table = await runQuery(`
+        select *
+        from 
+            users u,
+            vehicle_info vi,
+            takes_care tc,
+            care_transac ct,
+            shorttermcare sc
+        where 
+            u.userid=vi.vehicle_owner and
+            vi.vehicleno=tc.vehicleno and
+            tc.service_id=ct.service_id and
+            ct.service_id=sc.shortterm_id and
+            ${columnMap[filterby]} like :filterterm`,{filterterm: `%${filterterm}%`});
+
+        const data = await runQuery(`
+            select * from (
+                select 
+                    ROW_NUMBER() OVER (order by sc.completed,ct.service_id) as row_num, 
+                    u.name,
+                    vi.vehicleno,
+                    ct.service_id,
+                    to_char(tc.service_date,'yyyy-mm-dd') as service_date,
+                    sc.repair.type as repairtype,
+                    sc.repair.cost as repaircost, 
+                    sc.wash.type as washtype,
+                    sc.wash.cost as washcost, ct.mechanic_name,
+                    ct.servicing_cost,
+                    sc.completed, 
+                    sc.labor_hours 
+                from 
+                    users u,
+                    vehicle_info vi,
+                    takes_care tc,
+                    care_transac ct,
+                    shorttermcare sc
+                    where u.userid=vi.vehicle_owner and
+                    vi.vehicleno=tc.vehicleno and
+                    tc.service_id=ct.service_id and
+                    ct.service_id=sc.shortterm_id and
+                    LOWER(${columnMap[filterby]}) like LOWER(:filterterm)
+                    order by row_num)
+            where 
+            row_num between :lowindx and :highindx`,{filterterm: `%${filterterm}%`, lowindx, highindx});
+
+        res.status(200).json({
+            'size': table.length,
+            'table': data
+        });
     }catch(err){
         console.error(err);
         res.status(500).send('Error fetching the table');
@@ -264,18 +307,84 @@ const shortTableFetch = async(req,res)=>{
 
 const longTableFetch =async(req,res)=>{
     try{
+        const {lowindx, highindx, filterby, filterterm} = req.body;
+        console.log(columnMap[filterby]);
+        const table = await runQuery(`
+        select distinct 
+            u.name,
+            ct.service_id,
+            vi.vehicleno,
+            tc.service_date,
+            lc.final_date,
+            ct.mechanic_name,
+            lc.odometer_reading,
+            lc.maintenance_category,
+            lc.insurance_provider,
+            lc.insurance_exp_date,
+            ct.servicing_cost
+        from 
+            users u,
+            vehicle_info vi,
+            takes_care tc,
+            care_transac ct,
+            longtermcare lc,
+            maintenance_info mi
+            where u.userid=vi.vehicle_owner and
+            vi.vehicleno=tc.vehicleno and
+            tc.service_id=ct.service_id and
+            ct.service_id=lc.longterm_id and
+            ct.service_id=mi.maintenance_id and
+            LOWER(${columnMap[filterby]}) like LOWER(:filterterm)`,{filterterm: `%${filterterm}%`})
 
-        const data = await runQuery(`select distinct u.name,ct.service_id,vi.vehicleno,to_char(tc.service_date,'yyyy-mm-dd') as service_date,to_char(lc.final_date,'yyyy-mm-dd') as final_date,
-        ct.mechanic_name,lc.odometer_reading,lc.maintenance_category,lc.insurance_provider,to_char(lc.insurance_exp_date,'yyyy-mm-dd') as insurance_exp_date,ct.servicing_cost
-        from users u,vehicle_info vi,takes_care tc,care_transac ct,longtermcare lc,maintenance_info mi
-        where u.userid=vi.vehicle_owner and
-        vi.vehicleno=tc.vehicleno and
-        tc.service_id=ct.service_id and
-        ct.service_id=lc.longterm_id and
-        ct.service_id=mi.maintenance_id 
-        order by ct.service_id`,{});
+        const data = await runQuery(`
+        select * from
+            (select 
+                ROW_NUMBER() OVER (order by service_id) as row_num, 
+                name,
+                service_id,
+                vehicleno,
+                to_char(service_date,'yyyy-mm-dd') as service_date,
+                to_char(final_date,'yyyy-mm-dd') as final_date,
+                mechanic_name,
+                odometer_reading,
+                maintenance_category,
+                insurance_provider,
+                to_char(insurance_exp_date,'yyyy-mm-dd') as insurance_exp_date,
+                servicing_cost
+            from
+                (select distinct 
+                    u.name,
+                    ct.service_id,
+                    vi.vehicleno,
+                    tc.service_date,
+                    lc.final_date,
+                    ct.mechanic_name,
+                    lc.odometer_reading,
+                    lc.maintenance_category,
+                    lc.insurance_provider,
+                    lc.insurance_exp_date,
+                    ct.servicing_cost
+                from 
+                    users u,
+                    vehicle_info vi,
+                    takes_care tc,
+                    care_transac ct,
+                    longtermcare lc,
+                    maintenance_info mi
+                    where u.userid=vi.vehicle_owner and
+                    vi.vehicleno=tc.vehicleno and
+                    tc.service_id=ct.service_id and
+                    ct.service_id=lc.longterm_id and
+                    ct.service_id=mi.maintenance_id and
+                    LOWER(${columnMap[filterby]}) like LOWER(:filterterm)
+                )
+            )
+        where row_num between :lowindx and :highindx`,{filterterm: `%${filterterm}%`, lowindx, highindx});
 
-        res.status(200).json({"table": data});
+        res.status(200).json({
+            'size': table.length,
+            'table': data
+        });
     }catch(err){
         console.error(err);
         res.status(500).send('Error fetching the long-data');
@@ -472,6 +581,15 @@ const deleteMaintInfo =async(req,res)=>{
     }
 }
 
+const queryTable =  async(req,res)=>{
+    try{
+        const {filterby, filterterm} = req.body;
+        console.log(filterby, filterterm);
+    }catch(err){
+        console.error(err);
+    }
+}
+
 module.exports={
     pieData,
     lineData,
@@ -484,7 +602,8 @@ module.exports={
     updateLongTable,
     availVehicle,
     updateMaintInfo,
-    deleteMaintInfo
+    deleteMaintInfo,
+    queryTable
 }
 
 
