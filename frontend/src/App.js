@@ -27,6 +27,9 @@ import VehicleEntryExit from './pages/VehicleEntryExit'
 import Wavy from './pages/Wavy'
 import RecordHistory from './pages/record'
 import Profile from './pages/userProfile'
+import Dashboard from './pages/dashboard'
+import ShortRecord from './components/ShortRecord'
+import LongRecord from './components/LongRecord'
 
 function App() {
   const { user } = useAuthContext()
@@ -40,10 +43,7 @@ function App() {
         <div className="pages">
           <main>
             <Routes>
-              <Route
-                path="/"
-                element={<Home />}
-              />
+              <Route path="/" element={<Home />} />
               <Route
                 path="/login"
                 element={!user ? <Login /> : <Navigate to="/" />}
@@ -52,10 +52,7 @@ function App() {
                 path="/signup"
                 element={!user ? <Signup /> : <Navigate to="/" />}
               />
-              <Route
-                path="/searchparks"
-                element={<SearchParking />}
-              />
+              <Route path="/searchparks" element={<SearchParking />} />
               <Route
                 path="/pickupvanservice"
                 element={user ? <PickupVanService /> : <Navigate to="/login" />}
@@ -98,12 +95,7 @@ function App() {
                   }
                 />
               )}
-              {user && (
-                <Route
-                  path="/addvehicle"
-                  element={<AddVehicle />}
-                />
-              )}
+              {user && <Route path="/addvehicle" element={<AddVehicle />} />}
               {user && (
                 <Route
                   path="/vehicleentryexit"
@@ -166,6 +158,12 @@ function App() {
                 <Route
                   path="/record"
                   element={user ? <RecordHistory /> : <Navigate to="/login" />}
+                />
+              )}
+              {user && (
+                <Route
+                  path="/dashboard"
+                  element={user ? <Dashboard /> : <Navigate to="/login" />}
                 />
               )}
               <Route

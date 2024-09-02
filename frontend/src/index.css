@@ -453,3 +453,6 @@ div.msg {
   background: #254a4e;
   color: #fff;
 }
+.carSHover:hover {
+  transform: scale(1.1);
+}

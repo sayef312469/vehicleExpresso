@@ -1,0 +1,40 @@
+/* src/App.css */
+
+.hero-section1 {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(52, 58, 64, 0.5);
+    color: black;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    transition: opacity 0.5s ease-out;
+  }
+  
+  .features-section {
+    background-color: transparent;
+  }
+  
+  .pricing-section {
+    background-color: transparent;
+  }
+  
+  .faq-section {
+    background-color: transparent;
+  }
+  
+  .footer {
+    background-color: #343a40;
+    color: transparent;
+  }
+  
+  .text-muted {
+    color: #6c757d !important;
+  }
+  
+  h1, h2, h3, h4, h5 {
+    font-weight: 700;
+  }
+  

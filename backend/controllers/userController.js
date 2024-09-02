@@ -5,7 +5,6 @@ const { runQuery } = require('../connection')
 const path = require('path')
 const oracleErrorHandler = require('../oracleErrorHandler')
 const { BlobServiceClient } = require('@azure/storage-blob')
-const { autoCommit } = require('oracledb')
 
 const createToken = (ID) => {
   return jwt.sign({ ID }, process.env.SECRET, { expiresIn: '30d' })
@@ -63,7 +62,7 @@ const signUpUser = async (req, res) => {
         'select userid id from users where email=:email',
         {
           email,
-        },
+        }
       )
       if (exists.length == 0) {
         runQuery(
@@ -72,14 +71,14 @@ const signUpUser = async (req, res) => {
             username,
             email,
             hash,
-          },
+          }
         )
           .then(async () => {
             const data = await runQuery(
               'select * from users where email=:email',
               {
                 email,
-              },
+              }
             )
             const user = data[0]
             const usname = await user.NAME
@@ -107,7 +106,7 @@ const profileUser = async (req, res) => {
   let userid = req.params.id
   try {
     console.log('Data fetched from database')
-    const result = await runQuery('SELECT * FROM users where userid=:userid', {
+    const result = await runQuery('SELECT * FROM USERS WHERE USERID=:userid', {
       userid,
     })
     if (result.length) {
@@ -123,7 +122,7 @@ const profileUser = async (req, res) => {
 const profilePicture = async (req, res) => {
   const id = req.params.id
   const blobServiceClient = BlobServiceClient.fromConnectionString(
-    process.env.AZURE_STORAGE_CONNECTION_STRING,
+    process.env.AZURE_STORAGE_CONNECTION_STRING
   )
   const containerClient = blobServiceClient.getContainerClient('images')
   const file = req.file
@@ -137,7 +136,7 @@ const profilePicture = async (req, res) => {
   try {
     const uploadBlobResponse = await blockBlobClient.uploadFile(file.path)
     console.log(
-      `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`,
+      `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
     )
 
     const imageUrl = blockBlobClient.url
@@ -148,7 +147,7 @@ const profilePicture = async (req, res) => {
         id,
         imageUrl,
       },
-      { autoCommit: true },
+      { autoCommit: true }
     )
     console.log('URL stored in database', result)
     res.status(200).json({ PRO_URL: imageUrl })
@@ -163,17 +162,105 @@ const profileParking = async (req, res) => {
   try {
     console.log('Data fetched from database')
     const result = await runQuery(
-      `SELECT GARAGE.GARAGEID, GARAGE.COUNTRY, GARAGE.CITY, 
-      GARAGE.AREA, VEHICLE_INFO.VEHICLENO, VEHICLE_INFO.VEHICLETYPE, VEHICLE_INFO.VEHICLE_MODEL, 
-      VEHICLE_INFO.VEHICLE_COMPANY, VEHICLE_INFO.VEHICLE_COLOR 
-      FROM USERS, GARAGE, VEHICLE_INFO, HAS_PAYMENT 
-      WHERE VEHICLE_INFO.VEHICLENO = HAS_PAYMENT.VEHICLENO
-      AND GARAGE.GARAGEID = HAS_PAYMENT.GARAGEID
-      AND VEHICLE_INFO.VEHICLE_OWNER = USERS.USERID
-      AND USERS.USERID = :userid`,
+      `WITH PARK_COUNT AS (
+        SELECT
+            COUNT(*) AS COUNTS
+        FROM
+            USERS,
+            GARAGE,
+            VEHICLE_INFO,
+            HAS_PAYMENT
+        WHERE
+            VEHICLE_INFO.VEHICLENO = HAS_PAYMENT.VEHICLENO
+            AND GARAGE.GARAGEID = HAS_PAYMENT.GARAGEID
+            AND VEHICLE_INFO.VEHICLE_OWNER = USERS.USERID
+            AND USERS.USERID = :userid
+      )
+      SELECT
+          PARK_COUNT.COUNTS,
+          GARAGE.GARAGEID,
+          GARAGE.COUNTRY,
+          GARAGE.CITY,
+          GARAGE.AREA,
+          VEHICLE_INFO.VEHICLENO,
+          VEHICLE_INFO.VEHICLETYPE,
+          VEHICLE_INFO.VEHICLE_MODEL,
+          VEHICLE_INFO.VEHICLE_COMPANY,
+          VEHICLE_INFO.VEHICLE_COLOR
+      FROM
+          USERS,
+          GARAGE,
+          VEHICLE_INFO,
+          HAS_PAYMENT,
+          PARK_COUNT
+      WHERE
+          VEHICLE_INFO.VEHICLENO = HAS_PAYMENT.VEHICLENO
+          AND GARAGE.GARAGEID = HAS_PAYMENT.GARAGEID
+          AND VEHICLE_INFO.VEHICLE_OWNER = USERS.USERID
+          AND USERS.USERID = :userid`,
       {
         userid,
-      },
+      }
+    )
+    if (result.length) {
+      res.status(200).json(result)
+    } else {
+      res.status(400).json({ error: 'No user found' })
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+const profileShorterm = async (req, res) => {
+  let userid = req.params.id
+  try {
+    console.log('Data fetched from database')
+    const result = await runQuery(
+      `WITH SERVICE_COUNT AS (
+        SELECT
+            COUNT(*) AS COUNTS
+        FROM
+            CARE_TRANSAC,
+            SHORTTERMCARE,
+            TAKES_CARE,
+            VEHICLE_INFO,
+            USERS
+        WHERE
+            SHORTTERM_ID=CARE_TRANSAC.SERVICE_ID
+            AND SHORTTERM_ID=TAKES_CARE.SERVICE_ID
+            AND TAKES_CARE.VEHICLENO=VEHICLE_INFO.VEHICLENO
+            AND VEHICLE_INFO.VEHICLE_OWNER=USERS.USERID
+            AND USERID=:userid
+      )
+      SELECT
+          SERVICE_COUNT.COUNTS,
+          SERVICE_TYPE,
+          MECHANIC_NAME,
+          REPAIR,
+          WASH,
+          VEHICLE_INFO.VEHICLENO,
+          VEHICLETYPE,
+          VEHICLE_MODEL,
+          VEHICLE_COLOR,
+          VEHICLE_COMPANY,
+          SERVICE_DATE
+      FROM
+          CARE_TRANSAC,
+          SHORTTERMCARE,
+          TAKES_CARE,
+          VEHICLE_INFO,
+          USERS,
+          SERVICE_COUNT
+      WHERE
+          SHORTTERM_ID=CARE_TRANSAC.SERVICE_ID
+          AND SHORTTERM_ID=TAKES_CARE.SERVICE_ID
+          AND TAKES_CARE.VEHICLENO=VEHICLE_INFO.VEHICLENO
+          AND VEHICLE_INFO.VEHICLE_OWNER=USERS.USERID
+          AND USERID=:userid`,
+      {
+        userid,
+      }
     )
     if (result.length) {
       res.status(200).json(result)
@@ -192,19 +279,54 @@ const updateContact = async (req, res) => {
     const result = await runQuery(
       `UPDATE users SET phone=:phone, area=:area, city=:city, country=:country where userid=:id`,
       {
-        id,
         phone,
         area,
         city,
         country,
         id,
       },
-      { autoCommit: true },
+      { autoCommit: true }
     )
     console.log('Contact updated', result)
     res.status(200).json({ message: 'Contact updated successfully' })
   } catch (err) {
     res.status(500).json({ error: err.message })
+  }
+}
+
+const userRecord = async (req, res) => {
+  try {
+    const query = `
+      SELECT USERID, NAME, EMAIL, COUNTRY, CITY, AREA, PHONE 
+      FROM USERS 
+      WHERE USERID > 0
+    `
+    const result = await runQuery(query, {})
+    res.status(200).json(result)
+  } catch (err) {
+    console.error('Error fetching record:', err)
+    res.status(500).json({ error: err.message })
+  }
+}
+
+const userIdUpdate = async (req, res) => {
+  const id = req.params.id
+  const { userid } = req.body
+  try {
+    const result = await runQuery(
+      `update users set userid=:userid where userid=:id`,
+      {
+        userid,
+        id,
+      },
+      { autoCommit: true }
+    )
+    console.log('User ID updated')
+    res.status(200).json({ message: 'Contact updated successfully' })
+    console.log('Done')
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+    console.log(err)
   }
 }
 
@@ -215,4 +337,7 @@ module.exports = {
   profilePicture,
   profileParking,
   updateContact,
+  profileShorterm,
+  userRecord,
+  userIdUpdate,
 }
