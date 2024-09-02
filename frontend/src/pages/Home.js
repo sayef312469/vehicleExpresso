@@ -1,11 +1,13 @@
 import React from 'react'
-import { Container } from 'react-bootstrap'
+import { Container, Carousel, Card, Row, Col } from 'react-bootstrap'
 import SmallCardServices from '../components/SmallCardServices'
 import s1 from '../img/s1.png'
 import s2 from '../img/s2.png'
 import s3 from '../img/s3.png'
 import s4 from '../img/s4.png'
 import s5 from '../img/s5.png'
+import pic1 from '../img/pic1.jpg'
+import pic2 from '../img/pic2.jpg'
 
 const Home = () => {
   const webName = 'Vehicle Expresso'
@@ -45,7 +47,6 @@ const Home = () => {
               ))}
           </div>
         </div>
-        className="hero-section text-white text-center" >
       </Container>
 
       <Container className="my-5">

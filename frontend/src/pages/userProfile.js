@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
+import StarRating from '../components/starRatings'
 import {
   Card,
   Button,
@@ -10,7 +11,6 @@ import {
   InputGroup,
   Form,
   FormControl,
-  Alert,
 } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -186,6 +186,9 @@ export default function ProfileTest() {
   const goRecord = () => {
     window.location.href = '/record'
   }
+  const goDashboard = () => {
+    window.location.href = '/dashboard'
+  }
 
   const toggleEditPhone = () => {
     setEditPhone(!editPhone)
@@ -225,6 +228,7 @@ export default function ProfileTest() {
           width: '90%',
           height: 'auto',
           borderRadius: '16px',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
         }}
       >
         <Card.Img
@@ -393,25 +397,44 @@ export default function ProfileTest() {
               </div>
             )}
           </Card.Text>
+          <StarRating />
           <span
             style={{
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              width: 'fit-content',
             }}
           >
             <Button
               variant="primary"
               className="recordBtn"
-              onClick={goRecord}
+              onClick={goDashboard}
               style={{
                 position: 'relative',
                 top: '-50px',
                 fontSize: '0.9rem',
+                width: '101px',
               }}
             >
-              History
+              Dashboard
             </Button>
+            {userDetail.USERID < 0 && (
+              <Button
+                variant="primary"
+                className="recordBtn"
+                onClick={goRecord}
+                style={{
+                  position: 'relative',
+                  top: '-50px',
+                  fontSize: '0.9rem',
+                  width: '101px',
+                  marginLeft: '10px',
+                }}
+              >
+                Users
+              </Button>
+            )}
           </span>
           <Container
             style={{ textAlign: 'center', position: 'relative', top: '-20px' }}
@@ -480,6 +503,7 @@ export default function ProfileTest() {
               borderTop: 'none',
               borderBottom: 'none',
               borderLeft: 'none',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
             }}
           >
             <Card.Header>
@@ -525,6 +549,7 @@ export default function ProfileTest() {
               overflow: 'auto',
               borderTop: 'none',
               borderBottom: 'none',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
             }}
           >
             <Card.Header>
@@ -583,6 +608,7 @@ export default function ProfileTest() {
               overflow: 'auto',
               borderTop: 'none',
               borderBottom: 'none',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
             }}
           >
             <Card.Header>
@@ -606,6 +632,7 @@ export default function ProfileTest() {
               borderRight: 'none',
               borderBottom: 'none',
               borderTop: 'none',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
             }}
           >
             <Card.Header>

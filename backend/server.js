@@ -7,6 +7,7 @@ const { Server } = require('socket.io')
 const parkingRoute = require('./routes/parkingRoute')
 const userRoutes = require('./routes/userRoutes')
 const careRoute = require('./routes/careRoute')
+const shopRoute = require('./routes/shopRoute')
 
 const app = express()
 app.use(cors())
@@ -54,6 +55,7 @@ io.on('connection', (socket) => {
 app.use('/api/parking', parkingRoute)
 app.use('/api/user', userRoutes)
 app.use('/api/care', careRoute)
+app.use('/api/shop', shopRoute)
 
 server.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}`)
