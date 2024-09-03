@@ -208,31 +208,31 @@ span{
   padding: 5px;
 }
 
-.buttons {
+.user .animation-container {
   display: flex;
-  flex-direction: row;
+  gap: 80px;
   align-items: center;
   width: 90%;
-  min-height: 40vw;
   padding: 0 40px;
-  gap: 20px;
 }
-.buttons img {
-  width: 60%;
+.user .animation-container img {
+  width: 55%;
+  margin: auto;
 }
 
-.buttons div {
+
+.user .animation-container div{
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  width: 40%;
+  margin: auto;
   gap: 40px;
 }
 
-.buttons div div {
-  --b: 3px;   /* border thickness */
-  --s: .45em; /* size of the corner */
+.user .animation-container div div {
+  --b: 3px;   
+  --s: .45em;
   --color: #373B44;
   
   padding: calc(.5em + var(--s)) calc(.9em + var(--s));
@@ -254,9 +254,10 @@ span{
   display: flex;
   flex-direction: row;
   width: fit-content;
+  background-color: cadetblue;
 }
 
-.buttons div div:hover {
+.user .animation-container div div:hover {
   --_p: 0px;
   outline-color: var(--color);
   outline-offset: .05em;
@@ -292,7 +293,7 @@ span{
   right: 0;
 }
 
-.buttons div div svg {
+.user .animation-container div div svg {
   font-size: 30px;
   color:  black;
   font-weight: bold;
@@ -300,7 +301,7 @@ span{
   border-radius: 20px;
 }
 
-.buttons div div button {
+.user .animation-container div div button {
   background: transparent;
   border: none;
   font-size: 25px;
@@ -308,9 +309,18 @@ span{
   font-weight: bold;
 }
 
+@media (width< 950px){
+  .user .animation-container div div{
+    scale: 0.7;
+  }
+}
+
 @media (width<830px){
   .user .buttons{
     flex-direction: column;
+  }
+  .user .animation-container img{
+    display: none;
   }
 }
 

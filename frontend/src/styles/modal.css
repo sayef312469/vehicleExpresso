@@ -20,9 +20,10 @@
 
 .Title h3{
     text-align: center;
-    width:30%;
+    min-width:40%;
     font-size: 100%;
     padding: 8px;
+    word-wrap: break-word;
 }
 
 .modal{
@@ -89,16 +90,18 @@
     border-radius: 10px;
     background-color: azure;
     width: 80%;
-    height: 35em;
-    overflow: auto;
+    height: 38em;
+    overflow: hidden;
 }
 
 .maintenanceinfo-modal .info{
     text-align: left;
     object-fit: contain;
-    overflow: auto;
-    height:400px;
-    width:50%;
+    height:450px;
+    width:100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
 }
 
 .info .history{
@@ -106,17 +109,18 @@
     padding: 30px;
     border-radius: 10px 0 ;
     border-bottom: 1px solid #ccc;
-    background-color: #C8E6C9;
+    background-color: cadetblue;
     width: 100%;
+    overflow-y: auto;
+    
 }
 
 .final .add{
     margin: 5px 10px;
     padding-left: 20px;
-    right:0;
-    top:0;
     border-bottom: 1px solid #ccc;
-    width: 50%;
+    width: 100%;
+    overflow-y: auto;
 }
 
 .add .block{
@@ -260,5 +264,15 @@ h3{
     .Title h3{
         font-size: small;
         width: 100%;
+    }
+}
+
+
+@media (width<830px){
+    .final{
+      flex-direction: column;
+    }
+    .maintenanceinfo-modal{
+        overflow: auto;
     }
 }

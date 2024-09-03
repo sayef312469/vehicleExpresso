@@ -541,14 +541,14 @@ const updateMaintInfo=async(req,res)=>{
       if(next_maintenance_type==="Basic")flag=flag.slice(0,1)+'B';
       else flag=flag.slice(0,1)+'P';
 
-      maintenance_date=new Date().toISOString().slice(0,10);
+      const maintenance_date=new Date().toISOString().slice(0,10);
       await runQuery(`insert into Maintenance_info (Maintenance_id,basic_desc,flag,last_service_date,next_service_date)
       values(:service_id,:description,:flag,to_date(:maintenance_date,'yyyy-mm-dd'),to_date(:next_maintenance_date,'yyyy-mm-dd'))`,{service_id,description,flag,maintenance_date,next_maintenance_date});
 
       const data=await runQuery(`select servicing_cost 
       from care_transac where service_id=:service_id`,{service_id});
 
-      let updatedTotal=Number(data[0].SERVICING_COST)+totalcost;
+      const updatedTotal=Number(data[0].SERVICING_COST)+totalcost;
       
       await runQuery(`update care_transac
       set servicing_cost=:updatedTotal where service_id=:service_id`,{updatedTotal,service_id});

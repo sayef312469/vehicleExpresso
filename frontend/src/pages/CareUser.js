@@ -244,23 +244,21 @@ const CareUser = () => {
             <button onClick={HandleLongTerm}>Longterm Vehicle care</button>
             <button onClick={HandleShortTerm}>Shorterm Vehicle care</button>
         </div> */}
-        <div className="buttons">
-            <img src={carCare} alt='Car Care' />
-
+        <div className="animation-container">
+          <img src={carCare} alt='Car Care' />
           <div>
-            <div>
-            <BiAnalyse />
-            <button onClick={HandleLongTerm}>Longterm Vehicle care</button>
+            <div >
+              <BiAnalyse />
+              <button onClick={HandleLongTerm}>Longterm Vehicle care</button>
             </div>
             <span id="or">OR</span>
             <div>
-            <BiBadgeCheck />
-            <button onClick={HandleShortTerm}>Shorterm Vehicle care</button>
+              <BiBadgeCheck />
+              <button onClick={HandleShortTerm}>Shorterm Vehicle care</button>
             </div>
-            
-            
           </div>
         </div>
+
         <ToastContainer
           position="top-right"
           autoClose={3000}

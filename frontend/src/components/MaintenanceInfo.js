@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import '../styles/modal.css'
 
 const Maintenance_info = ({row,Update,closeModal}) => {
+    const prem_serv=['Fluid check','Battery maintenance','Break inspection','Tire change','Air-filter replace','Spark-plug replace','Suspension-steering','Fuel-system clean','Timing-belt replace','Transmission replace'];
+    const bas_serv=['Fluid check','Battery maintenance','Break inspection','Tire change','Air-filter replace'];
     const [update,setUpdate]=Update;
     const [err,setErr] = useState(null);
     const [data,setData] = useState('');
@@ -9,26 +11,32 @@ const Maintenance_info = ({row,Update,closeModal}) => {
     const [nxtServDate,setNxtServDate] = useState('');
     const [nxtMainType,setNxtMainType] = useState('Basic');
     //basic
-    const [fluidcheck,setFluidcheck] = useState(false);
-    const [batmaint,setBatmaint]=useState(false);
-    const [breakinsp,setBreakinsp]=useState(false);
-    const [tirecng,setTirecng]=useState(false);
-    const [airfilrep,setAirfilrep]=useState(false);
-    //premium
-    const [sparkplugrep,setSparkplugrep] = useState(false);
-    const [supsteer,setSupsteer]=useState(false);
-    const [fuelsyscln,setFuelsyscln]=useState(false);
-    const [timbelrep,setTimbelrep]=useState(false);
-    const [transm,setTransm]=useState(false);
+    const [state,setState] = useState({
+       'Fluid check' :false,
+       'Battery maintenance': false,
+       'Break inspection': false,
+       'Tire change': false,
+       'Air-filter replace': false,
+       'Spark-plug replace': false,
+       'Suspension-steering': false,
+       'Fuel-system clean': false,
+       'Timing-belt replace': false,
+       'Transmission replace': false
+    });
 
-    const prem_serv=['Spark-plug replace','Suspension-steering','Fuel-system clean','Timing-belt replace','Transmission replace'];
-    const bas_serv=['Fluid check','Battery maintenance','Break inspection','Tire change','Air-filter replace'];
-    const [costs,setCosts] = useState([0,0,0,0,0]);
+    const updateState =(key, value)=>{
+        console.log(key,value)
+        setState(prev_state=>({
+            ...prev_state,
+            [key]: value
+        }))
+    }
+    const [costs,setCosts] = useState([0,0,0,0,0,0,0,0,0,0]);
     const [totalcost,setTotalcost]=useState(0);
 
     useEffect(() => {
         let sum=0;
-        for(let i=0;i<5;++i){
+        for(let i=0;i<costs.length;++i){
             if(!isNaN(costs[i]) && costs[i]!=="")sum+=parseFloat(costs[i]);
         }
         setTotalcost(parseFloat(sum.toFixed(3)));
@@ -36,7 +44,7 @@ const Maintenance_info = ({row,Update,closeModal}) => {
 
     const generatePremiumDesp=()=>{
         let desp=[];
-        for(let i=0;i<5;++i){
+        for(let i=0;i<costs.length;++i){
             if(costs[i]>0)desp.push(`${prem_serv[i]}=${costs[i]}`);
         }
         return desp.join(',');
@@ -44,7 +52,7 @@ const Maintenance_info = ({row,Update,closeModal}) => {
     
     const generateBasicDesp=()=>{
         let desp=[];
-        for(let i=0;i<5;++i){
+        for(let i=0;i<costs.length;++i){
             if(costs[i]>0)desp.push(`${bas_serv[i]}=${costs[i]}`);
         }
         return desp.join(',');
@@ -54,14 +62,30 @@ const Maintenance_info = ({row,Update,closeModal}) => {
         try{
             let description="";
             if(maintype==='Basic'){
-                if(!fluidcheck && !batmaint && !breakinsp && !tirecng && !airfilrep){
+                let selected = false;
+                for(let i=0;i<bas_serv.length;++i){
+                    console.log(bas_serv[i],state[bas_serv[i]]);
+                    if(state[bas_serv[i]]){
+                        selected= true;
+                        break;
+                    }
+                }
+                if(!selected){
                     console.log('Select Atleast one service!!');
                     return;
                 }
                 description=generateBasicDesp();
             }
             else{
-                if(!sparkplugrep && !supsteer && !fuelsyscln && !timbelrep && !transm){
+                let selected = false;
+                for(let i=0;i<prem_serv.length;++i){
+                    console.log(prem_serv[i],state[prem_serv[i]]);
+                    if(state[prem_serv[i]]){
+                        selected= true;
+                        break;
+                    }
+                }
+                if(!selected){
                     console.log('Select Atleast one service!!');
                     return;
                 }
@@ -126,15 +150,14 @@ const Maintenance_info = ({row,Update,closeModal}) => {
     <div className="modal-container" onClick={(e)=>{
         if(e.target.className==='modal-container')closeModal();}}>
         <div className='maintenanceinfo-modal'>
-            <div className='Title'>
-                <h3>History</h3>
-                <h3>Maintenance Update</h3>
-            </div>
             <hr/>
             <form className="maintform-group">
                 <fieldset>
-                    <div className='final'>
+            <div className='final'>
                         <div className='info'>
+                            <div className='Title'>
+                                <h3>History</h3>
+                            </div>
                                     {!err && Array.isArray(data) && data.map((val,key)=>{
                                         return <div className='history' key={key}>
                                             <ul>
@@ -146,6 +169,10 @@ const Maintenance_info = ({row,Update,closeModal}) => {
                                         </div>
                                     })}
                         </div>
+                        <div className='info'>
+                            <div className='Title'>
+                                <h3>Maintenance Update</h3>
+                            </div>
                         <div className='add'>
                             <form>
                                 <fieldset>
@@ -165,159 +192,61 @@ const Maintenance_info = ({row,Update,closeModal}) => {
                                     </select>
                                 </div>
                                 {maintype==='Basic' && <div className='check'>
-                                <div className="check-block">
-                                    <div className='block1'>
-                                        <input className='tic' type="checkbox" id="fluid-check" name="fluid-check" onChange={(e)=>{setFluidcheck(e.target.checked)}} checked={fluidcheck}></input>
-                                        <label htmlFor="fluid-check">Fluid checks</label>
-                                    </div>
-                                    <div className='block2'>
-                                        <label htmlFor="cost0">Cost(tk) </label>
-                                        <input className="cost" name="cost0"
-                                            value={costs[0]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[0]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                <div className="check-block">
-                                <div className='block1'>
-                                        <input className='tic' type="checkbox" id="battery-maint" name="battery-maint" onChange={(e)=>{setBatmaint(e.target.checked)}} checked={batmaint}></input>
-                                        <label htmlFor="battery-maint">Battery maintenance</label>
-                                    </div>
-                                    <div className='block2'>
-                                    <label htmlFor="cost1">Cost(tk) </label>
-                                        <input className="cost" name="cost1"
-                                            value={costs[1]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[1]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                <div className="check-block">
-                                    <div className='block1'>
-                                        <input className='tic' type="checkbox" id="break-insp" name="break-insp" onChange={(e)=>{setBreakinsp(e.target.checked)}} checked={breakinsp}></input>
-                                        <label htmlFor="break-insp">Break inspection</label>
-                                    </div>
-                                    <div className='block2'>
-                                    <label htmlFor="cost2">Cost(tk) </label>
-                                        <input className="cost" name="cost2"
-                                            value={costs[2]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[2]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                <div className="check-block">
-                                <div className='block1'>
-                                        <input className='tic' type="checkbox" id="tire-cng" name="tire-cng" onChange={(e)=>{setTirecng(e.target.checked)}} checked={tirecng}></input>
-                                        <label htmlFor="tire-cng">Tire change</label>
-                                    </div>
-                                    <div className='block2'>
-                                    <label htmlFor="cost3">Cost(tk) </label>
-                                        <input className="cost" name="cost3"
-                                            value={costs[3]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[3]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                <div className="check-block">
-                                <div className='block1'>
-                                        <input className='tic' type="checkbox" id="air-filter-rep" name="air-filter-rep" onChange={(e)=>{setAirfilrep(e.target.checked)}} checked={airfilrep}></input>
-                                        <label htmlFor="air-filter-rep">Air-filter replace</label>
-                                    </div>
-                                    <div className='block2'>
-                                        <label htmlFor="cost4">Cost(tk) </label>
-                                        <input className="cost" name="cost4"
-                                            value={costs[4]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[4]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
+                                   
+                                    {bas_serv.map((val,key)=>{
+                                        console.log(state[val]);
+                                        return(
+                                            
+                                            <div className="check-block">
+                                                <div className='block1'>
+                                                    <input className='tic' 
+                                                        type="checkbox" 
+                                                        id={val} 
+                                                        name={val} 
+                                                        onChange={(e)=>{updateState(val,e.target.checked)}} 
+                                                        checked={state[val]}/>
+                                                    <label htmlFor={val}>{val}</label>
+                                                </div>
+                                                <div className='block2'>
+                                                    <label htmlFor={`costs${key}`}>Cost(tk) </label>
+                                                    <input className='cost' name={`costs${key}`}
+                                                    value={costs[key]}
+                                                    onChange={(e)=>{
+                                                        const newCosts=[...costs];
+                                                        newCosts[key]=e.target.value;
+                                                        setCosts(newCosts)}}/>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>}
                                 {maintype==='Premium' && <div className='check'>
-                                <div className="check-block">
-                                    <div className='block1'>
-                                        <input className='tic' type="checkbox" id="sparkplug-replace" name="sparkplug-replace" onChange={(e)=>{setSparkplugrep(e.target.checked)}} checked={sparkplugrep}></input>
-                                        <label htmlFor="sparkplug-replace">Spark-plug replace</label>
-                                    </div>
-                                    <div className='block2'>
-                                        <label htmlFor="cost0">Cost(tk) </label>
-                                        <input className="cost" name="cost0"
-                                            value={costs[0]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[0]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                <div className="check-block">
-                                <div className='block1'>
-                                        <input className='tic' type="checkbox" id="suspension-steering" name="suspension-steering" onChange={(e)=>{setSupsteer(e.target.checked)}} checked={supsteer}></input>
-                                        <label htmlFor="suspension-steering">Suspension & steering</label>
-                                    </div>
-                                    <div className='block2'>
-                                        <label htmlFor="cost1">Cost(tk) </label>
-                                        <input className="cost" name="cost1"
-                                            value={costs[1]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[1]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                <div className="check-block">
-                                    <div className='block1'>
-                                        <input className='tic' type="checkbox" id="fuel-sys-clean" name="fuel-sys-clean" onChange={(e)=>{setFuelsyscln(e.target.checked)}} checked={fuelsyscln}></input>
-                                        <label htmlFor="fuel-sys-clean">Fuel-system clean</label>
-                                    </div>
-                                    <div className='block2'>
-                                        <label htmlFor="cost2">Cost(tk) </label>
-                                        <input className="cost" name="cost2"
-                                            value={costs[2]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[2]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                <div className="check-block">
-                                <div className='block1'>
-                                        <input className='tic' type="checkbox" id="timing-belt-rep" name="timing-belt-rep" onChange={(e)=>{setTimbelrep(e.target.checked)}} checked={timbelrep}></input>
-                                        <label htmlFor="timing-belt-rep">Timing-belt replace</label>
-                                    </div>
-                                    <div className='block2'>
-                                        <label htmlFor="cost3">Cost(tk) </label>
-                                        <input className="cost" name="cost3"
-                                            value={costs[3]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[3]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                <div className="check-block">
-                                <div className='block1'>
-                                        <input className='tic' type="checkbox" id="transmission-serv" name="transmission-serv" onChange={(e)=>{setTransm(e.target.checked)}} checked={transm}></input>
-                                        <label htmlFor="transmission-serv">Transmission Service</label>
-                                    </div>
-                                    <div className='block2'>
-                                    <label htmlFor="cost4">Cost(tk) </label>
-                                            <input className="cost" name="cost4"
-                                            value={costs[4]}
-                                            onChange={(e)=>{
-                                                const newCosts=[...costs];
-                                                newCosts[4]=e.target.value;
-                                                setCosts(newCosts)}}/>
-                                    </div>
-                                </div>
-                                </div>}
+                                {prem_serv.map((val,key)=>{
+                                        console.log(state[val]);
+                                        return(
+                                            <div className="check-block">
+                                                <div className='block1'>
+                                                    <input className='tic' 
+                                                        type="checkbox" 
+                                                        id={val} 
+                                                        name={val} 
+                                                        onChange={(e)=>{updateState(val,e.target.checked)}} 
+                                                        checked={state[val]}/>
+                                                    <label htmlFor={val}>{val}</label>
+                                                </div>
+                                                <div className='block2'>
+                                                    <label htmlFor={`costs${key}`}>Cost(tk) </label>
+                                                    <input className='cost' name={`costs${key}`}
+                                                    value={costs[key]}
+                                                    onChange={(e)=>{
+                                                        const newCosts=[...costs];
+                                                        newCosts[key]=e.target.value;
+                                                        setCosts(newCosts)}}/>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                               </div>}
                                 <div className='block'>
                                     <label htmlFor="total-cost">Total Cost: </label>
                                     <input type="text"
@@ -342,9 +271,16 @@ const Maintenance_info = ({row,Update,closeModal}) => {
                                     value={nxtServDate}
                                     onChange={(e)=>{setNxtServDate(e.target.value)}}/>
                                 </div>
+                                <div style={{width: '100%',
+                                display: 'flex',
+                                alignContent: 'center',
+                                justifyContent: 'flex-end'
+                                }}>
+                                    <button onClick={HandleMaintInfo}>Submit</button>
+                                </div>
                              </fieldset>
                             </form>
-                            <button className='click' onClick={HandleMaintInfo}>Submit</button>
+                        </div>
                         </div>
                         </div>
                     </fieldset>
