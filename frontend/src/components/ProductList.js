@@ -15,8 +15,10 @@ import {
   Modal,
   Placeholder,
   Card,
+  Form,
 } from 'react-bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import { toast } from 'react-toastify'
 
 const ProductList = () => {
   const { user } = useAuthContext()
@@ -29,7 +31,7 @@ const ProductList = () => {
   const [currentView, setCurrentView] = useState('shop')
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [showModal, setShowModal] = useState(false)
-  const [stockUpdates, setStockUpdates] = useState({})
+  const [updatedStock, setUpdatedStock] = useState({})
   const [myProducts, setMyProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -77,6 +79,54 @@ const ProductList = () => {
     fetchData()
   }, [user])
 
+  const handleArchiveProduct = (productId) => {
+    console.log(`Deleting product with ID: ${productId}`)
+    const updatedProducts = products.map((product) =>
+      product.PRODUCT_ID === productId
+        ? { ...product, STATUS: product.STATUS === 1 ? 0 : 1 }
+        : product
+    )
+    setProducts(updatedProducts)
+    setMyProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.PRODUCT_ID === productId
+          ? { ...product, STATUS: product.STATUS === 1 ? 0 : 1 }
+          : product
+      )
+    )
+
+    const archiveProduct = async () => {
+      try {
+        const response = await fetch(
+          'http://localhost:4000/api/shop/archive-product/' + productId,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId }),
+          }
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to archive product')
+        }
+
+        const result = await response.json()
+        console.log(result.message)
+      } catch (error) {
+        console.error('Error archiving product:', error)
+      }
+    }
+
+    archiveProduct()
+
+    toast.success('Product archived successfully')
+    if (selectedProduct && selectedProduct.PRODUCT_ID === productId) {
+      setShowModal(false)
+    }
+  }
+
   const handleMyProductsClick = async () => {
     try {
       const response = await fetch(
@@ -91,8 +141,14 @@ const ProductList = () => {
   }
 
   const handleProductClick = (product) => {
-    setSelectedProduct(product) // Set the selected product
-    setCurrentView('productDetail') // Switch to the product detail view
+    setSelectedProduct(product)
+    setCurrentView('productDetail')
+  }
+
+  const handleProductDetails = (product) => {
+    setSelectedProduct(product)
+    setCurrentView('productDetail')
+    setShowModal(false)
   }
 
   const handleBackToShop = () => {
@@ -205,6 +261,69 @@ const ProductList = () => {
       : true
     return matchesSearchQuery && matchesTag
   })
+
+  useEffect(() => {
+    const initialStock = {}
+    products.forEach((product) => {
+      initialStock[product.PRODUCT_ID] = product.SELLER_STOCK
+    })
+    setUpdatedStock(initialStock)
+  }, [products])
+
+  const handleStockChange = (productId, value) => {
+    setUpdatedStock({
+      ...updatedStock,
+      [productId]: value,
+    })
+  }
+
+  const handleUpdateStock = async (productId) => {
+    const newStock = updatedStock[productId]
+    console.log(`Update stock for product ${productId}: ${newStock}`)
+
+    try {
+      // Send the updated stock to the backend
+      const response = await fetch(
+        'http://localhost:4000/api/shop/update-stock',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: productId, stock: newStock }),
+        }
+      )
+
+      if (!response.ok) {
+        toast.error('Failed to update stock')
+        throw new Error('Failed to update stock')
+      }
+
+      const result = await response.json()
+
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.PRODUCT_ID === productId
+            ? {
+                ...product,
+                SELLER_STOCK: newStock,
+              }
+            : product
+        )
+      )
+      toast.success('Stock updated successfully')
+      console.log(result.message)
+    } catch (error) {
+      console.error('Error updating stock:', error)
+    }
+  }
+
+  const truncateDescription = (description, limit) => {
+    if (description.length <= limit) {
+      return description
+    }
+    return description.substring(0, limit) + '...'
+  }
 
   return (
     <div style={{ width: '100' }}>
@@ -381,16 +500,18 @@ const ProductList = () => {
               ) : (
                 <div className="row">
                   {filteredProducts.length > 0 ? (
-                    filteredProducts.map((product) => (
-                      <div key={product.PRODUCT_ID} className="col-md-3 mb-4">
-                        <ProductCard
-                          key={product.PRODUCT_ID}
-                          product={product}
-                          onProductClick={() => handleProductClick(product)}
-                          handleAddToCart={handleAddToCart}
-                        />
-                      </div>
-                    ))
+                    filteredProducts
+                      .filter((product) => product.STATUS === 1)
+                      .map((product) => (
+                        <div key={product.PRODUCT_ID} className="col-md-3 mb-4">
+                          <ProductCard
+                            key={product.PRODUCT_ID}
+                            product={product}
+                            onProductClick={() => handleProductClick(product)}
+                            handleAddToCart={handleAddToCart}
+                          />
+                        </div>
+                      ))
                   ) : (
                     <Container>
                       <Alert variant="danger">No products found</Alert>
@@ -420,6 +541,91 @@ const ProductList = () => {
           )}
         </Col>
       </Row>
+      <Modal
+        show={showModal}
+        onHide={(e) => setShowModal(false)}
+        centered
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>My Products</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {myProducts.length === 0 ? (
+            <Alert variant="danger">You have no products.</Alert>
+          ) : (
+            myProducts.map((product) => (
+              <Row key={product.PRODUCT_ID} className="product-row mb-3">
+                <Col md={4} className="image-col">
+                  <img
+                    src={product.PRODUCT_IMAGE_URL}
+                    alt={product.PRODUCT_NAME}
+                    className="product-image"
+                  />
+                </Col>
+                <Col md={8}>
+                  <h5>{product.PRODUCT_NAME}</h5>
+                  <p>{truncateDescription(product.PRODUCT_DESCRIPTION, 50)}</p>
+                  <p>
+                    <strong>Category:</strong> {product.PRODUCT_CATEGORY}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> ${product.SELLER_PRICE.toFixed(2)}
+                  </p>
+                  <Form.Group as={Row} className="align-items-center">
+                    <Form.Label column md={4} style={{ textAlign: 'right' }}>
+                      <strong>Stock:</strong>
+                    </Form.Label>
+                    <Col md={4} className="d-flex justify-content-center">
+                      <Form.Control
+                        type="number"
+                        value={updatedStock[product.PRODUCT_ID]}
+                        onChange={(e) =>
+                          handleStockChange(
+                            product.PRODUCT_ID,
+                            parseInt(e.target.value, 10)
+                          )
+                        }
+                        className="stock-input"
+                      />
+                    </Col>
+                    <Col md={4}>
+                      <Button
+                        variant="primary"
+                        onClick={() => handleUpdateStock(product.PRODUCT_ID)}
+                        className="update-stock-btn"
+                      >
+                        Update Stock
+                      </Button>
+                    </Col>
+                  </Form.Group>
+                  <Button
+                    variant="info"
+                    onClick={() => handleProductDetails(product)}
+                    className="product-details-btn"
+                  >
+                    Product Details
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleArchiveProduct(product.PRODUCT_ID)}
+                    className="delete-product-btn"
+                  >
+                    {product.STATUS === 1
+                      ? 'Archive Product'
+                      : 'Unarchive Product'}
+                  </Button>
+                </Col>
+              </Row>
+            ))
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={(e) => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   )
 }

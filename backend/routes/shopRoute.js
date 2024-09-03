@@ -13,6 +13,7 @@ const {
   addAnswer,
   getProductReviews,
   addProductReview,
+  archiveProduct,
 } = require('../controllers/shopController')
 const router = express.Router()
 const multer = require('multer')
@@ -31,5 +32,6 @@ router.post('/add-question', addQuestion)
 router.post('/add-answer', addAnswer)
 router.get('/reviews/:productId', getProductReviews)
 router.post('/add-review', addProductReview)
+router.put('/archive-product/:id', archiveProduct)
 
 module.exports = router

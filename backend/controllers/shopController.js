@@ -1,7 +1,6 @@
 const { runQuery, runQueryOutBinds } = require('../connection')
-const path = require('path')
 const { BlobServiceClient } = require('@azure/storage-blob')
-const { create } = require('domain')
+const fs = require('fs')
 const oracledb = require('oracledb')
 
 const getShop = async (req, res) => {
@@ -21,11 +20,7 @@ const getShopById = async (req, res) => {
       'SELECT * FROM PRODUCTS WHERE SELLER_ID=:id',
       { id }
     )
-    if (result.length == 0) {
-      res.status(404).json({ error: 'Products not found' })
-    } else {
-      res.status(200).json(result)
-    }
+    res.status(200).json(result)
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Internal server error' })
@@ -78,7 +73,16 @@ const addProduct = async (req, res) => {
       `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
     )
     const imageUrl = blockBlobClient.url
-
+    if (uploadBlobResponse._response.status === 201) {
+      console.log(image.path)
+      fs.unlink(image.path, (err) => {
+        if (err) {
+          console.error('Failed to delete local file:', err)
+        } else {
+          console.log('Successfully deleted local file')
+        }
+      })
+    }
     const result = await runQuery(
       `INSERT INTO PRODUCTS 
         (PRODUCT_ID,
@@ -164,13 +168,13 @@ const updateProduct = async (req, res) => {
   }
 }
 
-const deleteProduct = async (req, res) => {
+const archiveProduct = async (req, res) => {
   const { id } = req.params
   try {
-    const result = await runQuery('DELETE FROM PRODUCTS WHERE PRODUCT_ID=:id', {
+    const result = await runQuery('CALL UPDATE_STATUS(:id)', {
       id,
     })
-    res.status(200).json({ message: 'Product deleted successfully' })
+    res.status(200).json({ message: 'Product archived successfully' })
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Internal server error' })
@@ -178,16 +182,13 @@ const deleteProduct = async (req, res) => {
 }
 
 const updateStock = async (req, res) => {
-  const { products } = req.body
+  const { id, stock } = req.body
   try {
-    for (const product of products) {
-      const { id, stock } = product
-      await runQuery(
-        'UPDATE PRODUCTS SET SELLER_STOCK=:stock WHERE PRODUCT_ID=:id',
-        { stock, id },
-        { autoCommit: true }
-      )
-    }
+    await runQuery(
+      'UPDATE PRODUCTS SET SELLER_STOCK=:stock WHERE PRODUCT_ID=:id',
+      { stock, id },
+      { autoCommit: true }
+    )
     res.status(200).json({ message: 'Stock updated successfully' })
   } catch (error) {
     console.log(error)
@@ -596,7 +597,7 @@ module.exports = {
   getShopByCategory,
   addProduct,
   updateProduct,
-  deleteProduct,
+  archiveProduct,
   updateStock,
   createPurchase,
   getPurchaseHistory,

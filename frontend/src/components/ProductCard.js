@@ -32,6 +32,13 @@ const ProductCard = ({ product, onProductClick, handleAddToCart }) => {
     }
   }
 
+  const truncateDescription = (description, limit) => {
+    if (description.length <= limit) {
+      return description
+    }
+    return description.substring(0, limit) + '...'
+  }
+
   return (
     <div className="card77">
       <div className="card-img">
@@ -40,12 +47,12 @@ const ProductCard = ({ product, onProductClick, handleAddToCart }) => {
       <div className="card-info">
         <p className="text-title">{product.PRODUCT_NAME}</p>
         <p className="text-body">
-          {product.PRODUCT_DESCRIPTION + ' '}
+          {truncateDescription(product.PRODUCT_DESCRIPTION, 38) + ' '}
           <span
             onClick={onProductClick}
             style={{ color: 'blue', cursor: 'pointer' }}
           >
-            See more...
+            See more
           </span>
         </p>
         <p className="text-body">Available: {product.SELLER_STOCK}</p>
