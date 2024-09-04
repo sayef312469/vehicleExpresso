@@ -591,6 +591,21 @@ const addProductReview = async (req, res) => {
   }
 }
 
+const averageRating = async (req, res) => {
+  const { productId } = req.params
+
+  try {
+    const result = await runQuery(
+      `SELECT AVG(RATING) AS AVERAGE_RATING FROM PRODUCTREVIEWS WHERE PRODUCT_ID = :productId`,
+      { productId }
+    )
+    res.status(200).json(result[0])
+  } catch (error) {
+    console.error('Error fetching average rating:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
 module.exports = {
   getShop,
   getShopById,
@@ -609,4 +624,5 @@ module.exports = {
   addAnswer,
   getProductReviews,
   addProductReview,
+  averageRating,
 }

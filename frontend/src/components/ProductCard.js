@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCart } from '../context/CartContext'
 import { ButtonGroup, Button, Container } from 'react-bootstrap'
 import { toast } from 'react-toastify'
@@ -6,21 +6,19 @@ import 'react-toastify/dist/ReactToastify.css'
 
 const ProductCard = ({ product, onProductClick, handleAddToCart }) => {
   const { addToCart } = useCart()
-  const [quantity, setQuantity] = useState(1) // State to store the selected quantity
+  const [quantity, setQuantity] = useState(1)
+  const [averageRating, setAverageRating] = useState(0)
 
-  // Function to handle incrementing the quantity
   const incrementQuantity = () => {
     setQuantity((prevQuantity) =>
       prevQuantity < product.SELLER_STOCK ? prevQuantity + 1 : prevQuantity
     )
   }
 
-  // Function to handle decrementing the quantity
   const decrementQuantity = () => {
     setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1))
   }
 
-  // Function to add the product to the cart with the selected quantity
   const handleAddToCartClick = () => {
     if (quantity > product.SELLER_STOCK) {
       toast.error(
@@ -37,6 +35,31 @@ const ProductCard = ({ product, onProductClick, handleAddToCart }) => {
       return description
     }
     return description.substring(0, limit) + '...'
+  }
+
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      const response = await fetch(
+        `http://localhost:4000/api/shop/average-rating/${product.PRODUCT_ID}`
+      )
+      const data = await response.json()
+      console.log('star rating: ' + data.AVERAGE_RATING)
+      setAverageRating(data.AVERAGE_RATING)
+    }
+    fetchAverageRating()
+  }, [product.PRODUCT_ID])
+
+  const StarRating = ({ rating }) => {
+    const starPercentage = (rating / 5) * 100
+    console.log('star percentage: ' + starPercentage)
+    return (
+      <div className="star-container">
+        <div
+          className="star-filled"
+          style={{ width: `${starPercentage}%` }}
+        ></div>
+      </div>
+    )
   }
 
   return (
@@ -56,6 +79,12 @@ const ProductCard = ({ product, onProductClick, handleAddToCart }) => {
           </span>
         </p>
         <p className="text-body">Available: {product.SELLER_STOCK}</p>
+        <div className="star-rating">
+          <StarRating rating={averageRating} />
+        </div>
+        <span className="rating-body">
+          ({averageRating ? averageRating.toFixed(1) : 0})
+        </span>
       </div>
       {product.SELLER_STOCK > 0 ? (
         <div className="card-footer">

@@ -26,12 +26,13 @@ const ProductDetail = ({
   const [newReview, setNewReview] = useState('')
   const [rating, setRating] = useState(0)
   const [showQASection, setShowQASection] = useState(false)
-  const [questions, setQuestions] = useState([]) // State to store questions
+  const [questions, setQuestions] = useState([])
   const [newQuestion, setNewQuestion] = useState('')
   const [reportText, setReportText] = useState('')
   const [reportSubmitted, setReportSubmitted] = useState(false)
   const [showReportSection, setShowReportSection] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [averageRating, setAverageRating] = useState(0)
 
   const incrementQuantity = () => {
     setQuantity((prevQuantity) =>
@@ -75,8 +76,8 @@ const ProductDetail = ({
 
   const handleAddReview = async () => {
     const reviewData = {
-      productId: product.PRODUCT_ID, // Ensure you have the productId available
-      userId: userDetail.USERID, // Ensure you have the userId available
+      productId: product.PRODUCT_ID,
+      userId: userDetail.USERID,
       rating: rating,
       reviewText: newReview,
     }
@@ -148,6 +149,31 @@ const ProductDetail = ({
 
     fetchQuestionsAndAnswers()
   }, [product.PRODUCT_ID])
+
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      const response = await fetch(
+        `http://localhost:4000/api/shop/average-rating/${product.PRODUCT_ID}`
+      )
+      const data = await response.json()
+      console.log('star rating: ' + data.AVERAGE_RATING)
+      setAverageRating(data.AVERAGE_RATING)
+    }
+    fetchAverageRating()
+  }, [product.PRODUCT_ID])
+
+  const StarRatingNew = ({ rating }) => {
+    const starPercentage = (rating / 5) * 100
+    console.log('star percentage: ' + starPercentage)
+    return (
+      <div className="star-container">
+        <div
+          className="star-filled"
+          style={{ width: `${starPercentage}%` }}
+        ></div>
+      </div>
+    )
+  }
 
   if (loading) {
     return (
@@ -295,6 +321,12 @@ const ProductDetail = ({
         />
         <Card.Body>
           <Card.Title>{product.PRODUCT_NAME}</Card.Title>
+          <div className="star-rating">
+            <StarRatingNew rating={averageRating} />
+          </div>
+          <span className="rating-body">
+            ({averageRating ? averageRating.toFixed(1) : 0})
+          </span>
           <Card.Text>{product.PRODUCT_DESCRIPTION}</Card.Text>
           <p className="text-body">Available: {product.SELLER_STOCK}</p>
           <Card.Text className="price">
