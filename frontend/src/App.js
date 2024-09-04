@@ -59,26 +59,27 @@ function App() {
                 path="/rentingcars"
                 element={user ? <RentingCars /> : <Navigate to="/login" />}
               />
-              <Route
-                path="/vehiclecare"
-                element={user ? <VehicleCare /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/vehiclecare/admin"
-                element={user ? <CareAdmin /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/vehiclecare/admin/short-record"
-                element={user ? <ShortRecord /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/vehiclecare/admin/long-record"
-                element={user ? <LongRecord /> : <Navigate to="/login" />}
-              />
-              <Route
+
+              {user && <Route
                 path="/vehiclecare/user"
-                element={user ? <CareUser /> : <Navigate to="/login" />}
-              />
+                element= {<CareUser />} 
+              />}
+
+              {user && <Route
+                path="/vehiclecare/admin"
+                element={<CareAdmin />}
+              />}
+
+              {user && <Route
+                path="/vehiclecare/admin/short-record"
+                element={<ShortRecord /> }
+              />}
+              
+              {user && <Route
+                path="/vehiclecare/admin/long-record"
+                element={<LongRecord />}
+              />}
+
               <Route
                 path="/carinsurancerenewal"
                 element={

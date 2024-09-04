@@ -20,9 +20,7 @@ CREATE TABLE LongtermCare(
 
 CREATE TABLE Maintenance_Info(
     maintenance_id INTEGER not null,
-    basic_desc VARCHAR(255),
-    premium_desc VARCHAR(255),
-    flag VARCHAR(20),
+    description VARCHAR(255),
     last_service_date DATE,
     next_service_date DATE,
     CONSTRAINT fk_maintenance_id FOREIGN KEY (maintenance_id) REFERENCES Care_Transac(service_id)

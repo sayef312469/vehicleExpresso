@@ -18,12 +18,14 @@
     justify-content: space-between;
 }
 
+.Title{
+    word-wrap: break-word;
+}
 .Title h3{
     text-align: center;
-    min-width:40%;
+    min-width:45%;
     font-size: 100%;
     padding: 8px;
-    word-wrap: break-word;
 }
 
 .modal{
@@ -112,6 +114,7 @@
     background-color: cadetblue;
     width: 100%;
     overflow-y: auto;
+    font-weight: bold;
     
 }
 
@@ -121,6 +124,7 @@
     border-bottom: 1px solid #ccc;
     width: 100%;
     overflow-y: auto;
+    font-weight: bold;
 }
 
 .add .block{

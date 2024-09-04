@@ -98,10 +98,8 @@ const Maintenance_info = ({row,Update,closeModal}) => {
                     },
                     body: JSON.stringify({
                         service_id: row.SERVICE_ID,
-                        maintenance_type: maintype,
                         description: description,
                         next_maintenance_date: nxtServDate,
-                        next_maintenance_type: nxtMainType,
                         totalcost: totalcost
                     })
                 })
@@ -162,9 +160,8 @@ const Maintenance_info = ({row,Update,closeModal}) => {
                                         return <div className='history' key={key}>
                                             <ul>
                                                 <li>Last service Date: {val.LAST_SERVICE_DATE}</li>
-                                                <li>Maintenance Type: {val.FLAG && val.FLAG[0]==='B'?'BASIC':'PREMIUM'}</li>
-                                                <li>Maintenance info:<br/>{val.BASIC_DESC?val.BASIC_DESC:val.PREMIUM_DESC}</li>
-                                                <li>Next service Date: {val.NEXT_SERVICE_DATE} {val.FLAG && val.FLAG[1]==='B'?'(BASIC)':'(PREMIUM)'}</li>
+                                                <li>Maintenance info:<br/>{val.DESCRIPTION}</li>
+                                                <li>Next service Date: {val.NEXT_SERVICE_DATE}</li>
                                             </ul>
                                         </div>
                                     })}
@@ -273,8 +270,7 @@ const Maintenance_info = ({row,Update,closeModal}) => {
                                 </div>
                                 <div style={{width: '100%',
                                 display: 'flex',
-                                alignContent: 'center',
-                                justifyContent: 'flex-end'
+                                justifyItems: 'flex-end'
                                 }}>
                                     <button onClick={HandleMaintInfo}>Submit</button>
                                 </div>
