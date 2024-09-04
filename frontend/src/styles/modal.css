@@ -1,4 +1,4 @@
-.modal-container{
+.modal-container1{
     position: fixed;
     z-index: 1;
     left:0;
@@ -28,7 +28,7 @@
     padding: 8px;
 }
 
-.modal{
+.modal1{
     padding: 35px;
     position: relative;
     display: flex;
@@ -38,7 +38,7 @@
     border-radius: 10px;
     background-color: azure;
     width: 28em;
-    height: 30em;
+    height: auto;
     text-align: center;
 }
 

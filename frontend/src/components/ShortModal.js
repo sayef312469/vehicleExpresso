@@ -88,13 +88,12 @@ const Modal = ({ row, Update, closeModal }) => {
     doc.save(`${row.VEHICLENO}.pdf`)
   }
   return (
-    <div
-      className="modal-container"
+    <div className="modal-container1"
       onClick={(e) => {
-        if (e.target.className === 'modal-container') closeModal()
+        if (e.target.className === 'modal-container1') closeModal()
       }}
     >
-      <div className="modal">
+      <div className="modal1">
         <form className="form-group">
           <fieldset>
             <h3>Edit Record</h3>
@@ -162,8 +161,7 @@ const Modal = ({ row, Update, closeModal }) => {
                 <option value="YES">Yes</option>
               </select>
             </div>
-            <span style={{ color: 'crimson' }}>Submit before generating the updated bill
-            </span>
+            <span style={{ color: 'crimson' }}>Submit before generating the updated bill</span>
             <div>
               <button onClick={HandleGenerateBill}>Generate Bill</button>
               <button onClick={HandleSubmit}>Submit</button>

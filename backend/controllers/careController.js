@@ -533,11 +533,6 @@ const updateMaintInfo=async(req,res)=>{
       next_maintenance_date,
       totalcost
       }=req.body;
-    //   let flag="00";
-    //   if(maintenance_type==="Basic")flag='B'+flag.slice(1);
-    //   else flag='P'+flag.slice(1);
-    //   if(next_maintenance_type==="Basic")flag=flag.slice(0,1)+'B';
-    //   else flag=flag.slice(0,1)+'P';
 
       const maintenance_date=new Date().toISOString().slice(0,10);
       await runQuery(`insert into Maintenance_info (Maintenance_id,description,last_service_date,next_service_date)

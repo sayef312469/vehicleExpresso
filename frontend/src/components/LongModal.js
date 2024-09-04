@@ -73,8 +73,8 @@ const LongModal = ({row,Update,closeModal}) => {
         closeModal();
     }
     return ( 
-    <div className="modal-container"onClick={(e)=>{if(e.target.className==='modal-container')closeModal();}}>
-        <div className="modal">
+    <div className="modal-container1" onClick={(e)=>{if(e.target.className==='modal-container1')closeModal();}}>
+        <div className="modal1">
             <h3>Edit Record</h3>
             <hr/>
             <form className="form-group">

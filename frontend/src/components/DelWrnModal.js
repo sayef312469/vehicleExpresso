@@ -31,7 +31,7 @@ const DelWrnModal = ({row,Update,Record,closeModal}) => {
         closeModal();
       }
     return ( 
-    <div className="modal-container" onClick={(e)=>{if(e.target.className==='modal-container')closeModal();}}>
+    <div className="modal-container1" onClick={(e)=>{if(e.target.className==='modal-container1')closeModal();}}>
         <div className='delwrn-modal'>
             <h3>Confirm Deletion</h3>
             <p>Do you want to delete this row permanently?</p>
