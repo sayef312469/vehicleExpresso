@@ -13,9 +13,22 @@ const PickupVanService = () => {
   return (
     <div>
       <HeroSection />
+      <br />
       <FeaturesSection />
+      <br />
+      <br />
+      <br />
+      <br />
       <TestimonialsSection />
+      <br />
+      <br />
+      <br />
+      <br />
       <PricingSection />
+      <br />
+      <br />
+      <br />
+      <br />
       <FAQSection />
       <br />
       <Footer />
