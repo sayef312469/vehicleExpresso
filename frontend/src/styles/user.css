@@ -155,7 +155,7 @@ span{
   border: 1px solid #444;
   background-color: transparent;
   padding: 45px 10px;
-  width: 90%;
+  width: 98%;
   margin-top: 10px;
   margin-bottom: 40px;
   display: flex;
@@ -210,10 +210,13 @@ span{
 
 .user .animation-container {
   display: flex;
-  gap: 80px;
   align-items: center;
-  width: 90%;
-  padding: 0 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px 2px;
+  border: 1px solid #444;
+  background-color: transparent;
+  width: 98%;
+  height: auto;
 }
 .user .animation-container img {
   width: 55%;
@@ -247,7 +250,6 @@ span{
   font-size: 16px;
 
   border: 0;
-
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
@@ -265,7 +267,7 @@ span{
 
 #or {
   position: relative;
-  width: 300px;
+  width: 290px;
   height: 50px;
   
   line-height: 50px;
@@ -277,11 +279,8 @@ span{
   position: absolute;
   width: 130px;
   height: 2px;
-  
   top: 24px;
-  
   background-color: #78B7D0;
-  
   content: '';
 }
 

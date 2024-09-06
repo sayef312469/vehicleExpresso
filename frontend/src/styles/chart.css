@@ -45,7 +45,7 @@
 }
 
 .select{
-  width: 70px;
+  width: auto;
   padding: 5px;
   border: 0.5px solid #ccc; 
   border-radius: 8px; 

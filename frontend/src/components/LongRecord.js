@@ -63,7 +63,7 @@ const LongRecord = () => {
     return ( 
     <div className='longrecord'>
         <h3>Longterm Record (Maintenance Info)</h3>
-        <hr style={{ border: 'none', height: '2px', background: 'linear-gradient(to right, #000000, #1a1a1a, #333333, #4d4d4d, #666666, #4d4d4d, #333333, #1a1a1a, #000000)', width: '90%', margin: '20px ' }} />
+        {/* <hr style={{ border: 'none', height: '2px', background: 'linear-gradient(to right, #000000, #1a1a1a, #333333, #4d4d4d, #666666, #4d4d4d, #333333, #1a1a1a, #000000)', width: '90%', margin: '20px ' }} /> */}
         <div className='filter-bar'>
           <BsFillFilterSquareFill className='filter-btn'/>
           <select className='filter-option' value={filterBy} onChange={(e)=>
