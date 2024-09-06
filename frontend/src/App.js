@@ -26,6 +26,8 @@ import Wavy from './pages/Wavy'
 import Dashboard from './pages/dashboard'
 import RecordHistory from './pages/record'
 import Profile from './pages/userProfile'
+import ShortRecord from './components/ShortRecord'
+import LongRecord from './components/LongRecord'
 
 function App() {
   const { user } = useAuthContext()
