@@ -204,6 +204,7 @@ div.msg {
 .showDateAndData {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   flex-wrap: wrap;
   width: 90vw;
 }

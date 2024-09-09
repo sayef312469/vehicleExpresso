@@ -227,20 +227,32 @@ const VehicleEntryExit = () => {
         setLLong(llong + 1)
       }
 
-      let parkName = ''
+      let parkName = {}
 
       parks.forEach((park) => {
         if (park.GARAGEID === Number(gidExit)) {
-          parkName = park.NAME
+          parkName = park
         }
       })
 
       const doc = new jsPDF()
 
+
+
+
       doc.setFontSize(18)
-      doc.text(parkName, 70, 20)
-      doc.setFontSize(14)
-      doc.text('Vehicle exit details', 80, 30)
+      doc.setFont('helvetica', 'bold')
+  
+      // Add company name and address
+  
+      doc.text(parkName.NAME, 105, 15, null, null, 'center')
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`${parkName.AREA}, ${parkName.CITY}, ${parkName.COUNTRY}`, 105, 20, null, null, 'center')
+      doc.text(`Vehicle Exit`, 105, 25, null, null, 'center')
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Receipt', 105, 35, null, null, 'center')
 
       doc.text(' ', 20, 40)
 
