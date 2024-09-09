@@ -139,9 +139,9 @@ input:invalid:focus{
 
 .vr{
   width: 1.5px;
-  background-color: #272424;
-  height:5px;
+  height:10px;
   top: 65%;
+  visibility: hidden;
 }
 
 span{
@@ -150,10 +150,12 @@ span{
 }
 
 .payment{
-  border-radius: 15px;
-  box-shadow: 0 4px 10px 2px;
-  border: 1px solid #444;
-  background-color: transparent;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 45px 10px;
   width: 98%;
   margin-top: 10px;
@@ -163,7 +165,6 @@ span{
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  font-family: "Special Elite", system-ui;
 }
 
 .title{
@@ -211,12 +212,14 @@ span{
 .user .animation-container {
   display: flex;
   align-items: center;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px 2px;
-  border: 1px solid #444;
-  background-color: transparent;
   width: 98%;
   height: auto;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .user .animation-container img {
   width: 55%;
