@@ -49,15 +49,17 @@ hr{
  .admin .animation-container{
   display: flex;
   align-items: center;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px 2px;
-  border: 1px solid #444;
-  background-color: transparent;
   padding: 45px 10px;
   width: 98%;
   height: auto;
   margin-top: 20px;
-}
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+ }
 
 .admin .animation-container img{
   width: 50%;
