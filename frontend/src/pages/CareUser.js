@@ -7,6 +7,10 @@ import { FaTimes } from 'react-icons/fa';
 import carCare from '../img/carCare.svg'
 import { BiAnalyse } from "react-icons/bi";
 import { BiBadgeCheck } from "react-icons/bi";
+import { Fab, Badge} from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
+import ChatUI from "../components/ChatUI";
+import socket from "../services/socket";
 
 
 const CareUser = () => {
@@ -37,7 +41,10 @@ const CareUser = () => {
     const [shortBill,setShortBill]=useState([{}]);
     const [longBill,setLongBill]=useState([{}]);
     const [formerr,setFormerr] = useState(false);
+    const [chatOpen, setChatOpen] = useState(false);
     const [errname,setErrname] = useState('');
+    const [imageUrl, setImageUrl] = useState();
+    const [unread, setUnread] = useState(0);
 
     useEffect(()=>{
       const getVehicleno = async()=>{
@@ -53,11 +60,12 @@ const CareUser = () => {
           })
           if(!response.ok) throw new Error('Error occured')
           const jsonData= await response.json();
+          console.log(jsonData);
           setData(jsonData.data);
           setShortBill(jsonData.shortBill);
           setLongBill(jsonData.longBill);
-          setNo(jsonData.data[0].VEHICLENO);
-          console.log(jsonData);
+          setImageUrl(jsonData.imageUrl[0].PRO_URL);
+          setNo(jsonData?.data[0]?.VEHICLENO);
         }catch(err){
           console.error(err);
           setError(err.message);
@@ -66,8 +74,28 @@ const CareUser = () => {
       getVehicleno();
     },[])
 
+    useEffect(()=>{
+      console.log('counting...');
+      socket.emit('users active',{
+        userId: user.id ,
+        imageUrl: imageUrl
+      })
+      socket.on('unread chat',({count})=>{
+        if(!chatOpen){
+          setUnread((prevUnread) => {
+              const newUnread = prevUnread + count;
+              return newUnread;
+            });
+            console.log(chatOpen);
+        }
+      })
+      return()=>{
+        socket.off('unread chat');
+      }
+    },[chatOpen]);
+  
     const clear = ()=>{
-      setNo(data[0].VEHICLENO);
+      setNo(data[0]?.VEHICLENO);
       setDate("");
       setRepair(false);
       setRepairtype("");
@@ -148,6 +176,7 @@ const CareUser = () => {
           warning(`Failure! Try again!`);
         }
       }
+
       const insertShortData = async () => {
         try {
           const response = await fetch(shorturl,
@@ -226,8 +255,6 @@ const CareUser = () => {
       }
 
 
-
-
     return (
       <div className="user" onClick={(e)=>{
         if(e.target.className ==="user"){
@@ -281,7 +308,7 @@ const CareUser = () => {
               <div className="block">
                 <label htmlFor="vehicleno">Vehicle No:</label>
                 <select name="vehicleno" value={no} onChange={(e)=>{setNo(e.target.value)}}>
-                  {!error && Array.isArray(data) && data.map((vehicle,key)=>{ return <option key={key} value={vehicle.VEHICLENO}>{vehicle.VEHICLENO}</option>})}
+                  {!error && Array.isArray(data) && data.map((vehicle,key)=>{ return <option key={key} value={vehicle?.VEHICLENO}>{vehicle?.VEHICLENO}</option>})}
                 </select>
               </div>
               <legend>MAINTENANCE INFO:</legend>
@@ -341,7 +368,7 @@ const CareUser = () => {
             <div className="block">
               <label htmlFor="vehicleno">Vehicle No:</label>
               <select name="vehicleno" value={no} onChange={(e)=>{setNo(e.target.value)}}>
-                  {!error && Array.isArray(data) && data.map((vehicle,key)=>{ return <option key={key}>{vehicle.VEHICLENO}</option>})}
+                  {!error && Array.isArray(data) && data.map((vehicle,key)=>{ return <option key={key}>{vehicle?.VEHICLENO}</option>})}
               </select>
             </div>
             <div className="block">
@@ -419,6 +446,27 @@ const CareUser = () => {
             </tbody>
           </table>
         </div>
+        <Fab
+          color="primary"
+          aria-label="chat"
+          onClick={()=>{
+            setChatOpen(!chatOpen);
+            setUnread(0);
+          }}
+          style={{ position: 'fixed', bottom: 20, right: 20 }}>
+            <Badge
+              badgeContent={unread} 
+              color="error"
+              overlap="circular"
+              anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+              }}>
+            <ChatIcon />
+          </Badge>
+        </Fab>
+        {chatOpen && 
+        <ChatUI imageUrl = {imageUrl}/>}
     </div>
   );
 }

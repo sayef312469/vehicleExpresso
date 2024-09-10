@@ -5,6 +5,7 @@ import LineChart from '../components/LineChart';
 import { Link } from 'react-router-dom';
 import { AiOutlineTool } from 'react-icons/ai';
 import { FaTools } from 'react-icons/fa';
+import { BiChat } from 'react-icons/bi';
 
 
 const CareAdmin = () => {
@@ -35,6 +36,14 @@ const CareAdmin = () => {
                     <button>
                       <FaTools style={{color: '#333'}}/>
                       Longterm Record
+                    </button>
+                  </div>
+                </Link>
+                <Link to="/vehiclecare/admin/chat" style={{textDecoration: 'none'}}>
+                  <div className='chat-button'>
+                    <button>
+                      <BiChat style={{color: '#333'}}/>
+                      Check Message
                     </button>
                   </div>
                 </Link>

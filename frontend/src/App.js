@@ -20,14 +20,14 @@ import RentingCars from './pages/RentingCars'
 import SearchParking from './pages/SearchPaking'
 import Signup from './pages/Signup'
 import UserParkHistory from './pages/UserParkHistory'
-import VehicleCare from './pages/VehicleCare'
 import VehicleEntryExit from './pages/VehicleEntryExit'
 import Wavy from './pages/Wavy'
 import Dashboard from './pages/dashboard'
 import RecordHistory from './pages/record'
 import Profile from './pages/userProfile'
-import ShortRecord from './components/ShortRecord'
-import LongRecord from './components/LongRecord'
+import ShortRecord from './pages/ShortRecord'
+import LongRecord from './pages/LongRecord'
+import ChatAdmin from './pages/ChatAdmin'
 
 function App() {
   const { user } = useAuthContext()
@@ -84,6 +84,11 @@ function App() {
               {user && <Route
                 path="/vehiclecare/admin/long-record"
                 element={<LongRecord />}
+              />}
+
+              {user && <Route
+                path="/vehiclecare/admin/chat"
+                element={<ChatAdmin/>}
               />}
 
               <Route

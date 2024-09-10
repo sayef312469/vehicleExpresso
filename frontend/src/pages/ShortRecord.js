@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import useFetchTable from '../hooks/useFetchTable';
 import {BsFillTrashFill,BsFillPencilFill,BsFillFilterSquareFill, BsArrowLeft, BsArrowRight} from 'react-icons/bs';
 import '../styles/table.css';
-import ShortModal from './ShortModal';
-import DelWrnModal from './DelWrnModal';
+import ShortModal from '../components/ShortModal';
+import DelWrnModal from '../components/DelWrnModal';
 import { Toaster } from 'react-hot-toast';
 
 const ShortRecord = () => {

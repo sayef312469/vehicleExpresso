@@ -8,6 +8,7 @@ const parkingRoute = require('./routes/parkingRoute')
 const userRoutes = require('./routes/userRoutes')
 const careRoute = require('./routes/careRoute')
 const shopRoute = require('./routes/shopRoute')
+const {chatSystem} = require('./realTimeChat');
 
 const app = express()
 app.use(cors())
@@ -28,6 +29,7 @@ const io = new Server(server, {
   },
 })
 
+
 io.on('connection', (socket) => {
   console.log(`User Connected: ${socket.id}`)
 
@@ -46,6 +48,10 @@ io.on('connection', (socket) => {
     console.log(`${socket.id} left room ${room}`)
     socket.to(room).emit('message', `User ${socket.id} left room ${room}`)
   })
+
+
+  //chat-system
+  chatSystem(socket);
 
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id)

@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import useFetchTable from '../hooks/useFetchTable';
 import {BsFillTrashFill,BsFillPencilFill,BsTools,BsFillFilterSquareFill, BsArrowLeft, BsArrowRight} from 'react-icons/bs';
 import '../styles/table.css';
-import LongModal from './LongModal';
-import MaintenanceInfo from './MaintenanceInfo';
-import DelWrnModal from './DelWrnModal';
+import LongModal from '../components/LongModal';
+import MaintenanceInfo from '../components/MaintenanceInfo';
+import DelWrnModal from '../components/DelWrnModal';
 import { Toaster } from 'react-hot-toast';
 
 const LongRecord = () => {

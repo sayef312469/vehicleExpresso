@@ -37,13 +37,8 @@ hr{
   font-weight: bold;
 }
 
-.long-button button{
+.long-button button, .short-button button, .chat-button button{
   background-color: transparent;
-}
-
-.short-button button{
-  background-color: transparent;
-  text-decoration: none;
 }
 
  .admin .animation-container{

@@ -500,6 +500,9 @@ const availVehicle=async(req,res)=>{
         const data = await runQuery(`select vehicleno
         from vehicle_info where vehicle_owner=:vehicleOwner`,{vehicleOwner});
 
+        const imageUrl =  await runQuery(`select pro_url
+        from users where userid=:vehicleOwner`,{vehicleOwner});
+
         const shortBill = await runQuery(`select tc.vehicleno,ct.service_type,sc.repair,sc.wash,ct.servicing_cost,to_char(tc.service_date,'yyyy-mm-dd') as SERVICE_DATE
         from vehicle_info vi,takes_care tc,care_transac ct,shorttermcare sc
         where vi.vehicle_owner=:vehicleOwner and
@@ -519,7 +522,7 @@ const availVehicle=async(req,res)=>{
         ct.service_id=mi.maintenance_id and
         to_char(lc.final_date,'yyyy-mm-dd')<:today
         order by tc.service_date`,{vehicleOwner,today})
-        res.status(200).json({data,shortBill,longBill});
+        res.status(200).json({data,imageUrl,shortBill,longBill});
     }catch(err){
         console.error(err);
         res.status(500).send('Fail to fetch vehicle no');
@@ -555,8 +558,10 @@ const updateMaintInfo=async(req,res)=>{
 
 const deleteMaintInfo =async(req,res)=>{
     try{
-        const {service_id,
-        record}=req.body;
+        const {
+        service_id,
+        record
+        }=req.body;
         console.log(service_id,record);
         if(record==='ShortTerm'){
             console.log('done');
@@ -574,10 +579,77 @@ const deleteMaintInfo =async(req,res)=>{
     }
 }
 
-const queryTable =  async(req,res)=>{
+
+const fetchOldChats = async(req,res)=>{
     try{
-        const {filterby, filterterm} = req.body;
-        console.log(filterby, filterterm);
+        const {userId} = req.body;
+        console.log('this is',userId);
+        const chatHistory = await runQuery(`select * from carechat
+        where user_id=:userId
+        order by sent_at asc`,{userId})
+        console.log(chatHistory[0]);
+        res.status(200).json({
+           oldChats: chatHistory
+        })
+    }catch(err){
+        console.error(err)
+    }
+}
+
+const storeNewChats = async(data)=>{
+    try{
+        const {adminId, userId, text} = data;
+        if(adminId<0){
+            await runQuery(`insert into carechat( admin_id, user_id, text)
+            values(:adminId,:userId,:text)`,{adminId, userId, text});
+        }
+        else{
+            await runQuery(`insert into carechat( admin_id, user_id, text)
+            values(:adminId,:userId ,:text)`,{adminId, userId, text});
+        }
+        console.log('chat history insertion successful!');
+    }catch(err){
+        console.error(err);
+    }
+}
+
+const fetchContacts = async(req,res)=>{
+    try{
+
+        const data = await runQuery(`
+            select 
+                u.userid as userid,
+                u.name as name, 
+                u.pro_url as imageurl,
+                c.text as text,
+                c.sent_at as sent_at
+            from
+                users u
+            join
+                carechat c
+            on
+                u.userid=c.user_id
+            join
+                (select 
+                    user_id,
+                    max(sent_at) as time
+                from 
+                    carechat
+                group by
+                    user_id) 
+                lm
+            on 
+                c.sent_at=lm.time
+            and
+                c.user_id=lm.user_id
+            order by 
+                c.sent_at desc`,{})
+
+        console.log(data);
+        res.status(200).json({
+            contacts: data
+        })
+
     }catch(err){
         console.error(err);
     }
@@ -596,7 +668,9 @@ module.exports={
     availVehicle,
     updateMaintInfo,
     deleteMaintInfo,
-    queryTable
+    fetchOldChats,
+    storeNewChats,
+    fetchContacts
 }
 
 
