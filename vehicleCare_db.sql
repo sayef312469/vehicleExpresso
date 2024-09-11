@@ -54,8 +54,12 @@ CREATE TABLE CARECHAT(
     user_id NUMBER not NULL,
     text VARCHAR2(4000) not NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_read CHAR(1) DEFAULT 'N',
+    CONSTRAINT fk_admin_id FOREIGN KEY (admin_id) REFERENCES USERS (userid),
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES USERS (userid)
 );
+
+CREATE INDEX msg_time_idx ON CareChat(sent_at);
+CREATE INDEX user_id_idx ON CareChat(user_id);
 
 CREATE TABLE UNREADCHAT(
     id NUMBER not NULL,
@@ -63,6 +67,3 @@ CREATE TABLE UNREADCHAT(
     contact_count NUMBER,
     CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES USERS (userid)
 )
-
-CREATE INDEX msg_time_idx ON CareChat(sent_at);
-CREATE INDEX user_id_idx ON CareChat(user_id);
