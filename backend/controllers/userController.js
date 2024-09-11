@@ -124,7 +124,8 @@ const profilePicture = async (req, res) => {
   const blobServiceClient = BlobServiceClient.fromConnectionString(
     process.env.AZURE_STORAGE_CONNECTION_STRING
   )
-  const containerClient = blobServiceClient.getContainerClient('images')
+  //const containerClient = blobServiceClient.getContainerClient('images')
+  const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_CONTAINER_NAME)
   const file = req.file
   if (!file) {
     return res.status(400).send('No file uploaded')
