@@ -1,50 +1,70 @@
 import { useState, useRef ,useEffect} from "react";
-import { Box , List , ListItem, TextField, Avatar, Typography , ButtonBase, Button, Paper} from "@mui/material";
+import { Box , List , ListItem, TextField, Avatar, Typography , ButtonBase, Button, Paper, IconButton, Slide} from "@mui/material";
 import '../styles/chat.css';
 import socket from "../services/socket";
 import { useAuthContext } from "../hooks/useAuthContext";
+import SearchIcon from '@mui/icons-material/Search';
 
 const ChatAdmin = () => {
-    console.log('initing...');
     const [contacts, setContacts ] = useState([]);
+    const [tempCont, setTempCont] = useState([]);
     const {user} = useAuthContext();
-    let newMessageContactId=0;
     const [messages, setMessages] = useState([]);
+    const [currContact, setCurrContact] = useState(null);
+    const [currId, setCurrId] = useState(null);
+    const [currImageUrl, setCurrImageUrl] = useState(null);
+    const endofmessageRef = useRef(null);
+    const [unread, setUnread] = useState({}); 
+    const [open,setOpen] = useState(false);
+    const [isFirstRender, setISFirstRender] = useState(true);
     const [newMessage, setNewMessage] = useState({
         userId: user.id,
         imageUrl: null,
         text: ''
     });
-    const [currContact, setCurrContact] = useState(null);
-    const [currId, setCurrId] = useState(null);
-    const endofmessageRef = useRef(null);
-    const [unread, setUnread ] = useState({}); 
 
     useEffect(()=>{
         const fetchContacts = async()=>{
             try{
+                
                 const response = await fetch('http://localhost:4000/api/care/contacts',{
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        
+                        user_id: user.id
                     })
                 })
                 if(!response.ok) throw new Error('fetch failure');
                 const jsonData = await response.json();
                 console.log(jsonData);
+
+                setISFirstRender(false);
                 setContacts([]);
+                setTempCont([]);
                 
-                const contactsObj = jsonData.contacts.map((contact)=>({
+                const contactsObj = jsonData.contacts.map((contact,key)=>({
                     id: contact.USERID,
                     name: contact.NAME,
                     avatarUrl: contact.IMAGEURL,
                     latestMessage: contact.TEXT,
                 }))
-               
-                setContacts(prevContacts=>([...prevContacts,...contactsObj]))
+
+                contactsObj.forEach((contact,key)=> {
+                    if(key<jsonData.unread){
+                        setUnread(prevState=>({
+                            ...prevState,
+                            [contact.id] : true
+                        }))
+                    }
+                });
+                
+                setContacts(prevContacts=>
+                    ([...prevContacts,...contactsObj])
+                )
+                setTempCont(prevContacts=>
+                    ([...prevContacts,...contactsObj]));
             }catch(err){
                 console.error(err);
             }
@@ -52,9 +72,76 @@ const ChatAdmin = () => {
         fetchContacts();
     },[])
 
+    useEffect(()=>{
+        const storeUnread = async()=>{
+            try{
+                if(isFirstRender) return;
+                const response = await fetch('http://localhost:4000/api/care/unread-contacts',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: user.id,
+                        count: Object.keys(unread).length
+                    })
+                })
+                const jsonData =  await response.json();
+                console.log(jsonData);
+            }catch(err){
+                console.error(err);
+            }
+        }
+        storeUnread();
+    },[unread])
+
+    useEffect(()=>{
+        endofmessageRef.current?.scrollIntoView({behaviour: 'smooth'});
+    },[messages])
+
+    useEffect(()=>{
+        socket.emit('admins active',{userId: user.id});
+
+        socket.on('careUser chat',({name, userId,imageUrl, text})=>{
+                const newmsg = {
+                    userId: userId,
+                    imageUrl: imageUrl,
+                    text: text
+                };
+                const contactObj = {
+                    id: userId,
+                    name: name,
+                    avatarUrl: imageUrl,
+                    latestMessage: text,
+                }
+                setContacts(prevContacts=>{
+                    const filteredContacts = prevContacts.filter(contact => contact.id !== userId)
+                    return [contactObj,...filteredContacts]
+                })
+                setTempCont(prevContacts=>{
+                    const filteredContacts = prevContacts.filter(contact => contact.id !== userId)
+                    return [contactObj,...filteredContacts]
+                });
+                if(currId===userId)setMessages(prevMsgs=>([...prevMsgs, newmsg]));
+                else{
+                    setISFirstRender(false);
+                    setUnread(prevState=>({
+                        ...prevState,
+                        [userId] : true
+                    }))
+                }
+        })
+        return ()=>{
+            socket.off('careUser chat');
+        }
+    },[contacts,currId])
+
+
     const fetchOldChats = async(userid,username,imageurl)=>{
         setCurrContact(username);
         setCurrId(userid);
+        setCurrImageUrl(imageurl);
+        setISFirstRender(false);
         setUnread(prevState=>{
             const newUnread = {...prevState};
             delete newUnread[userid];
@@ -101,47 +188,17 @@ const ChatAdmin = () => {
         console.log(messages);
       };
 
-    useEffect(()=>{
-        endofmessageRef.current?.scrollIntoView({behaviour: 'smooth'});
-    },[messages])
 
-    useEffect(()=>{
-        socket.emit('admins active',{userId: user.id});
-
-        socket.on('careUser chat',({name, userId,imageUrl, text})=>{
-                const newmsg = {
-                    userId: userId,
-                    imageUrl: imageUrl,
-                    text: text
-                };
-                
-                const contactObj = {
-                    id: userId,
-                    name: name,
-                    avatarUrl: imageUrl,
-                    latestMessage: text,
-                }
-                if(!contacts.some(contact=>contact.id===userId)){
-                    setContacts(prevContacts=>[contactObj,...prevContacts])
-                }
-                else{
-                    setContacts(prevContacts=>{
-                        const filteredContacts = prevContacts.filter(contact => contact.id !== userId)
-                        return [contactObj,...filteredContacts]
-                    })
-                }
-                if(currId===userId)setMessages(prevMsgs=>([...prevMsgs, newmsg]));
-                else{
-                    setUnread(prevState=>({
-                        ...prevState,
-                        [userId] : true
-                    }))
-                }
-        })
-        return ()=>{
-            socket.off('careUser chat');
+    const handleContactSearch = (filterterm)=>{
+        if(filterterm===''){
+            setTempCont(contacts);
+            return;
         }
-    },[contacts,currId])
+        const results = contacts.filter(contact=>{
+            return contact.name.toLowerCase().includes(filterterm.toLowerCase());
+        })
+        setTempCont(results);
+    }
 
     return ( 
     <div className="chatrecord">
@@ -151,20 +208,49 @@ const ChatAdmin = () => {
             minWidth: '80px',
             height: '100%',
             border: '1px solid cadetblue',
-            borderRadius: '16px 0 0 16px',
-        }}>
-        <Box style={{ backgroundColor: 'cadetblue', 
+            borderRadius: '16px 0 0 16px'}}>
+            
+            <Box style={{ backgroundColor: 'cadetblue', 
             color: 'black', 
             borderRadius: '16px 0 0 0' , 
             height: '55px', 
             padding: '10px',
             display: 'flex',
-            justifyContent: 'center'}}>
-            <Typography variant="h6">Contact</Typography>
+            margin: 'auto',
+            alignItems: 'center'}}>
+            <IconButton 
+            color="primary" 
+            onClick={() => setOpen(!open)}
+            aria-label="search">
+                <SearchIcon/>
+            </IconButton>
+
+            <Slide direction="left" in={open} mountOnEnter unmountOnExit>
+                <Box
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 50,
+                    p: 1,
+                    width: 300,
+                    backgroundColor: 'background.paper',
+                    borderRadius: 1,
+                    boxShadow: 1,
+                    zIndex: 3
+                }}>
+                <TextField 
+                    fullWidth 
+                    variant="outlined" 
+                    placeholder="Search..." 
+                    autoFocus
+                    onChange={(e)=>handleContactSearch(e.target.value)}/>
+                </Box>
+            </Slide>
+            <Typography variant="h6" sx={{margin: 'auto'}}>Contact</Typography>
         </Box>
         <div style={{overflowY: 'auto',height: 'calc(100% - 60px)'}}>
         <List >
-            {contacts?.map((contact) => (
+            {tempCont?.map((contact) => (
             <ButtonBase className="contact-holder"
                 key={contact.id}
                 style={{
@@ -214,7 +300,16 @@ const ChatAdmin = () => {
                 flexDirection: 'column'
             }}>
 
-            <Box style={{ backgroundColor: 'cadetblue', color: 'black', borderRadius: '0 10px 0 0' , height: '55px', padding: '10px'}}>
+            <Box style={{ 
+                backgroundColor: 'cadetblue', 
+                color: 'black', 
+                borderRadius: '0 10px 0 0' , 
+                height: '55px', 
+                padding: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '20px'}}>
+                <Avatar src={currImageUrl}></Avatar>
                 <Typography variant="h6">{currContact}</Typography>
             </Box>
 
@@ -243,7 +338,6 @@ const ChatAdmin = () => {
                 <ListItem ref={endofmessageRef} />
             </List>
 
-
             <Box p={2} style={{width: '100%', display: 'flex'}}>
                 <TextField
                     fullWidth
@@ -267,7 +361,6 @@ const ChatAdmin = () => {
                         Send
                 </Button>
             </Box>
-
         </Paper> 
     </div> );
 }

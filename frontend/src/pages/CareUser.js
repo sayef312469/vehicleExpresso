@@ -26,6 +26,8 @@ const CareUser = () => {
     const shorturl=`http://localhost:4000/api/care/shortuser`;
     const longurl=`http://localhost:4000/api/care/longuser`;
     const vehicleurl=`http://localhost:4000/api/care/vehicleno`;
+    const unreadMsgurl=`http://localhost:4000/api/care/unread-msgs`;
+    const fetchUnreadurl=`http://localhost:4000/api/care/fetch-unread-msgs`;
     const [no,setNo]=useState('');
     const [date,setDate]=useState('');
     const [repairtype,setRepairtype]=useState('');
@@ -44,7 +46,54 @@ const CareUser = () => {
     const [chatOpen, setChatOpen] = useState(false);
     const [errname,setErrname] = useState('');
     const [imageUrl, setImageUrl] = useState();
-    const [unread, setUnread] = useState(0);
+    const [unread, setUnread] = useState(null);
+
+    useEffect(()=>{
+      const storeUnread = async()=>{
+        try{
+          if(unread===null) return;
+          const response = await fetch(unreadMsgurl,{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              user_id: user.id,
+              count: unread
+            })
+          })
+          if(!response.ok) throw new Error('fetch failed')
+          const jsonData = await response.json();
+          console.log(jsonData);
+        }catch(err){
+          console.error(err);
+        }
+      }
+      storeUnread();
+    },[unread])
+
+    useEffect(()=>{
+      const fetchUnread = async()=>{
+        try{
+          console.log('doing..')
+          const response = await fetch(fetchUnreadurl,{
+              method: 'POST',
+              headers: {
+                'Content-type': 'application/json'
+              },
+              body: JSON.stringify({
+                user_id: user.id
+              })
+          })
+          const jsonData = await response.json();
+          console.log(jsonData);
+          setUnread(jsonData.count);
+        }catch(err){
+          console.error(err)
+        }
+      }
+      fetchUnread();
+    },[])
 
     useEffect(()=>{
       const getVehicleno = async()=>{
@@ -94,6 +143,8 @@ const CareUser = () => {
       }
     },[chatOpen]);
   
+
+    // functions
     const clear = ()=>{
       setNo(data[0]?.VEHICLENO);
       setDate("");
@@ -147,54 +198,49 @@ const CareUser = () => {
     }
 
 
-      const insertLongData = async () =>{
-        try {
-          const response = await fetch(longurl,
-              {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type':'application/json',
-                  },
-                  body: JSON.stringify({
-                    vehicleno: no,
-                    vehicleowner: user.id,
-                    date: date,
-                    main_category:basic?"Basic":"Premium",
-                    finaldate:finaldate,
-                    ins_prov:insProv,
-                    ins_expdate:insExp,
-                    odometer:odometer
-                  })
-              }
-          );
-          if (!response.ok) throw new Error('Failed to fetch data');
-          const jsonData = await response.json();
-          console.log(jsonData);
-          promise(jsonData.service_id);
-        }catch(err){
+    const insertLongData = async () =>{
+      try {
+        const response = await fetch(longurl,{
+          method: 'POST',
+          headers: {
+            'Content-Type':'application/json' },
+          body: JSON.stringify({
+            vehicleno: no,
+            vehicleowner: user.id,
+            date: date,
+            main_category:basic?"Basic":"Premium",
+            finaldate:finaldate,
+            ins_prov:insProv,
+            ins_expdate:insExp,
+            odometer:odometer
+          })
+      });
+      if (!response.ok) throw new Error('Failed to fetch data');
+      const jsonData = await response.json();
+      console.log(jsonData);
+      promise(jsonData.service_id);
+      }catch(err){
           console.error('Error fetching data : ',err);
           warning(`Failure! Try again!`);
-        }
       }
+    }
 
       const insertShortData = async () => {
         try {
           const response = await fetch(shorturl,
               {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type':'application/json',
-                  },
-                  body: JSON.stringify({
-                    vehicleno: no,
-                    vehicleowner: user.id,
-                    date: date,
-                    repairtype: repairtype,
-                    washtype: washtype
-                  })
-              }
-          );
-          if (!response.ok) throw new Error('Failed to fetch data');
+                method: 'POST',
+                headers: {
+                  'Content-Type':'application/json'},
+                body: JSON.stringify({
+                  vehicleno: no,
+                  vehicleowner: user.id,
+                  date: date,
+                  repairtype: repairtype,
+                  washtype: washtype
+                })
+              });
+          if(!response.ok) throw new Error('Failed to fetch data');
           const jsonData = await response.json();
           promise(jsonData.service_id);
         }catch(err){
@@ -202,7 +248,6 @@ const CareUser = () => {
           warning(`Failure! Try again!`);
         }
       };
-
 
       const HandleLongSubmit = (e)=>{
         e.preventDefault();
@@ -261,16 +306,11 @@ const CareUser = () => {
           if(visible1)HandleLongExit();
           else if(visible2)HandleShortExit();
           console.log('clicked outside');
-        }
-      }}>
+        }}}>
         <div className='header-container'>
           <h3>Book for your desired service now!</h3>
           <hr/>
         </div>
-        {/* <div className="buttons">
-            <button onClick={HandleLongTerm}>Longterm Vehicle care</button>
-            <button onClick={HandleShortTerm}>Shorterm Vehicle care</button>
-        </div> */}
         <div className="animation-container">
           <img src={carCare} alt='Car Care' />
           <div>

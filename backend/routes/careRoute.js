@@ -13,7 +13,10 @@ const {
     updateMaintInfo, 
     deleteMaintInfo, 
     fetchOldChats, 
-    fetchContacts}=require("../controllers/careController");
+    fetchContacts,
+    StoreUnreadMessages,
+    fetchUnreadMessages,
+    storeUnreadContacts}=require("../controllers/careController");
 
 
 router.post('/piedata',pieData);
@@ -30,5 +33,8 @@ router.post('/maintenanceinfo-update',updateMaintInfo);
 router.post('/maintenanceinfo-deletion',deleteMaintInfo);
 router.post('/old-chats',fetchOldChats);
 router.post('/contacts',fetchContacts)
+router.post('/unread-msgs',StoreUnreadMessages)
+router.post('/fetch-unread-msgs',fetchUnreadMessages)
+router.post('/unread-contacts', storeUnreadContacts)
 
 module.exports = router;

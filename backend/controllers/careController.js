@@ -615,8 +615,11 @@ const storeNewChats = async(data)=>{
 
 const fetchContacts = async(req,res)=>{
     try{
-
+        const {user_id}= req.body;
+        console.log(user_id);
         const data = await runQuery(`
+        select* 
+        from(
             select 
                 u.userid as userid,
                 u.name as name, 
@@ -624,11 +627,7 @@ const fetchContacts = async(req,res)=>{
                 c.text as text,
                 c.sent_at as sent_at
             from
-                users u
-            join
                 carechat c
-            on
-                u.userid=c.user_id
             join
                 (select 
                     user_id,
@@ -642,14 +641,105 @@ const fetchContacts = async(req,res)=>{
                 c.sent_at=lm.time
             and
                 c.user_id=lm.user_id
+            right join
+                users u
+            on
+                u.userid=c.user_id
+            ) 
+            where 
+                userid>100
             order by 
-                c.sent_at desc`,{})
+                sent_at desc NULLS LAST`,{})
+        
+        const unread = await runQuery(`
+        select 
+            contact_count
+        from 
+            unreadchat 
+        where 
+            id=:user_id`,{user_id});
 
-        console.log(data);
+        console.log(data,unread);
         res.status(200).json({
-            contacts: data
+            contacts: data,
+            unread: unread[0].CONTACT_COUNT
         })
 
+    }catch(err){
+        console.error(err);
+    }
+}
+
+const StoreUnreadMessages = async(req,res)=>{
+    try{
+        const {user_id, count} = req.body;
+        const exists = await runQuery(`select * 
+        from 
+            unreadChat
+        where 
+            id=:user_id`,{user_id});
+        if(exists.length===0){
+            await runQuery(`insert into unreadchat(id,msg_count)
+            values(:user_id,:count)`,{user_id, count});
+            res.status(200).send({msg: 'insertion success'});
+        }
+        else{
+            await runQuery(`update 
+                unreadchat
+            set 
+                msg_count=:count
+            where 
+                id=:user_id`,{count,user_id});
+            res.status(200).send({msg: 'update success'});
+        }
+    }catch(err){
+        console.error(err);
+    }
+}
+
+const fetchUnreadMessages = async(req,res)=>{
+    try{
+        const {user_id}= req.body;
+        const count =  await runQuery(`
+        select 
+            msg_count
+        from 
+            unreadchat
+        where 
+            id=:user_id`,{user_id});
+        console.log(count);
+        res.status(200).json({
+            count: count[0].MSG_COUNT
+        })
+    }catch(err){
+        console.error(err);
+    }
+}
+
+const storeUnreadContacts = async(req,res)=>{
+    try{
+        const {user_id, count} = req.body;
+        console.log(user_id, count);
+        const exists = await runQuery(`select * 
+        from 
+            unreadChat
+        where 
+            id=:user_id`,{user_id});
+        
+        if(exists.length===0){
+            await runQuery(`insert into unreadchat(id,contact_count)
+            values(:user_id,:count)`,{user_id, count}) 
+            res.status(200).send({msg: 'insertion successful'})
+        }else{
+            console.log(exists.length);
+            await runQuery(`update 
+                unreadchat
+            set 
+                contact_count=:count
+            where 
+                id=:user_id`,{count,user_id});
+            res.status(200).send({msg: 'update success'});
+        }   
     }catch(err){
         console.error(err);
     }
@@ -670,7 +760,10 @@ module.exports={
     deleteMaintInfo,
     fetchOldChats,
     storeNewChats,
-    fetchContacts
+    fetchContacts,
+    StoreUnreadMessages,
+    fetchUnreadMessages,
+    storeUnreadContacts
 }
 
 

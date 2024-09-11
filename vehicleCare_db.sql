@@ -49,15 +49,20 @@ CREATE TABLE ShorttermCare(
 );
 
 
-
 CREATE TABLE CARECHAT(
     admin_id NUMBER not NULL,
     user_id NUMBER not NULL,
-    imageUrl VARCHAR2(100),
     text VARCHAR2(4000) not NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_read CHAR(1) DEFAULT 'N',
 );
+
+CREATE TABLE UNREADCHAT(
+    id NUMBER not NULL,
+    msg_count NUMBER,
+    contact_count NUMBER,
+    CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES USERS (userid)
+)
 
 CREATE INDEX msg_time_idx ON CareChat(sent_at);
 CREATE INDEX user_id_idx ON CareChat(user_id);
