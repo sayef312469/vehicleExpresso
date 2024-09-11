@@ -6,6 +6,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import SearchIcon from '@mui/icons-material/Search';
 
 const ChatAdmin = () => {
+    const adminUrl = 'https://www.shutterstock.com/image-vector/user-icon-vector-600nw-393536320.jpg';
     const [contacts, setContacts ] = useState([]);
     const [tempCont, setTempCont] = useState([]);
     const {user} = useAuthContext();
@@ -19,14 +20,14 @@ const ChatAdmin = () => {
     const [isFirstRender, setISFirstRender] = useState(true);
     const [newMessage, setNewMessage] = useState({
         userId: user.id,
-        imageUrl: null,
+        imageUrl: adminUrl,
         text: ''
     });
 
     useEffect(()=>{
         const fetchContacts = async()=>{
             try{
-                
+                socket.emit('admins active',{userId: user.id});
                 const response = await fetch('http://localhost:4000/api/care/contacts',{
                     method: 'POST',
                     headers: {
@@ -100,8 +101,6 @@ const ChatAdmin = () => {
     },[messages])
 
     useEffect(()=>{
-        socket.emit('admins active',{userId: user.id});
-
         socket.on('careUser chat',({name, userId,imageUrl, text})=>{
                 const newmsg = {
                     userId: userId,
@@ -154,7 +153,8 @@ const ChatAdmin = () => {
                     'Content-Type': 'application/json', 
                 },
                 body: JSON.stringify({
-                    userId: userid
+                    userId: userid,
+                    adminId: user.id
                 })
             })
             if(!response.ok) throw new Error('network error')
@@ -162,7 +162,7 @@ const ChatAdmin = () => {
             setMessages([]);
             const oldChatsObj = jsonData?.oldChats?.map((chat)=>({
                 userId: chat.ADMIN_ID < 0 ?chat.USER_ID:chat.ADMIN_ID,
-                imageUrl: chat.ADMIN_ID < 0 ? imageurl:'',
+                imageUrl: chat.ADMIN_ID < 0 ? imageurl:adminUrl,
                 text: chat.TEXT
             }))
             setMessages(prevMsgs=>([...prevMsgs,...oldChatsObj]));
@@ -182,7 +182,6 @@ const ChatAdmin = () => {
           socket.emit('careAdmin chat',{
             adminId: user.id,
             userId: currId, 
-            imageUrl: null,
             text: newMessage.text});
         }
         console.log(messages);
@@ -318,14 +317,14 @@ const ChatAdmin = () => {
                     <ListItem key={index} style={{ 
                         display: 'flex',
                         alignItems: 'center',
-                        flexDirection: user.id!==message.userId? 'row': 'row-reverse'
+                        flexDirection: user.id!==message.userId ? 'row': 'row-reverse'
                     }}>
                     <Avatar alt="User" 
                     src={message.imageUrl}
                     style={{ margin: '8px' }}/>
                     <Box
                     style={{
-                        backgroundColor:user.id!==message.userId? '#0084FF': '#ddd',
+                        backgroundColor:user.id!==message.userId ? '#0084FF': '#ddd',
                         borderRadius: '18px',
                         padding: '10px',
                         maxWidth: '70%',

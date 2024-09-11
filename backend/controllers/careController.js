@@ -582,12 +582,23 @@ const deleteMaintInfo =async(req,res)=>{
 
 const fetchOldChats = async(req,res)=>{
     try{
-        const {userId} = req.body;
+        const {userId, adminId} = req.body;
         console.log('this is',userId);
-        const chatHistory = await runQuery(`select * from carechat
-        where user_id=:userId
-        order by sent_at asc`,{userId})
-        console.log(chatHistory[0]);
+        const chatHistory = await runQuery(`
+        select * 
+        from 
+            carechat
+        where 
+            (user_id=:userId
+        and 
+            (admin_id < 0
+        or
+            admin_id=:adminId)
+        )or
+            user_id=:userId
+        order by 
+            sent_at asc`,{userId, adminId})
+        
         res.status(200).json({
            oldChats: chatHistory
         })
@@ -659,10 +670,9 @@ const fetchContacts = async(req,res)=>{
         where 
             id=:user_id`,{user_id});
 
-        console.log(data,unread);
         res.status(200).json({
             contacts: data,
-            unread: unread[0].CONTACT_COUNT
+            unread: unread[0]!==undefined?unread[0].CONTACT_COUNT:0
         })
 
     }catch(err){

@@ -4,6 +4,7 @@ import socket from "../services/socket";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 const ChatUI = ({imageUrl}) => {
+    const adminUrl = 'https://www.shutterstock.com/image-vector/user-icon-vector-600nw-393536320.jpg';
     const {user} = useAuthContext();
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState({
@@ -14,11 +15,11 @@ const ChatUI = ({imageUrl}) => {
     const endofmessageRef = useRef(null);
 
     useEffect(()=>{
-        socket.on('careAdmin chat',({adminId, imageUrl, text})=>{
-            console.log(adminId, imageUrl, text);
+        socket.on('careAdmin chat',({adminId, text})=>{
+            console.log(adminId, text);
             const newMsg = {
                 userId: adminId,
-                imageUrl: imageUrl,
+                imageUrl: adminUrl,
                 text: text
             }
             setMessages(prevMsgs=>([...prevMsgs, newMsg]));
@@ -46,7 +47,7 @@ const ChatUI = ({imageUrl}) => {
                 setMessages([]);
                 const oldChatsObj = jsonData?.oldChats?.map((chat)=>({
                     userId: chat.ADMIN_ID < 0 ?chat.USER_ID:chat.ADMIN_ID,
-                    imageUrl: chat.ADMIN_ID < 0 ? imageUrl:'',
+                    imageUrl: chat.ADMIN_ID < 0 ? imageUrl:adminUrl,
                     text: chat.TEXT
                 }))
                 setMessages(prevMsgs=>([...prevMsgs,...oldChatsObj]));

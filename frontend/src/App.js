@@ -73,24 +73,26 @@ function App() {
 
               {user && <Route
                 path="/vehiclecare/admin"
-                element={<CareAdmin />}
-              />}
+                element={
+                  user.id < 100 ? <CareAdmin /> : <Navigate to="/login"/>}/>
+                }
 
               {user && <Route
                 path="/vehiclecare/admin/short-record"
-                element={<ShortRecord /> }
-              />}
+                element={
+                  user.id < 100 ? <ShortRecord /> : <Navigate to="/login"/>}/>
+                }
               
               {user && <Route
                 path="/vehiclecare/admin/long-record"
-                element={<LongRecord />}
-              />}
-
+                element={
+                  user.id < 100 ? <LongRecord /> : <Navigate to="/login"/>}/>
+                }
               {user && <Route
                 path="/vehiclecare/admin/chat"
-                element={<ChatAdmin/>}
-              />}
-
+                element={
+                  user.id < 100 ? <ChatAdmin/> : <Navigate to="/login"/>}/>
+                }
               <Route
                 path="/carinsurancerenewal"
                 element={
