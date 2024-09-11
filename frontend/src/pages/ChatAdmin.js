@@ -135,6 +135,10 @@ const ChatAdmin = () => {
         }
     },[contacts,currId])
 
+    const handleClose = ()=>{
+        setOpen(!open);
+        setTempCont(contacts);
+    }
 
     const fetchOldChats = async(userid,username,imageurl)=>{
         setCurrContact(username);
@@ -219,7 +223,7 @@ const ChatAdmin = () => {
             alignItems: 'center'}}>
             <IconButton 
             color="primary" 
-            onClick={() => setOpen(!open)}
+            onClick={handleClose}
             aria-label="search">
                 <SearchIcon/>
             </IconButton>
