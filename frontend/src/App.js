@@ -10,14 +10,17 @@ import AddVehicle from './pages/AddVehicle'
 import CarInsuranceRenewal from './pages/CarInsuranceRenewal'
 import CareAdmin from './pages/CareAdmin'
 import CareUser from './pages/CareUser'
+import ChatAdmin from './pages/ChatAdmin'
 import GarageAdminPay from './pages/GarageAdminPay'
 import Home from './pages/Home'
 import Login from './pages/Login'
+import LongRecord from './pages/LongRecord'
 import Notification from './pages/Notification'
 import ParkHistory from './pages/ParkHistory'
 import PickupVanService from './pages/PickupVanService'
 import RentingCars from './pages/RentingCars'
 import SearchParking from './pages/SearchPaking'
+import ShortRecord from './pages/ShortRecord'
 import Signup from './pages/Signup'
 import UserParkHistory from './pages/UserParkHistory'
 import VehicleEntryExit from './pages/VehicleEntryExit'
@@ -25,9 +28,6 @@ import Wavy from './pages/Wavy'
 import Dashboard from './pages/dashboard'
 import RecordHistory from './pages/record'
 import Profile from './pages/userProfile'
-import ShortRecord from './pages/ShortRecord'
-import LongRecord from './pages/LongRecord'
-import ChatAdmin from './pages/ChatAdmin'
 
 function App() {
   const { user } = useAuthContext()
@@ -66,123 +66,136 @@ function App() {
                 element={user ? <RentingCars /> : <Navigate to="/login" />}
               />
 
-              {user && <Route
+              <Route
                 path="/vehiclecare/user"
-                element= {<CareUser />} 
-              />}
+                element={user ? <CareUser /> : <Navigate to="/login" />}
+              />
 
-              {user && <Route
+              <Route
                 path="/vehiclecare/admin"
                 element={
-                  user.id < 100 ? <CareAdmin /> : <Navigate to="/login"/>}/>
+                  user && user.id < 100 ? (
+                    <CareAdmin />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
+              />
 
-              {user && <Route
+              <Route
                 path="/vehiclecare/admin/short-record"
                 element={
-                  user.id < 100 ? <ShortRecord /> : <Navigate to="/login"/>}/>
+                  user && user.id < 100 ? (
+                    <ShortRecord />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
-              
-              {user && <Route
+              />
+
+              <Route
                 path="/vehiclecare/admin/long-record"
                 element={
-                  user.id < 100 ? <LongRecord /> : <Navigate to="/login"/>}/>
+                  user && user.id < 100 ? (
+                    <LongRecord />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
-              {user && <Route
+              />
+
+              <Route
                 path="/vehiclecare/admin/chat"
                 element={
-                  user.id < 100 ? <ChatAdmin/> : <Navigate to="/login"/>}/>
+                  user && user.id < 100 ? (
+                    <ChatAdmin />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
+              />
+
               <Route
-                path="/carinsurancerenewal"
+                path="/myshop"
                 element={
                   user ? <CarInsuranceRenewal /> : <Navigate to="/login" />
                 }
               />
-              {user && (
-                <Route
-                  path="/addparkadmin"
-                  element={
-                    user.id < 100 ? <AddParkAdmin /> : <Navigate to="/" />
-                  }
-                />
-              )}
-              {user && (
-                <Route
-                  path="/addvehicle"
-                  element={<AddVehicle />}
-                />
-              )}
-              {user && (
-                <Route
-                  path="/vehicleentryexit"
-                  element={
-                    user.parkAdmin ? (
-                      <VehicleEntryExit />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-              )}
-              {user && (
-                <Route
-                  path="/addrentinfo"
-                  element={
-                    user.parkAdmin ? <AddRentInfo /> : <Navigate to="/login" />
-                  }
-                />
-              )}
-              {user && (
-                <Route
-                  path="/userparkhistory"
-                  element={
-                    user ? <UserParkHistory /> : <Navigate to="/login" />
-                  }
-                />
-              )}
-              {user && (
-                <Route
-                  path="/parkhistory"
-                  element={user ? <ParkHistory /> : <Navigate to="/login" />}
-                />
-              )}
-              {user && (
-                <Route
-                  path="/garageadminpay"
-                  element={
-                    user.id < 100 ? (
-                      <GarageAdminPay />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-              )}
-              {user && (
-                <Route
-                  path="/notification"
-                  element={user ? <Notification /> : <Navigate to="/login" />}
-                />
-              )}
-              {user && (
-                <Route
-                  path="/profile"
-                  element={user ? <Profile /> : <Navigate to="/login" />}
-                />
-              )}
-              {user && (
-                <Route
-                  path="/record"
-                  element={user ? <RecordHistory /> : <Navigate to="/login" />}
-                />
-              )}
-              {user && (
-                <Route
-                  path="/dashboard"
-                  element={user ? <Dashboard /> : <Navigate to="/login" />}
-                />
-              )}
+              <Route
+                path="/addparkadmin"
+                element={
+                  user && user.id < 100 ? <AddParkAdmin /> : <Navigate to="/" />
+                }
+              />
+
+              <Route
+                path="/addvehicle"
+                element={user ? <AddVehicle /> : <Navigate to="/login" />}
+              />
+
+              <Route
+                path="/vehicleentryexit"
+                element={
+                  user && user.parkAdmin ? (
+                    <VehicleEntryExit />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+
+              <Route
+                path="/addrentinfo"
+                element={
+                  user && user.parkAdmin ? (
+                    <AddRentInfo />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+
+              <Route
+                path="/userparkhistory"
+                element={user ? <UserParkHistory /> : <Navigate to="/login" />}
+              />
+
+              <Route
+                path="/parkhistory"
+                element={user ? <ParkHistory /> : <Navigate to="/login" />}
+              />
+
+              <Route
+                path="/garageadminpay"
+                element={
+                  user && user.id < 100 ? (
+                    <GarageAdminPay />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+
+              <Route
+                path="/notification"
+                element={user ? <Notification /> : <Navigate to="/login" />}
+              />
+
+              <Route
+                path="/profile"
+                element={user ? <Profile /> : <Navigate to="/login" />}
+              />
+
+              <Route
+                path="/record"
+                element={user ? <RecordHistory /> : <Navigate to="/login" />}
+              />
+
+              <Route
+                path="/dashboard"
+                element={user ? <Dashboard /> : <Navigate to="/login" />}
+              />
+
               <Route
                 path="/smallcardservices"
                 element={<SmallCardServices />}

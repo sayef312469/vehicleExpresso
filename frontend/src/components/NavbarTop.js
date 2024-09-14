@@ -203,21 +203,10 @@ const NavbarTop = () => {
 
               <NavDropdown.Item
                 as={Link}
-                to={'/pickupvanservice'}
+                to={'/myshop'}
               >
-                Pickup Van Service
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                as={Link}
-                to={'/rentingcars'}
-              >
-                Renting Cars
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                as={Link}
-                to={'/carinsurancerenewal'}
-              >
-                Car Insurance Renewal
+                <span className="material-symbols-outlined">sell</span>
+                My Shop
               </NavDropdown.Item>
               {user && <NavDropdown.Divider />}
               {user && (

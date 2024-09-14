@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import '../styles/record.css'
-import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import { Button, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify'
+import '../styles/record.css'
 
 const RecordHistory = () => {
   const [records, setRecords] = useState([])
@@ -42,14 +42,14 @@ const RecordHistory = () => {
         `http://localhost:4000/api/user/recordUpdate/${selectedUser.USERID}`,
         {
           userid,
-        }
+        },
       )
       setRecords((prevRecords) =>
         prevRecords.map((record) =>
           record.USERID === selectedUser.USERID
             ? { ...record, USERID: userid }
-            : record
-        )
+            : record,
+        ),
       )
       toast.success("User's role changed successfully")
       setIsModalOpen(false)
@@ -65,7 +65,10 @@ const RecordHistory = () => {
   }
 
   const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
+    <Tooltip
+      id="button-tooltip"
+      {...props}
+    >
       Change role
     </Tooltip>
   )
@@ -78,9 +81,15 @@ const RecordHistory = () => {
           <h2 class="fourth">Users & Admins</h2>
           <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {records.map((record) => (
-              <li className="fifth" key={record.USERID}>
+              <li
+                className="fifth"
+                key={record.USERID}
+              >
                 <div>
-                  <h3 className="sixth" style={{ textAlign: 'left' }}>
+                  <h3
+                    className="sixth"
+                    style={{ textAlign: 'left' }}
+                  >
                     {record.NAME}
                   </h3>
                   <p className="seventh">Email: {record.EMAIL}</p>
@@ -125,10 +134,16 @@ const RecordHistory = () => {
             </Modal.Header>
             <Modal.Body>Do you want to change this user to Admin?</Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCancel}>
+              <Button
+                variant="secondary"
+                onClick={handleCancel}
+              >
                 No
               </Button>
-              <Button variant="primary" onClick={handleConfirm}>
+              <Button
+                variant="primary"
+                onClick={handleConfirm}
+              >
                 Yes
               </Button>
             </Modal.Footer>

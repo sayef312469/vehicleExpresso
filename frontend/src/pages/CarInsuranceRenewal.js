@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { CartProvider } from '../context/CartContext'
-import Shop from '../components/Shop'
-import '../styles/shop.css'
+import React from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Shop from '../components/Shop'
+import { CartProvider } from '../context/CartContext'
+import '../styles/shop.css'
 
 function CarInsuranceRenewal() {
   return (
