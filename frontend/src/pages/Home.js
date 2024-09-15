@@ -29,14 +29,7 @@ const Home = () => {
         className="hero-section text-white text-center d-flex-column justify-content-center align-items-center"
       >
         <div className="rowServices">
-          <p className="large rise">
-            <span className="material-symbols-outlined">
-              emoji_transportation
-            </span>
-            {webName.split('').map((c) => (
-              <span key={c}>{c}</span>
-            ))}
-          </p>
+          <h1 className='heroTitle'>Vehicle Expresso</h1>
         </div>
         <div className="rowServices">
           <div className="heroServices">

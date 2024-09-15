@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Playwrite+NL:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ga+Maamli&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 :root {
   --primary: #1aac83;
   --error: #e7195a;
@@ -343,50 +344,17 @@ div.msg {
   height: 100vh;
 }
 
-.large {
-  font-size: 5rem;
-  font-family: 'Audiowide', cursive;
-}
-
-.large span {
-  transition: 0.3s;
-}
-
-.large span:nth-child(1) {
-  font-size: 5rem;
-  margin: 10px;
-}
-
-.large span:hover {
+.heroTitle {
   color: var(--primary);
-  cursor: pointer;
-}
-
-.rise {
-  text-shadow: -0.01em -0.01em 0.01em #000;
-  animation: rise 2s ease-in-out 0.5s forwards;
-}
-
-@keyframes rise {
-  to {
-    text-shadow:
-      0em 0.01em var(--primary),
-      0em 0.02em var(--primary),
-      0em 0.02em 0.03em var(--primary),
-      -0.01em 0.01em #333,
-      -0.02em 0.02em #333,
-      -0.03em 0.03em #333,
-      -0.04em 0.04em #333,
-      -0.01em -0.01em 0.03em #000,
-      -0.02em -0.02em 0.03em #000,
-      -0.03em -0.03em 0.03em #000;
-    transform: translateY(-0.025em) translateX(0.04em);
-  }
+  font-size: 5rem;
+  font-family: "VT323", monospace;
+  letter-spacing: 2px;
 }
 
 .heroServices {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
