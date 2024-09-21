@@ -28,6 +28,7 @@ import Wavy from './pages/Wavy'
 import Dashboard from './pages/dashboard'
 import RecordHistory from './pages/record'
 import Profile from './pages/userProfile'
+import PurchaseHistory from './pages/PurchaseHistory'
 
 function App() {
   const { user } = useAuthContext()
@@ -41,10 +42,7 @@ function App() {
         <div className="pages">
           <main>
             <Routes>
-              <Route
-                path="/"
-                element={<Home />}
-              />
+              <Route path="/" element={<Home />} />
               <Route
                 path="/login"
                 element={!user ? <Login /> : <Navigate to="/" />}
@@ -53,10 +51,7 @@ function App() {
                 path="/signup"
                 element={!user ? <Signup /> : <Navigate to="/" />}
               />
-              <Route
-                path="/searchparks"
-                element={<SearchParking />}
-              />
+              <Route path="/searchparks" element={<SearchParking />} />
               <Route
                 path="/pickupvanservice"
                 element={user ? <PickupVanService /> : <Navigate to="/login" />}
@@ -194,6 +189,11 @@ function App() {
               <Route
                 path="/dashboard"
                 element={user ? <Dashboard /> : <Navigate to="/login" />}
+              />
+
+              <Route
+                path="/purchasehistory"
+                element={user ? <PurchaseHistory /> : <Navigate to="/login" />}
               />
 
               <Route

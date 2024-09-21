@@ -472,8 +472,8 @@ const ProductList = () => {
               <br />
               <br />
               {loading ? (
-                <Row xs={1} md={3} className="g-4">
-                  {[...Array(6)].map((_, idx) => (
+                <Row xs={1} md={4} className="g-4">
+                  {[...Array(8)].map((_, idx) => (
                     <Col key={idx}>
                       <Card>
                         <Card.Img

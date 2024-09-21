@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useCart } from '../context/CartContext'
+import moment from 'moment'
 import {
   Card,
   Button,
@@ -445,7 +446,11 @@ const ProductDetail = ({
                         {console.log(question)}
                         <strong>Q:</strong> {question.questionText}-
                         <em>{question.buyerName}</em>
-                        <p>{question.questionDate}</p>
+                        <p>
+                          {moment(question.questionDate).format(
+                            'MMMM Do YYYY, h:mm:ss A'
+                          )}
+                        </p>
                         <strong>A:</strong>
                         {question.answers.length > 0 ? (
                           <ul>
@@ -453,7 +458,9 @@ const ProductDetail = ({
                               <li key={ansIndex}>
                                 {answer.answerText}-<em>{answer.sellerName}</em>
                                 <br />
-                                {answer.answerDate}
+                                {moment(answer.answerDate).format(
+                                  'MMMM Do YYYY, h:mm:ss A'
+                                )}
                               </li>
                             ))}
                           </ul>
@@ -505,7 +512,11 @@ const ProductDetail = ({
                 {reviews.map((review, index) => (
                   <ListGroup.Item key={index}>
                     <strong>{review.userName}</strong> -{' '}
-                    <em>{new Date(review.reviewDate).toLocaleDateString()}</em>
+                    <em>
+                      {moment(review.reviewDate).format(
+                        'MMMM Do YYYY, h:mm:ss A'
+                      )}
+                    </em>
                     <br />
                     <div className="star-rating">
                       {[1, 2, 3, 4, 5].map((i) => (

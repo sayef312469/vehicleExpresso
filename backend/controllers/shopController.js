@@ -272,16 +272,46 @@ const createPurchase = async (req, res) => {
   }
 }
 
-const getPurchaseHistory = async (req, res) => {
-  const { buyerId } = req.params
+const getPurchaseHistoryByUserId = async (req, res) => {
+  const { userId } = req.params
+  const { page = 1, pageSize = 10 } = req.query
+  const offset = (page - 1) * pageSize
+
   try {
     const result = await runQuery(
-      `SELECT * FROM PURCHASES WHERE BUYER_ID=:buyerId`,
-      { buyerId }
+      `SELECT 
+         PURCHASE_ID, 
+         BUYER_ID, 
+         PAYMENT_OPTION, 
+         PURCHASE_DATE, 
+         PROMO_CODE, 
+         PURCHASE_TOTAL_PRICE, 
+         PRODUCT_DETAILS 
+       FROM PURCHASES_WITH_DETAILS 
+       WHERE BUYER_ID = :userId 
+       ORDER BY PURCHASE_DATE DESC 
+       OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY`,
+      { userId, offset, pageSize }
     )
-    res.status(200).json(result)
+
+    const totalRecordsResult = await runQuery(
+      `SELECT COUNT(*) AS TOTAL_COUNT 
+       FROM PURCHASES_WITH_DETAILS 
+       WHERE BUYER_ID = :userId`,
+      { userId }
+    )
+
+    const totalRecords = totalRecordsResult[0]?.TOTAL_COUNT || 0
+
+    res.status(200).json({
+      purchases: result,
+      totalRecords,
+      currentPage: parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalPages: Math.ceil(totalRecords / pageSize),
+    })
   } catch (error) {
-    console.error('Error getting purchase history:', error)
+    console.error('Error fetching purchase history:', error)
     res.status(500).json({ error: 'Internal server error' })
   }
 }
@@ -615,7 +645,7 @@ module.exports = {
   archiveProduct,
   updateStock,
   createPurchase,
-  getPurchaseHistory,
+  getPurchaseHistoryByUserId,
   promoCodeCheck,
   submitProductReport,
   getQuestionsAndAnswers,

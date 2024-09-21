@@ -1271,3 +1271,103 @@ hr {
   top: -8.5px;
   padding-left: 5px;
 }
+
+/* Container styling */
+.purchase-history-container {
+  margin-top: 20px;
+  background-color: rgba(249, 249, 249, 0.562);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styling */
+.purchase-history-heading {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Main table styling */
+.purchase-history-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.purchase-history-table th,
+.purchase-history-table td {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.purchase-history-table th {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.purchase-history-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.purchase-history-table td {
+  color: #555;
+}
+
+/* Inner product table styling */
+.inner-product-table {
+  width: 100%;
+  margin: 10px 0;
+  background-color: #fff;
+}
+
+.inner-product-table th,
+.inner-product-table td {
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+.inner-product-table th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: bold;
+}
+
+.inner-product-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.inner-product-table td {
+  color: #444;
+}
+
+/* Pagination styling */
+.custom-pagination1 {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.custom-pagination1 .page-item.active .page-link {
+  background-color: white;
+  border-color: gray;
+  color: black;
+  cursor: pointer;
+}
+
+.custom-pagination1 .page-link {
+  color: #007bff;
+  border: 1px solid #007bff;
+  margin: 0 3px;
+  border-radius: 50%;
+}
+
+.custom-pagination1 .page-link:hover {
+  background-color: gray;
+  color: #fff;
+  border-color: white;
+}
