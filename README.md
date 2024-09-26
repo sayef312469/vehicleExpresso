@@ -2,6 +2,8 @@
 
 ![Home](https://github.com/Tamal267/vehicleExpresso/blob/main/frontend/src/img/home.png?raw=true)
 
+It is a Database Management project where we handled a lot of simple and complex sql queries and plsqls. Here we use Node.js as backend, React for frontend, Oracle SQL for Database Management system and lot of packages for view map, send emails, generate pdf, view chart, upload image, encryption and much more. We use socket.io for realtime updates. We keep the UI as simple as possible.
+
 ## Primary Features
 
 - **Search Parks**: Search for parks nearby your location or by name, city, or state.
@@ -37,7 +39,7 @@ npm install
 mpm start
 ```
 
-3. Ensure your database setup.
+3. Ensure your database setup. See the `.sql` files.
 
 ## Screentshots
 ![Search Parks](https://github.com/Tamal267/vehicleExpresso/blob/main/frontend/src/img/search_parks.png?raw=true)
