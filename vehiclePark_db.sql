@@ -359,6 +359,12 @@ begin
     return parks_array;
 end;
 
+create or replace type USR as object (
+        USERID integer,
+        name   varchar2(100),
+        EMAIL  varchar2(100)
+);
+
 create or replace type usr_table as
     table of usr;
 
