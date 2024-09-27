@@ -174,7 +174,89 @@ BEGIN
 
 END;
 
+-----------------VIEW-----------------
 
+CREATE OR REPLACE VIEW view_short_table
+(
+    row_num,
+    name,
+    vehicleno,
+    service_id,
+    service_date,
+    repairtype,
+    repaircost,
+    washtype,
+    washcost,
+    mechanic_name,
+    servicing_cost,
+    completed,
+    labor_hours
+)
+AS select 
+    ROW_NUMBER() OVER (order by sc.completed,ct.service_id), 
+    u.name,
+    vi.vehicleno,
+    ct.service_id,
+    to_char(tc.service_date,'yyyy-mm-dd') as service_date,
+    sc.repair.type as repairtype,
+    sc.repair.cost as repaircost, 
+    sc.wash.type as washtype,
+    sc.wash.cost as washcost, 
+    ct.mechanic_name,
+    ct.servicing_cost,
+    sc.completed, 
+    sc.labor_hours 
+from 
+    users u,
+    vehicle_info vi,
+    takes_care tc,
+    care_transac ct,
+    shorttermcare sc
+    where u.userid=vi.vehicle_owner and
+    vi.vehicleno=tc.vehicleno and
+    tc.service_id=ct.service_id and
+    ct.service_id=sc.shortterm_id
+WITH READ ONLY;
+
+CREATE OR REPLACE VIEW view_long_table
+(
+    row_num,
+    name,
+    service_id,
+    vehicleno,
+    service_date,
+    final_date,
+    mechanic_name,
+    odometer_reading,
+    maintenance_category,
+    insurance_provider,
+    insurance_exp_date,
+    servicing_cost
+)
+AS select 
+    ROW_NUMBER() OVER (order by ct.service_id), 
+    u.name,
+    ct.service_id,
+    vi.vehicleno,
+    to_char(tc.service_date,'yyyy-mm-dd'),
+    to_char(lc.final_date,'yyyy-mm-dd'),
+    ct.mechanic_name,
+    lc.odometer_reading,
+    lc.maintenance_category,
+    lc.insurance_provider,
+    to_char(lc.insurance_exp_date,'yyyy-mm-dd'),
+    ct.servicing_cost
+from 
+    users u,
+    vehicle_info vi,
+    takes_care tc,
+    care_transac ct,
+    longtermcare lc
+    where u.userid=vi.vehicle_owner and
+    vi.vehicleno=tc.vehicleno and
+    tc.service_id=ct.service_id and
+    ct.service_id=lc.longterm_id
+WITH READ ONLY;
 
 
 -------TABLE CHANGES-------
