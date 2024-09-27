@@ -1,7 +1,7 @@
 
 ---------------------------------------------------VEHICLE_CARE-------------------------------------------------
 CREATE TABLE Care_Transac(
-    service_id INTEGER generated always as identity(start with 100 increment by 1),
+    service_id INTEGER,
     mechanic_name VARCHAR2(20) not null,
     service_type VARCHAR2(20) not null,
     servicing_cost NUMBER,
@@ -37,7 +37,7 @@ CREATE table Takes_Care(
     service_date DATE,
     CONSTRAINT fk_service_id FOREIGN KEY (service_id) REFERENCES Care_Transac(service_id), 
     CONSTRAINT fk_vehicleno FOREIGN KEY (vehicleno) REFERENCES vehicle_info(vehicleno)
-)
+);
 
 CREATE TABLE ShorttermCare(
     shortterm_id INTEGER not null,
@@ -67,3 +67,61 @@ CREATE TABLE UNREADCHAT(
     contact_count NUMBER,
     CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES USERS (userid)
 )
+
+
+--------------Sequence-------------
+CREATE SEQUENCE SERVICE_ID
+START WITH 100
+INCREMENT BY 1
+MAXVALUE 9999999
+CACHE 100
+CYCLE
+
+
+---FUNCTION----
+
+CREATE OR REPLACE FUNCTION RET_PIEDATA
+(year NUMBER, month VARCHAR2, term VARCHAR2)
+return INTEGER
+IS
+    COUNT_ INTEGER;
+BEGIN
+        IF term = 'Basic' or term = 'Premium' THEN
+            select count(c.SERVICE_ID)
+            INTO COUNT_
+            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
+            c.SERVICE_ID=l.LONGTERM_ID AND 
+            c.SERVICE_ID=t.SERVICE_ID AND 
+            (month is NULL or to_char(t.SERVICE_DATE,'MON')=month) AND
+            EXTRACT(YEAR FROM t.SERVICE_DATE)=year AND 
+            l.MAINTENANCE_CATEGORY= term;
+        ELSIF term= 'Repair' THEN
+            select count(c.SERVICE_ID)
+            INTO COUNT_
+            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
+            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
+            c.SERVICE_ID=t.SERVICE_ID AND 
+            (month is NULL or to_char(t.SERVICE_DATE,'MON')=month) AND
+            EXTRACT(YEAR FROM t.SERVICE_DATE)=year AND 
+            s.REPAIR.type is not null;
+        ELSE 
+            select count(c.SERVICE_ID)
+            INTO COUNT_
+            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
+            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
+            c.SERVICE_ID=t.SERVICE_ID AND 
+            (month is NULL or to_char(t.SERVICE_DATE,'MON')=month) AND
+            EXTRACT(YEAR FROM t.SERVICE_DATE)=year AND 
+            s.WASH.type is not null;
+        END IF;
+    return COUNT_;
+END;
+
+
+
+------DROP TABLES-----
+drop table ShorttermCare;
+drop table LongtermCare;
+drop table Maintenance_Info;
+drop table Takes_Care;
+drop table Care_Transac;

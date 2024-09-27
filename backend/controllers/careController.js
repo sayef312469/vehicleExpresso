@@ -6,82 +6,29 @@ const {runQuery,runQueryOutBinds}=require('../connection');
 const pieData = async(req, res)=>{
     try{
         let count =[];
-        let d=[];
-        const {year,month} = req.body;
-        if(!month || month=="ALL"){
-            d[0] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Only Basic"
-            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
-            c.SERVICE_ID=l.LONGTERM_ID AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            l.MAINTENANCE_CATEGORY='Basic'`,{year});
+        let {year,month} = req.body;
+        if(month==='ALL') month=null;
+            let result = await runQueryOutBinds(`
+                BEGIN
+                    :count1 := RET_PIEDATA(:year,:month,'Basic');
+                    :count2 := RET_PIEDATA(:year,:month,'Premium');
+                    :count3 := RET_PIEDATA(:year,:month,'Repair');
+                    :count4 := RET_PIEDATA(:year,:month,'Wash');
+                END;
+            `,
+            {year,
+            month,
+            count1:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER},
+            count2:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER},
+            count3:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER},
+            count4:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER}});
 
-            d[1] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Basic & Premium"
-            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
-            c.SERVICE_ID=l.LONGTERM_ID AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            l.MAINTENANCE_CATEGORY='Premium'`,{year});
-
-            d[2] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Vehicle Repair"
-            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
-            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            s.REPAIR.type is not null`,{year});
-
-            d[3] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Vehicle Wash"
-            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
-            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            s.WASH.type is not null`,{year});   
-            
-            for(let i=0;i<4;++i)count.push(d[i][0]);
-        }
-        else{
-            d[0] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Only Basic"
-            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
-            c.SERVICE_ID=l.LONGTERM_ID AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            to_char(t.SERVICE_DATE,'MON')=:month AND
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            l.MAINTENANCE_CATEGORY='Basic'`,{month,year});
-    
-            d[1] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Basic & Premium"
-            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
-            c.SERVICE_ID=l.LONGTERM_ID AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            to_char(t.SERVICE_DATE,'MON')=:month AND
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            l.MAINTENANCE_CATEGORY='Premium'`,{month,year});
-    
-            d[2] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Vehicle Repair"
-            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
-            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            to_char(t.SERVICE_DATE,'MON')=:month AND
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            s.REPAIR.type is not null`,{month,year});
-    
-            d[3] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Vehicle Wash"
-            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
-            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            to_char(t.SERVICE_DATE,'MON')=:month AND
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            s.WASH.type is not null`,{month,year});   
-                
-            for(let i=0;i<4;++i)count.push(d[i][0]);
-        }
+            count = [
+                { 'Basic': result.count1  },
+                { 'Premium': result.count2},
+                { 'Repair': result.count3 },
+                { 'Wash': result.count4   }
+            ];
         res.status(200).json({
             "slicedata": count
         });
@@ -142,9 +89,10 @@ const shortUser = async(req,res)=>{
             date,
             repairtype,
             washtype}=req.body;
-            vehicleno = vehicleno.toUpperCase();
-        const data=await runQueryOutBinds(`insert into care_transac(MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
-        values('Not Selected','shortterm',0)
+            //vehicleno = vehicleno.toUpperCase();
+
+        const data=await runQueryOutBinds(`insert into care_transac(SERVICE_ID,MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
+        values(service_id.nextval,'Not Selected','shortterm',0)
         returning SERVICE_ID INTO :service_id`,
         {
                 service_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
@@ -153,7 +101,7 @@ const shortUser = async(req,res)=>{
 
         const serviceid=data.service_id[0];
         await runQuery(`insert into Shorttermcare (SHORTTERM_ID,LABOR_HOURS,REPAIR,WASH,COMPLETED)
-        values(:serviceid,0,SHORT_CARE(:repairtype,0),SHORT_CARE(:washtype,0),'NO')`,
+        values(:serviceid, 0, SHORT_CARE(:repairtype,0),SHORT_CARE(:washtype,0),'NO')`,
         {   
             serviceid,
             repairtype,
@@ -162,7 +110,7 @@ const shortUser = async(req,res)=>{
         console.log('Successful Insertion in shorttermcare!!');
         const service_date=date;
         await runQuery(`INSERT INTO takes_care (SERVICE_ID, VEHICLENO,SERVICE_DATE)
-        VALUES (:serviceid, :vehicleno, TO_DATE(:service_date,'yyyy-mm-dd'))`,
+        VALUES (:serviceid, upper(:vehicleno), TO_DATE(:service_date,'yyyy-mm-dd'))`,
         {   
             serviceid,
             vehicleno,
@@ -170,7 +118,7 @@ const shortUser = async(req,res)=>{
         });
         console.log('Successful Insertion in takes_care!!');
 
-        res.status(200).json({"service_id": data.service_id[0]});
+        res.status(200).json({"service_id": serviceid});
 
     }catch(err){
         console.error(err);
@@ -200,8 +148,8 @@ const longUser = async(req,res)=>{
         }
 
         console.log(finaldate);
-        const data=await runQueryOutBinds(`insert into care_transac (MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
-        values('Not Selected','longterm',0)
+        const data=await runQueryOutBinds(`insert into care_transac (SERVICE_ID,MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
+        values(service_id.nextval,'Not Selected','longterm',0)
         returning SERVICE_ID INTO :service_id`,
         {
                 service_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
@@ -235,8 +183,7 @@ const longUser = async(req,res)=>{
             service_date
         });
         console.log('Successful Insertion in takes_care!!');
-
-        res.status(200).json({"service_id": data.service_id[0]});
+        res.status(200).json({"service_id": serviceid});
 
     }catch(err){
         console.error(err);
@@ -719,7 +666,7 @@ const fetchUnreadMessages = async(req,res)=>{
             id=:user_id`,{user_id});
         console.log(count);
         res.status(200).json({
-            count: count[0].MSG_COUNT
+            count: count[0]?count[0].MSG_COUNT:0
         })
     }catch(err){
         console.error(err);
