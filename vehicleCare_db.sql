@@ -23,6 +23,7 @@ CREATE TABLE Maintenance_Info(
     description VARCHAR(255),
     last_service_date DATE,
     next_service_date DATE,
+    maintenance_cost NUMBER
     CONSTRAINT fk_maintenance_id FOREIGN KEY (maintenance_id) REFERENCES Care_Transac(service_id)
 );
 
@@ -68,6 +69,9 @@ CREATE TABLE UNREADCHAT(
     CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES USERS (userid)
 )
 
+
+
+---------------------------NEW CHANGES-----------------------------
 
 --------------Sequence-------------
 CREATE SEQUENCE SERVICE_ID
@@ -118,6 +122,70 @@ BEGIN
 END;
 
 
+-----PROCEDURE--------
+
+CREATE OR REPLACE PROCEDURE RET_LINEDATA
+(month IN NUMBER, day in NUMBER,year IN NUMBER,COUNT_ OUT INTEGER)
+IS
+
+BEGIN
+    SELECT NVL(SUM(c.SERVICING_COST),0)
+    INTO COUNT_
+    FROM CARE_TRANSAC c,TAKES_CARE t WHERE 
+    (day is NULL or EXTRACT(DAY FROM t.SERVICE_DATE)=day)AND
+    EXTRACT(MONTH FROM t.SERVICE_DATE)=month AND 
+    EXTRACT(YEAR FROM t.SERVICE_DATE)=year AND
+    c.SERVICE_ID=t.SERVICE_ID;
+END;
+
+
+-------TRIGGER-----------
+CREATE OR REPLACE TRIGGER TRIGG_SERVICING_COST
+AFTER INSERT ON MAINTENANCE_INFO
+FOR EACH ROW
+
+BEGIN
+    update care_transac
+    set servicing_cost=(:NEW.maintenance_cost+servicing_cost) where service_id=:NEW.maintenance_id;
+END;
+
+CREATE OR REPLACE TRIGGER TRIGG_DELETE_LONG_ID
+AFTER DELETE ON LONGTERMCARE
+FOR EACH ROW
+
+BEGIN
+
+    delete from MAINTENANCE_INFO
+    where maintenance_id=:OLD.longterm_id;
+
+    delete from TAKES_CARE
+    where service_id =:OLD.longterm_id;
+
+END;
+
+CREATE OR REPLACE TRIGGER TRIGG_DELETE_SHORT_ID
+AFTER DELETE ON SHORTTERMCARE
+FOR EACH ROW
+
+BEGIN
+
+    delete from TAKES_CARE
+    where service_id =:OLD.shortterm_id;
+
+END;
+
+
+
+
+-------TABLE CHANGES-------
+
+
+ALTER TABLE MAINTENANCE_INFO
+ADD maintenance_cost NUMBER;
+
+----------------------------------------------------
+
+
 
 ------DROP TABLES-----
 drop table ShorttermCare;
@@ -125,3 +193,5 @@ drop table LongtermCare;
 drop table Maintenance_Info;
 drop table Takes_Care;
 drop table Care_Transac;
+
+
