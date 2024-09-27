@@ -35,4 +35,12 @@ const runQueryOutBinds = async (query, params) => {
   return data.outBinds
 }
 
-module.exports = { runQuery, runQueryOutBinds }
+const runQueryOutBindsAdvanced = async (query, params) => {
+  const conn = await connection()
+  const result = await conn.execute(query, params, {
+    outFormat: oracledb.OUT_FORMAT_OBJECT,
+  })
+  return { conn, result }
+}
+
+module.exports = { runQuery, runQueryOutBinds, runQueryOutBindsAdvanced }

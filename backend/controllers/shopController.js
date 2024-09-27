@@ -1,4 +1,8 @@
-const { runQuery, runQueryOutBinds } = require('../connection')
+const {
+  runQuery,
+  runQueryOutBinds,
+  runQueryOutBindsAdvanced,
+} = require('../connection')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const fs = require('fs')
 const oracledb = require('oracledb')
@@ -636,6 +640,64 @@ const averageRating = async (req, res) => {
   }
 }
 
+const getSales = async (req, res) => {
+  const { sellerId } = req.params
+  const { searchTerm } = req.query
+
+  let conn
+
+  try {
+    const result = await runQueryOutBindsAdvanced(
+      `BEGIN 
+      GET_SALES(:seller_id, :search_term, :sales_cursor);
+      END;`,
+      {
+        seller_id: sellerId,
+        search_term: searchTerm || null,
+        sales_cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      }
+    )
+
+    conn = result.conn
+    console.log('Result:', result)
+
+    const salesCursor = result.result.outBinds.sales_cursor
+    if (!salesCursor) {
+      throw new Error('Cursor not returned from PL/SQL block')
+    }
+
+    console.log('Sales Cursor:', salesCursor)
+
+    const salesData = []
+    let row
+
+    console.log('Fetching rows from cursor...')
+    while ((row = await salesCursor.getRow())) {
+      salesData.push(row)
+    }
+    await salesCursor.close()
+
+    if (salesData.length === 0) {
+      return res
+        .status(404)
+        .json({ message: 'No sales found for this seller.' })
+    }
+    res.status(200).json(salesData)
+  } catch (error) {
+    console.error('Error fetching sales data:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  } finally {
+    if (conn) {
+      try {
+        await conn.commit()
+        await conn.close()
+      } catch (err) {
+        console.error('Error closing connection:', err)
+      }
+    }
+  }
+}
+
 module.exports = {
   getShop,
   getShopById,
@@ -655,4 +717,5 @@ module.exports = {
   getProductReviews,
   addProductReview,
   averageRating,
+  getSales,
 }

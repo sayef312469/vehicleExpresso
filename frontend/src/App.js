@@ -29,6 +29,7 @@ import Dashboard from './pages/dashboard'
 import RecordHistory from './pages/record'
 import Profile from './pages/userProfile'
 import PurchaseHistory from './pages/PurchaseHistory'
+import SalesReport from './pages/MySalesReport'
 
 function App() {
   const { user } = useAuthContext()
@@ -194,6 +195,11 @@ function App() {
               <Route
                 path="/purchasehistory"
                 element={user ? <PurchaseHistory /> : <Navigate to="/login" />}
+              />
+
+              <Route
+                path="/salesreport"
+                element={user ? <SalesReport /> : <Navigate to="/login" />}
               />
 
               <Route

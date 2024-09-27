@@ -235,3 +235,45 @@ BEGIN
     WHERE
         PRODUCT_ID = P_PRODUCT_ID;
 END;
+
+CREATE OR REPLACE PROCEDURE GET_SALES( P_SELLER_ID IN NUMBER, SEARCH_TERM IN VARCHAR2 DEFAULT NULL, SALES_CURSOR OUT SYS_REFCURSOR ) AS
+BEGIN
+    OPEN SALES_CURSOR FOR
+        SELECT
+            P.PRODUCT_ID,
+            P.PRODUCT_NAME,
+            P.PRODUCT_DESCRIPTION,
+            P.PRODUCT_CATEGORY,
+            P.PRODUCT_IMAGE_URL,
+            P.SELLER_STOCK,
+            SUM(PD.QUANTITY)                AS TOTAL_QUANTITY,
+            PD.ITEM_PRICE,
+            SUM(PD.DISCOUNT_PRICE)          AS TOTAL_DISCOUNT,
+            SUM(PD.TOTAL_PRICE)             AS TOTAL_PRICE,
+            P.STATUS,
+            MAX(PUR.PURCHASE_DATE)          AS LAST_PURCHASE_DATE,
+            SUM(SUM(PD.TOTAL_PRICE)) OVER() AS TOTAL_SALES
+        FROM
+            PRODUCTS         P,
+            PURCHASE_DETAILS PD,
+            PURCHASES        PUR
+        WHERE
+            P.PRODUCT_ID = PD.PRODUCT_ID
+            AND PD.PURCHASE_ID = PUR.PURCHASE_ID
+            AND P.SELLER_ID = P_SELLER_ID
+            AND (SEARCH_TERM IS NULL
+            OR LOWER(P.PRODUCT_NAME) LIKE '%'
+                                          || LOWER(SEARCH_TERM)
+                                          || '%')
+        GROUP BY
+            P.PRODUCT_ID,
+            P.PRODUCT_NAME,
+            P.PRODUCT_DESCRIPTION,
+            P.PRODUCT_CATEGORY,
+            P.PRODUCT_IMAGE_URL,
+            PD.ITEM_PRICE,
+            P.SELLER_STOCK,
+            P.STATUS
+        ORDER BY
+            LAST_PURCHASE_DATE DESC;
+END;

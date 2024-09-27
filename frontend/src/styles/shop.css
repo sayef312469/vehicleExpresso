@@ -1371,3 +1371,128 @@ hr {
   color: #fff;
   border-color: white;
 }
+
+/* Container Styling */
+.sales-report-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+.sales-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.sales-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Elevated shadow on hover */
+}
+
+/* Product Image Styling */
+.product-image83 {
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Card Body Styling */
+.card-body91 {
+  padding: 15px;
+  color: #333;
+}
+
+.card-title91 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.card-text91 {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.card-text91 strong {
+  color: #333;
+}
+
+/* Card Footer Styling */
+.card-footer91 {
+  background-color: #f7f7f7;
+  border-top: 1px solid #eaeaea;
+  font-size: 0.85rem;
+  padding: 10px 15px;
+  display: inline-block;
+}
+
+.card-footer91 strong {
+  color: #007bff;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+.unique-search-button {
+  margin: 0;
+  padding: 7px 15px;
+  background-color: rgba(33, 244, 177, 0.653);
+  border: none;
+  color: #333;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unique-search-button:hover {
+  background-color: rgba(17, 150, 108, 0.918);
+  cursor: pointer;
+  transform: translateY(-2px);
+}
+
+.unique-search-button:active {
+  background-color: #004494;
+  transform: translateY(0);
+}
+
+.unique-search-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.unique-error-message {
+  color: #dc3545;
+  text-align: center;
+  padding: 10px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+}
+
+.alert73 {
+  font-size: 1rem;
+}
+
+/* Responsive Spacing */
+@media (max-width: 767px) {
+  .sales-card {
+    margin-bottom: 20px;
+  }
+
+  .unique-search-button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+
+

@@ -166,6 +166,12 @@ const NavbarTop = () => {
                 <span className="material-symbols-outlined">history_edu</span>
                 Purchase History
               </NavDropdown.Item>
+              {user && user.id < 100 && (
+                <NavDropdown.Item as={Link} to={'/salesreport'}>
+                  <span className="material-symbols-outlined">bar_chart</span>
+                  My Sales
+                </NavDropdown.Item>
+              )}
               {user && <NavDropdown.Divider />}
               {user && (
                 <NavDropdown.Item as={Link} to={'/profile'}>
