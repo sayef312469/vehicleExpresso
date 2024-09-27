@@ -1,7 +1,7 @@
 
 ---------------------------------------------------VEHICLE_CARE-------------------------------------------------
 CREATE TABLE Care_Transac(
-    service_id INTEGER generated always as identity(start with 100 increment by 1),
+    service_id INTEGER,
     mechanic_name VARCHAR2(20) not null,
     service_type VARCHAR2(20) not null,
     servicing_cost NUMBER,
@@ -23,6 +23,7 @@ CREATE TABLE Maintenance_Info(
     description VARCHAR(255),
     last_service_date DATE,
     next_service_date DATE,
+    maintenance_cost NUMBER
     CONSTRAINT fk_maintenance_id FOREIGN KEY (maintenance_id) REFERENCES Care_Transac(service_id)
 );
 
@@ -37,7 +38,7 @@ CREATE table Takes_Care(
     service_date DATE,
     CONSTRAINT fk_service_id FOREIGN KEY (service_id) REFERENCES Care_Transac(service_id), 
     CONSTRAINT fk_vehicleno FOREIGN KEY (vehicleno) REFERENCES vehicle_info(vehicleno)
-)
+);
 
 CREATE TABLE ShorttermCare(
     shortterm_id INTEGER not null,
@@ -67,3 +68,212 @@ CREATE TABLE UNREADCHAT(
     contact_count NUMBER,
     CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES USERS (userid)
 )
+
+
+
+---------------------------NEW CHANGES-----------------------------
+
+--------------Sequence-------------
+CREATE SEQUENCE SERVICE_ID
+START WITH 100
+INCREMENT BY 1
+MAXVALUE 9999999
+CACHE 100
+CYCLE
+
+
+---FUNCTION----
+
+CREATE OR REPLACE FUNCTION RET_PIEDATA
+(year NUMBER, month VARCHAR2, term VARCHAR2)
+return INTEGER
+IS
+    COUNT_ INTEGER;
+BEGIN
+        IF term = 'Basic' or term = 'Premium' THEN
+            select count(c.SERVICE_ID)
+            INTO COUNT_
+            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
+            c.SERVICE_ID=l.LONGTERM_ID AND 
+            c.SERVICE_ID=t.SERVICE_ID AND 
+            (month is NULL or to_char(t.SERVICE_DATE,'MON')=month) AND
+            EXTRACT(YEAR FROM t.SERVICE_DATE)=year AND 
+            l.MAINTENANCE_CATEGORY= term;
+        ELSIF term= 'Repair' THEN
+            select count(c.SERVICE_ID)
+            INTO COUNT_
+            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
+            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
+            c.SERVICE_ID=t.SERVICE_ID AND 
+            (month is NULL or to_char(t.SERVICE_DATE,'MON')=month) AND
+            EXTRACT(YEAR FROM t.SERVICE_DATE)=year AND 
+            s.REPAIR.type is not null;
+        ELSE 
+            select count(c.SERVICE_ID)
+            INTO COUNT_
+            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
+            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
+            c.SERVICE_ID=t.SERVICE_ID AND 
+            (month is NULL or to_char(t.SERVICE_DATE,'MON')=month) AND
+            EXTRACT(YEAR FROM t.SERVICE_DATE)=year AND 
+            s.WASH.type is not null;
+        END IF;
+    return COUNT_;
+END;
+
+
+-----PROCEDURE--------
+
+CREATE OR REPLACE PROCEDURE RET_LINEDATA
+(month IN NUMBER, day in NUMBER,year IN NUMBER,COUNT_ OUT INTEGER)
+IS
+
+BEGIN
+    SELECT NVL(SUM(c.SERVICING_COST),0)
+    INTO COUNT_
+    FROM CARE_TRANSAC c,TAKES_CARE t WHERE 
+    (day is NULL or EXTRACT(DAY FROM t.SERVICE_DATE)=day)AND
+    EXTRACT(MONTH FROM t.SERVICE_DATE)=month AND 
+    EXTRACT(YEAR FROM t.SERVICE_DATE)=year AND
+    c.SERVICE_ID=t.SERVICE_ID;
+END;
+
+
+-------TRIGGER-----------
+CREATE OR REPLACE TRIGGER TRIGG_SERVICING_COST
+AFTER INSERT ON MAINTENANCE_INFO
+FOR EACH ROW
+
+BEGIN
+    update care_transac
+    set servicing_cost=(:NEW.maintenance_cost+servicing_cost) where service_id=:NEW.maintenance_id;
+END;
+
+CREATE OR REPLACE TRIGGER TRIGG_DELETE_LONG_ID
+AFTER DELETE ON LONGTERMCARE
+FOR EACH ROW
+
+BEGIN
+
+    delete from MAINTENANCE_INFO
+    where maintenance_id=:OLD.longterm_id;
+
+    delete from TAKES_CARE
+    where service_id =:OLD.longterm_id;
+
+END;
+
+CREATE OR REPLACE TRIGGER TRIGG_DELETE_SHORT_ID
+AFTER DELETE ON SHORTTERMCARE
+FOR EACH ROW
+
+BEGIN
+
+    delete from TAKES_CARE
+    where service_id =:OLD.shortterm_id;
+
+END;
+
+-----------------VIEW-----------------
+
+CREATE OR REPLACE VIEW view_short_table
+(
+    row_num,
+    name,
+    vehicleno,
+    service_id,
+    service_date,
+    repairtype,
+    repaircost,
+    washtype,
+    washcost,
+    mechanic_name,
+    servicing_cost,
+    completed,
+    labor_hours
+)
+AS select 
+    ROW_NUMBER() OVER (order by sc.completed,ct.service_id), 
+    u.name,
+    vi.vehicleno,
+    ct.service_id,
+    to_char(tc.service_date,'yyyy-mm-dd') as service_date,
+    sc.repair.type as repairtype,
+    sc.repair.cost as repaircost, 
+    sc.wash.type as washtype,
+    sc.wash.cost as washcost, 
+    ct.mechanic_name,
+    ct.servicing_cost,
+    sc.completed, 
+    sc.labor_hours 
+from 
+    users u,
+    vehicle_info vi,
+    takes_care tc,
+    care_transac ct,
+    shorttermcare sc
+    where u.userid=vi.vehicle_owner and
+    vi.vehicleno=tc.vehicleno and
+    tc.service_id=ct.service_id and
+    ct.service_id=sc.shortterm_id
+WITH READ ONLY;
+
+CREATE OR REPLACE VIEW view_long_table
+(
+    row_num,
+    name,
+    service_id,
+    vehicleno,
+    service_date,
+    final_date,
+    mechanic_name,
+    odometer_reading,
+    maintenance_category,
+    insurance_provider,
+    insurance_exp_date,
+    servicing_cost
+)
+AS select 
+    ROW_NUMBER() OVER (order by ct.service_id), 
+    u.name,
+    ct.service_id,
+    vi.vehicleno,
+    to_char(tc.service_date,'yyyy-mm-dd'),
+    to_char(lc.final_date,'yyyy-mm-dd'),
+    ct.mechanic_name,
+    lc.odometer_reading,
+    lc.maintenance_category,
+    lc.insurance_provider,
+    to_char(lc.insurance_exp_date,'yyyy-mm-dd'),
+    ct.servicing_cost
+from 
+    users u,
+    vehicle_info vi,
+    takes_care tc,
+    care_transac ct,
+    longtermcare lc
+    where u.userid=vi.vehicle_owner and
+    vi.vehicleno=tc.vehicleno and
+    tc.service_id=ct.service_id and
+    ct.service_id=lc.longterm_id
+WITH READ ONLY;
+
+
+-------TABLE CHANGES-------
+
+
+ALTER TABLE MAINTENANCE_INFO
+ADD maintenance_cost NUMBER;
+
+----------------------------------------------------
+
+
+
+------DROP TABLES-----
+drop table ShorttermCare;
+drop table LongtermCare;
+drop table Maintenance_Info;
+drop table Takes_Care;
+drop table Care_Transac;
+
+

@@ -2,86 +2,35 @@ const oracledb = require('oracledb')
 const {getDaysInMonth, ReversemonthMap, monthMap, columnMap}  = require('../monthTonum')
 const {runQuery,runQueryOutBinds}=require('../connection');
 
-
+//function
 const pieData = async(req, res)=>{
     try{
         let count =[];
-        let d=[];
-        const {year,month} = req.body;
-        if(!month || month=="ALL"){
-            d[0] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Only Basic"
-            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
-            c.SERVICE_ID=l.LONGTERM_ID AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            l.MAINTENANCE_CATEGORY='Basic'`,{year});
+        let {year,month} = req.body;
+        if(month==='ALL') month=null;
+            let result = await runQueryOutBinds(`
+                BEGIN
+                    :count1 := RET_PIEDATA(:year,:month,'Basic');
+                    :count2 := RET_PIEDATA(:year,:month,'Premium');
+                    :count3 := RET_PIEDATA(:year,:month,'Repair');
+                    :count4 := RET_PIEDATA(:year,:month,'Wash');
+                END;
+            `,
+            {
+                year,
+                month,
+                count1:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER},
+                count2:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER},
+                count3:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER},
+                count4:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER}
+            });
 
-            d[1] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Basic & Premium"
-            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
-            c.SERVICE_ID=l.LONGTERM_ID AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            l.MAINTENANCE_CATEGORY='Premium'`,{year});
-
-            d[2] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Vehicle Repair"
-            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
-            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            s.REPAIR.type is not null`,{year});
-
-            d[3] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Vehicle Wash"
-            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
-            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            s.WASH.type is not null`,{year});   
-            
-            for(let i=0;i<4;++i)count.push(d[i][0]);
-        }
-        else{
-            d[0] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Only Basic"
-            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
-            c.SERVICE_ID=l.LONGTERM_ID AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            to_char(t.SERVICE_DATE,'MON')=:month AND
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            l.MAINTENANCE_CATEGORY='Basic'`,{month,year});
-    
-            d[1] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Basic & Premium"
-            from CARE_TRANSAC c,LONGTERMCARE l,TAKES_CARE t where 
-            c.SERVICE_ID=l.LONGTERM_ID AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            to_char(t.SERVICE_DATE,'MON')=:month AND
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            l.MAINTENANCE_CATEGORY='Premium'`,{month,year});
-    
-            d[2] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Vehicle Repair"
-            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
-            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            to_char(t.SERVICE_DATE,'MON')=:month AND
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            s.REPAIR.type is not null`,{month,year});
-    
-            d[3] = await runQuery(
-            `select count(c.SERVICE_ID) AS "Vehicle Wash"
-            from CARE_TRANSAC c,SHORTTERMCARE s,TAKES_CARE t where 
-            c.SERVICE_ID in(SELECT s.SHORTTERM_ID FROM SHORTTERMCARE) AND 
-            c.SERVICE_ID=t.SERVICE_ID AND 
-            to_char(t.SERVICE_DATE,'MON')=:month AND
-            EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-            s.WASH.type is not null`,{month,year});   
-                
-            for(let i=0;i<4;++i)count.push(d[i][0]);
-        }
+            count = [
+                { 'Basic': result.count1  },
+                { 'Premium': result.count2},
+                { 'Repair': result.count3 },
+                { 'Wash': result.count4   }
+            ];
         res.status(200).json({
             "slicedata": count
         });
@@ -91,39 +40,52 @@ const pieData = async(req, res)=>{
     }
 }
 
-
+//procedure
 const lineData = async(req,res)=>{
     try{
         const {year,month} = req.body;
         let months=[];
         let days=[];
-        if(month=="ALL" || !month){
+        if(month==="ALL" || !month){
             for(let mon=1;mon<=12;++mon){
-                const data=await runQuery(
-                `SELECT SUM(c.SERVICING_COST) AS "${ReversemonthMap[mon]}"
-                FROM CARE_TRANSAC c,TAKES_CARE t WHERE 
-                EXTRACT(MONTH FROM t.SERVICE_DATE)=:mon AND 
-                EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND
-                c.SERVICE_ID=t.SERVICE_ID`,{mon,year});
-                if(data[0][ReversemonthMap[mon]]!==null) months.push(data[0]);
-                else months.push({[ReversemonthMap[mon]]: 0});  
+            const data=await runQueryOutBinds(`
+                    DECLARE
+                        COUNT_ INTEGER;
+                    BEGIN
+                        RET_LINEDATA(:mon,NULL,:year,COUNT_);
+                        :count := COUNT_;
+                    END;
+                `,
+                {
+                    mon,
+                    year,
+                    count:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER}
+                });
+                months.push({ [ReversemonthMap[mon]]: data.count });  
             }
             res.status(200).json({
                 "monthCost": months
             }); 
         }
         else{
-            const total=getDaysInMonth(monthMap[month], year);
+            const  monthCount = monthMap[month];
+            const total=getDaysInMonth(monthCount, year);
             for(let day=1;day<=total;++day){
-                const data=await runQuery(
-                `SELECT SUM(c.SERVICING_COST) AS "Day ${day}"
-                FROM CARE_TRANSAC c,TAKES_CARE t WHERE 
-                EXTRACT(DAY FROM t.SERVICE_DATE)=:day AND
-                to_char(t.SERVICE_DATE,'MON')=:month AND 
-                EXTRACT(YEAR FROM t.SERVICE_DATE)=:year AND 
-                c.SERVICE_ID=t.SERVICE_ID`,{day,month,year});
-                if(data[0][`Day ${day}`]!==null) days.push(data[0]);
-                else days.push({[`Day ${day}`]:0});  
+                const data=await runQueryOutBinds(`
+                    DECLARE
+                        COUNT_ INTEGER;
+                    BEGIN
+                        RET_LINEDATA(:monthCount,:day,:year,COUNT_);
+                        :count := COUNT_;
+                    END;
+                `,
+                {
+                    monthCount,
+                    day,
+                    year,
+                    count:{dir: oracledb.BIND_OUT, type: oracledb.NUMBER}
+                });
+                days.push({[`Day ${day}`]: data.count});  
             }
             res.status(200).json({
                 "dayCost": days
@@ -135,16 +97,19 @@ const lineData = async(req,res)=>{
     }
 }
 
+//function
+
 const shortUser = async(req,res)=>{
     try{
         let {
             vehicleno,
             date,
             repairtype,
-            washtype}=req.body;
-            vehicleno = vehicleno.toUpperCase();
-        const data=await runQueryOutBinds(`insert into care_transac(MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
-        values('Not Selected','shortterm',0)
+            washtype
+        }=req.body;
+
+        const data=await runQueryOutBinds(`insert into care_transac(SERVICE_ID,MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
+        values(service_id.nextval,'Not Selected','shortterm',0)
         returning SERVICE_ID INTO :service_id`,
         {
                 service_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
@@ -153,16 +118,17 @@ const shortUser = async(req,res)=>{
 
         const serviceid=data.service_id[0];
         await runQuery(`insert into Shorttermcare (SHORTTERM_ID,LABOR_HOURS,REPAIR,WASH,COMPLETED)
-        values(:serviceid,0,SHORT_CARE(:repairtype,0),SHORT_CARE(:washtype,0),'NO')`,
+        values(:serviceid, 0, SHORT_CARE(:repairtype,0),SHORT_CARE(:washtype,0),'NO')`,
         {   
             serviceid,
             repairtype,
             washtype
         });
         console.log('Successful Insertion in shorttermcare!!');
+
         const service_date=date;
         await runQuery(`INSERT INTO takes_care (SERVICE_ID, VEHICLENO,SERVICE_DATE)
-        VALUES (:serviceid, :vehicleno, TO_DATE(:service_date,'yyyy-mm-dd'))`,
+        VALUES (:serviceid, upper(:vehicleno), TO_DATE(:service_date,'yyyy-mm-dd'))`,
         {   
             serviceid,
             vehicleno,
@@ -170,7 +136,7 @@ const shortUser = async(req,res)=>{
         });
         console.log('Successful Insertion in takes_care!!');
 
-        res.status(200).json({"service_id": data.service_id[0]});
+        res.status(200).json({"service_id": serviceid});
 
     }catch(err){
         console.error(err);
@@ -178,6 +144,7 @@ const shortUser = async(req,res)=>{
     }
 }
 
+//function
 
 const longUser = async(req,res)=>{
     try{
@@ -199,9 +166,8 @@ const longUser = async(req,res)=>{
             return;
         }
 
-        console.log(finaldate);
-        const data=await runQueryOutBinds(`insert into care_transac (MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
-        values('Not Selected','longterm',0)
+        const data=await runQueryOutBinds(`insert into care_transac (SERVICE_ID,MECHANIC_NAME,SERVICE_TYPE,SERVICING_COST)
+        values(service_id.nextval,'Not Selected','longterm',0)
         returning SERVICE_ID INTO :service_id`,
         {
                 service_id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
@@ -221,12 +187,7 @@ const longUser = async(req,res)=>{
             finaldate
         });
         console.log('Successful Insertion in longtermcare!!');
-        await runQuery(`INSERT INTO maintenance_info(MAINTENANCE_ID)
-        VALUES (:serviceid)`,
-        {   
-            serviceid
-        });
-        console.log('Successful Insertion in maintenance_info!!');
+
         await runQuery(`INSERT INTO takes_care (SERVICE_ID, VEHICLENO,SERVICE_DATE)
         VALUES (:serviceid, :vehicleno, TO_DATE(:service_date,'yyyy-mm-dd'))`,
         {   
@@ -235,8 +196,7 @@ const longUser = async(req,res)=>{
             service_date
         });
         console.log('Successful Insertion in takes_care!!');
-
-        res.status(200).json({"service_id": data.service_id[0]});
+        res.status(200).json({"service_id": serviceid});
 
     }catch(err){
         console.error(err);
@@ -244,56 +204,29 @@ const longUser = async(req,res)=>{
     }
 }
 
-
+//view
 const shortTableFetch = async(req,res)=>{
     try{
         const {lowindx, highindx, filterby, filterterm} = req.body;
 
         console.log(columnMap[filterby]);
         const table = await runQuery(`
-        select *
-        from 
-            users u,
-            vehicle_info vi,
-            takes_care tc,
-            care_transac ct,
-            shorttermcare sc
-        where 
-            u.userid=vi.vehicle_owner and
-            vi.vehicleno=tc.vehicleno and
-            tc.service_id=ct.service_id and
-            ct.service_id=sc.shortterm_id and
-            ${columnMap[filterby]} like :filterterm`,{filterterm: `%${filterterm}%`});
+        select * from
+            view_short_table
+        where
+            LOWER(${columnMap[filterby]}) like LOWER(:filterterm)`,
+            {
+                filterterm: `%${filterterm}%`
+            });
 
         const data = await runQuery(`
-            select * from (
-                select 
-                    ROW_NUMBER() OVER (order by sc.completed,ct.service_id) as row_num, 
-                    u.name,
-                    vi.vehicleno,
-                    ct.service_id,
-                    to_char(tc.service_date,'yyyy-mm-dd') as service_date,
-                    sc.repair.type as repairtype,
-                    sc.repair.cost as repaircost, 
-                    sc.wash.type as washtype,
-                    sc.wash.cost as washcost, ct.mechanic_name,
-                    ct.servicing_cost,
-                    sc.completed, 
-                    sc.labor_hours 
-                from 
-                    users u,
-                    vehicle_info vi,
-                    takes_care tc,
-                    care_transac ct,
-                    shorttermcare sc
-                    where u.userid=vi.vehicle_owner and
-                    vi.vehicleno=tc.vehicleno and
-                    tc.service_id=ct.service_id and
-                    ct.service_id=sc.shortterm_id and
-                    LOWER(${columnMap[filterby]}) like LOWER(:filterterm)
-                    order by row_num)
-            where 
-            row_num between :lowindx and :highindx`,{filterterm: `%${filterterm}%`, lowindx, highindx});
+            select * from
+                view_short_table
+            where
+                LOWER(${columnMap[filterby]}) like LOWER(:filterterm) and
+                row_num between :lowindx and :highindx
+            order by 
+                row_num`,{filterterm: `%${filterterm}%`, lowindx, highindx});
 
         res.status(200).json({
             'size': table.length,
@@ -305,82 +238,31 @@ const shortTableFetch = async(req,res)=>{
     }
 }
 
+//view
 const longTableFetch =async(req,res)=>{
     try{
         const {lowindx, highindx, filterby, filterterm} = req.body;
         console.log(columnMap[filterby]);
         const table = await runQuery(`
-        select distinct 
-            u.name,
-            ct.service_id,
-            vi.vehicleno,
-            tc.service_date,
-            lc.final_date,
-            ct.mechanic_name,
-            lc.odometer_reading,
-            lc.maintenance_category,
-            lc.insurance_provider,
-            lc.insurance_exp_date,
-            ct.servicing_cost
+        select *
         from 
-            users u,
-            vehicle_info vi,
-            takes_care tc,
-            care_transac ct,
-            longtermcare lc,
-            maintenance_info mi
-            where u.userid=vi.vehicle_owner and
-            vi.vehicleno=tc.vehicleno and
-            tc.service_id=ct.service_id and
-            ct.service_id=lc.longterm_id and
-            ct.service_id=mi.maintenance_id and
-            LOWER(${columnMap[filterby]}) like LOWER(:filterterm)`,{filterterm: `%${filterterm}%`})
+            view_long_table
+        where 
+        LOWER(${columnMap[filterby]}) like LOWER(:filterterm)`,{filterterm: `%${filterterm}%`})
 
         const data = await runQuery(`
-        select * from
-            (select 
-                ROW_NUMBER() OVER (order by service_id) as row_num, 
-                name,
-                service_id,
-                vehicleno,
-                to_char(service_date,'yyyy-mm-dd') as service_date,
-                to_char(final_date,'yyyy-mm-dd') as final_date,
-                mechanic_name,
-                odometer_reading,
-                maintenance_category,
-                insurance_provider,
-                to_char(insurance_exp_date,'yyyy-mm-dd') as insurance_exp_date,
-                servicing_cost
-            from
-                (select distinct 
-                    u.name,
-                    ct.service_id,
-                    vi.vehicleno,
-                    tc.service_date,
-                    lc.final_date,
-                    ct.mechanic_name,
-                    lc.odometer_reading,
-                    lc.maintenance_category,
-                    lc.insurance_provider,
-                    lc.insurance_exp_date,
-                    ct.servicing_cost
-                from 
-                    users u,
-                    vehicle_info vi,
-                    takes_care tc,
-                    care_transac ct,
-                    longtermcare lc,
-                    maintenance_info mi
-                    where u.userid=vi.vehicle_owner and
-                    vi.vehicleno=tc.vehicleno and
-                    tc.service_id=ct.service_id and
-                    ct.service_id=lc.longterm_id and
-                    ct.service_id=mi.maintenance_id and
-                    LOWER(${columnMap[filterby]}) like LOWER(:filterterm)
-                )
-            )
-        where row_num between :lowindx and :highindx`,{filterterm: `%${filterterm}%`, lowindx, highindx});
-
+        select *
+        from 
+            view_long_table
+        where 
+            LOWER(${columnMap[filterby]}) like LOWER(:filterterm) and
+            row_num between :lowindx and :highindx`,
+        {
+            filterterm: `%${filterterm}%`, 
+            lowindx,
+            highindx
+        });
+        console.log(table.length);
         res.status(200).json({
             'size': table.length,
             'table': data
@@ -394,7 +276,10 @@ const longTableFetch =async(req,res)=>{
 const maintenanceinfoFetch =async(req,res)=>{
     try{
         const {service_id}=req.body;
-        const data = await runQuery(`select description,to_char(last_service_date,'yyyy-mm-dd') as last_service_date,to_char(next_service_date,'yyyy-mm-dd') as next_service_date
+        const data = await runQuery(`select 
+        description,
+        to_char(last_service_date,'yyyy-mm-dd') as last_service_date,
+        to_char(next_service_date,'yyyy-mm-dd') as next_service_date
         from maintenance_info where
         maintenance_id=:service_id
         order by last_service_date`,{service_id});
@@ -419,8 +304,6 @@ const updateShortTable = async(req,res)=>{
             status
         }=req.body;
 
-        const servicing_cost =repairCost+washCost+(labourHour*laborCost);
-
         await runQuery(`
         DECLARE
             v_repair SHORT_CARE;
@@ -439,12 +322,13 @@ const updateShortTable = async(req,res)=>{
             labor_hours=:labourHour,
             completed = :status
             WHERE shortterm_id = :service_id;
-        END;`,{service_id,repairCost,washCost,labourHour,status,service_id});
 
-        await runQuery(`update care_transac
-        set mechanic_name=:mechanic,
-        servicing_cost=:servicing_cost
-        where service_id=:service_id`,{mechanic,servicing_cost,service_id});
+            UPDATE care_transac
+            set mechanic_name=:mechanic,
+            servicing_cost=(v_repair.cost + v_wash.cost)+(:labourHour * :laborCost)
+            where service_id=:service_id;
+
+        END;`,{service_id,repairCost,washCost,labourHour,status,service_id,mechanic,labourHour, laborCost});
         
         const data1 = await runQuery(`select * from care_transac
         where service_id=:service_id`,{service_id});
@@ -470,9 +354,8 @@ const updateLongTable = async(req,res)=>{
         await runQuery(`update care_transac 
         set mechanic_name=:mechanic,servicing_cost=:totalCost 
         where service_id=:service_id`,{mechanic,totalCost,service_id});
-        //insExpdate=dateFormat();
+        
         if(insExpdate){
-            console.log('hello');
             await runQuery(`update longtermcare 
             set odometer_reading=:odometerRead,insurance_exp_date=TO_DATE(:insExpdate,'yyyy-mm-dd')
             where longterm_id=:service_id`,{odometerRead,insExpdate,service_id});
@@ -482,10 +365,12 @@ const updateLongTable = async(req,res)=>{
             set odometer_reading=:odometerRead,insurance_exp_date=null
             where longterm_id=:service_id`,{odometerRead,service_id});
         }
+
         const data1 = await runQuery(`select * from care_transac
         where service_id=:service_id`,{service_id});
         const data2 = await runQuery(`select * from longtermcare
         where longterm_id=:service_id`,{service_id});
+
         res.status(200).json({data1,data2});
     }catch(err){
         console.error(err);
@@ -511,8 +396,8 @@ const availVehicle=async(req,res)=>{
         ct.service_id=sc.shortterm_id and
         Upper(sc.completed)='YES'
         order by tc.service_date`,{vehicleOwner});
-        const today = new Date().toISOString().slice(0,10);
-        console.log(today);
+
+
         const longBill = await runQuery(`select tc.vehicleno,ct.service_type,lc.maintenance_category,ct.servicing_cost,to_char(tc.service_date,'yyyy-mm-dd') as SERVICE_DATE
         from vehicle_info vi,takes_care tc,care_transac ct,longtermcare lc,maintenance_info mi
         where vi.vehicle_owner=:vehicleOwner and
@@ -520,8 +405,9 @@ const availVehicle=async(req,res)=>{
         tc.service_id=ct.service_id and
         ct.service_id=lc.longterm_id and
         ct.service_id=mi.maintenance_id and
-        to_char(lc.final_date,'yyyy-mm-dd')<:today
-        order by tc.service_date`,{vehicleOwner,today})
+        to_date(lc.final_date,'yyyy-mm-dd') < to_date(SYSDATE,'yyyy-mm-dd')
+        order by tc.service_date`,{vehicleOwner})
+        console.log('yooooooooo');
         res.status(200).json({data,imageUrl,shortBill,longBill});
     }catch(err){
         console.error(err);
@@ -529,33 +415,38 @@ const availVehicle=async(req,res)=>{
     }
 }
 
+//trigger
 const updateMaintInfo=async(req,res)=>{
   try{
-    const {service_id,
-      description,
-      next_maintenance_date,
-      totalcost
-      }=req.body;
+    const {
+        service_id,
+        description,
+        next_maintenance_date,
+        totalcost
+    }=req.body;
 
-      const maintenance_date=new Date().toISOString().slice(0,10);
-      await runQuery(`insert into Maintenance_info (Maintenance_id,description,last_service_date,next_service_date)
-      values(:service_id,:description,to_date(:maintenance_date,'yyyy-mm-dd'),to_date(:next_maintenance_date,'yyyy-mm-dd'))`,{service_id,description,maintenance_date,next_maintenance_date});
+    await runQuery(`insert into Maintenance_info (Maintenance_id,description,last_service_date,next_service_date,maintenance_cost)
+    values(
+        :service_id,
+        :description,
+        to_date(SYSDATE,'yyyy-mm-dd'),
+        to_date(:next_maintenance_date,'yyyy-mm-dd'),
+        :totalcost
+    )`,{service_id,description,next_maintenance_date,totalcost});
 
-      const data=await runQuery(`select servicing_cost 
-      from care_transac where service_id=:service_id`,{service_id});
+    const data=await runQuery(`select servicing_cost 
+    from care_transac where service_id=:service_id`,{service_id});
 
-      const updatedTotal=Number(data[0].SERVICING_COST)+totalcost;
-      
-      await runQuery(`update care_transac
-      set servicing_cost=:updatedTotal where service_id=:service_id`,{updatedTotal,service_id});
+    const updatedTotal=Number(data[0].SERVICING_COST)+totalcost;
 
-      res.status(200).json({'Updatedcost':updatedTotal});
+    res.status(200).json({'Updatedcost':updatedTotal});
   }catch(err){
     console.error(err);
     res.status(500).send('Failed to update Maintenance Info');
   }
 }
 
+//trigger
 const deleteMaintInfo =async(req,res)=>{
     try{
         const {
@@ -564,13 +455,12 @@ const deleteMaintInfo =async(req,res)=>{
         }=req.body;
         console.log(service_id,record);
         if(record==='ShortTerm'){
-            console.log('done');
             await runQuery(`delete from shorttermcare
             where shortterm_id=:service_id`,{service_id});
         }
         else{
-            await runQuery(`delete from maintenance_info
-            where maintenance_id=:service_id`,{service_id});
+            await runQuery(`delete from longtermcare
+            where longterm_id=:service_id`,{service_id});
         }
         res.status(200).json(`${service_id} deleted successfully!!`);
     }catch(err){
@@ -719,7 +609,7 @@ const fetchUnreadMessages = async(req,res)=>{
             id=:user_id`,{user_id});
         console.log(count);
         res.status(200).json({
-            count: count[0].MSG_COUNT
+            count: count[0]?count[0].MSG_COUNT:0
         })
     }catch(err){
         console.error(err);
