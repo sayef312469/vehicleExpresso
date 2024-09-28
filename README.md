@@ -36,7 +36,7 @@ npm run dev
 ```bash
 cd frontend
 npm install
-mpm start
+npm start
 ```
 
 3. Ensure your database setup. See the `.sql` files.
