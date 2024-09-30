@@ -135,10 +135,8 @@ const PaymentModal = ({
     // Add company logo
     doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
-    const logo = 'data:image/jpeg;base64,...' // Replace with your base64 encoded logo
+    const logo = 'data:image/jpeg;base64,...'
     doc.addImage(logo, 'JPEG', 15, 10, 50, 20)
-
-    // Add company name and address
 
     doc.text('Company Name', 105, 15, null, null, 'center')
     doc.setFontSize(12)
@@ -149,12 +147,10 @@ const PaymentModal = ({
     doc.setFont('helvetica', 'bold')
     doc.text('Receipt', 105, 35, null, null, 'center')
 
-    // Add a line below the header
     doc.setLineWidth(0.5)
     doc.setDrawColor(0, 0, 0)
     doc.line(15, 40, 195, 40)
 
-    //Add customer details
     doc.setFontSize(12)
     doc.setFont('helvetica', 'normal')
     doc.text(`Customer Name: ${userDetail.NAME}`, 15, 50)
@@ -167,7 +163,6 @@ const PaymentModal = ({
 
     doc.line(15, 67, 195, 67)
 
-    // Add item table
     const tableColumn = ['Item', 'Quantity', 'Price', 'Total']
     const tableRows = []
 
@@ -181,7 +176,6 @@ const PaymentModal = ({
       tableRows.push(itemData)
     })
 
-    // Calculate the subtotal
     const subtotal = cartItems.reduce(
       (sum, item) => sum + item.SELLER_PRICE * item.quantity,
       0
@@ -193,7 +187,6 @@ const PaymentModal = ({
     const shipping = 10
     const grandTotal = subtotal + tax + shipping
 
-    // Add tax, shipping, and total
     tableRows.push(['Tax (15%)', '', '', `$${tax.toFixed(2)}`])
     tableRows.push(['Shipping', '', '', `$${shipping.toFixed(2)}`])
     if (discountPrice > 0) {
@@ -211,7 +204,7 @@ const PaymentModal = ({
     })
 
     const finalY = doc.previousAutoTable.finalY || 92
-    // Add footer
+
     doc.setFontSize(10)
     doc.setFont('helvetica', 'italic')
     doc.text(
@@ -223,10 +216,8 @@ const PaymentModal = ({
       'center'
     )
 
-    // Save the PDF
     doc.save('receipt.pdf')
 
-    // Simulate payment processing here
     handlePayment(paymentMethod)
     clearCart()
     handleClose()

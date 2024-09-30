@@ -1,5 +1,3 @@
-// src/components/IncomeCard.js
-
 import React from 'react'
 import { Card } from 'react-bootstrap'
 import { FaChartLine } from 'react-icons/fa'

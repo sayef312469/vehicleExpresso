@@ -1,5 +1,3 @@
-// src/components/HeroSection.js
-
 import React from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import useScrollFade from '../hooks/useScrollFade'

@@ -1,5 +1,3 @@
-// src/components/OrdersCard.js
-
 import React from 'react'
 import { Card } from 'react-bootstrap'
 import { FaClipboardList } from 'react-icons/fa'

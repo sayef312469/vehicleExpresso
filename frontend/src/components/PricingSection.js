@@ -1,5 +1,3 @@
-// src/components/PricingSection.js
-
 import React from 'react'
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import useScrollFade from '../hooks/useScrollFade'

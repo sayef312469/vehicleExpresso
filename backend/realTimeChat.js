@@ -20,9 +20,9 @@ const chatSystem = (socket)=>{
     socket.on('careAdmin chat', async({adminId, userId,text})=>{
         //console.log(userId,text)
         await storeNewChats({adminId, userId, text});
-        const socketids = userIds[userId];
+        const socketIds = userIds[userId];
         if(socketIds===undefined) return;
-        socketids.forEach((socketid)=>{
+        socketIds.forEach((socketid)=>{
             //console.log(socketid);
             socket.to(socketid).emit('unread chat',{count: 1});
             socket.to(socketid).emit('careAdmin chat',{adminId, text});

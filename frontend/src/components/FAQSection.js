@@ -1,5 +1,3 @@
-// src/components/FAQSection.js
-
 import React from 'react'
 import { Container, Row, Col, Accordion } from 'react-bootstrap'
 import useScrollFade from '../hooks/useScrollFade'

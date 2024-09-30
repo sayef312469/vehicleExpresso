@@ -1,4 +1,3 @@
-// src/components/Hero.js
 import React from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 

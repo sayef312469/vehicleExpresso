@@ -1,5 +1,3 @@
-// src/components/EarningsCard.js
-
 import React from 'react'
 import { Card } from 'react-bootstrap'
 import { FaMoneyBillWave } from 'react-icons/fa'

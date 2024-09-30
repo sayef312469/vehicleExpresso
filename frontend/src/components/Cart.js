@@ -9,7 +9,6 @@ const Cart = ({ restoreQuantity }) => {
   const { cart, removeFromCart } = useCart()
   const [showModal, setShowModal] = useState(false)
 
-  // Function to calculate the total price of items in the cart
   const calculateTotalPrice = () => {
     return cart.reduce(
       (total, item) => total + item.SELLER_PRICE * item.quantity,

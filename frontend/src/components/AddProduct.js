@@ -59,16 +59,14 @@ const AddProduct = ({ onAddProduct, onCancel }) => {
             method: 'POST',
             body: formData,
             headers: {
-              Authorization: `Bearer ${user.token}`, // Assuming you're using token-based auth
+              Authorization: `Bearer ${user.token}`,
             },
           }
         )
 
         if (response.ok) {
-          // Handle success
           console.log('Product added successfully')
         } else {
-          // Handle errors
           console.error('Error adding product')
         }
       } catch (error) {

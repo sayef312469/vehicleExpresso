@@ -397,7 +397,6 @@ export default function ProfileTest() {
               </div>
             )}
           </Card.Text>
-          <StarRating />
           <span
             style={{
               display: 'flex',
@@ -406,19 +405,6 @@ export default function ProfileTest() {
               width: 'fit-content',
             }}
           >
-            <Button
-              variant="primary"
-              className="recordBtn"
-              onClick={goDashboard}
-              style={{
-                position: 'relative',
-                top: '-50px',
-                fontSize: '0.9rem',
-                width: '101px',
-              }}
-            >
-              Dashboard
-            </Button>
             {userDetail.USERID < 0 && (
               <Button
                 variant="primary"

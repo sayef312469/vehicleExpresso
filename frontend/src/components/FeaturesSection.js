@@ -1,5 +1,3 @@
-// src/components/FeaturesSection.js
-
 import React from 'react'
 import { Container, Row, Col, Card } from 'react-bootstrap'
 import { FaRocket, FaShieldAlt, FaChartLine } from 'react-icons/fa'
