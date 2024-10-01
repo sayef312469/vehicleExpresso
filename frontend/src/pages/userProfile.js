@@ -463,7 +463,9 @@ export default function ProfileTest() {
               </Col>
               <Col>
                 <h5>
-                  {shortermInfo.length > 0 ? shortermInfo[0].COUNTS : '0'}
+                  {shortermInfo.length > 0 && longtermInfo.length > 0
+                    ? shortermInfo[0].COUNTS + longtermInfo[0].TOTAL_LONG
+                    : '0'}
                 </h5>
                 <text
                   style={{
@@ -654,12 +656,12 @@ export default function ProfileTest() {
                         Mechanic Name: <i>{' ' + carInfo.MECHANIC_NAME}</i>
                       </li>
                       <li>
-                        Maintenance Category: <i>{' ' + carInfo.MAINTENANCE_CATEGORY}</i>
+                        Maintenance Category:{' '}
+                        <i>{' ' + carInfo.MAINTENANCE_CATEGORY}</i>
                       </li>
                       <br />
                     </React.Fragment>
                   ))}
-                
                 </Card.Text>
               )}
             </Card.Body>
