@@ -218,7 +218,7 @@ const profileShorterm = async (req, res) => {
           VEHICLE_MODEL,
           VEHICLE_COLOR,
           VEHICLE_COMPANY,
-          SERVICE_DATE
+          TO_CHAR(SERVICE_DATE, 'yyyy-mm-dd') AS SERVICE_DATE
       FROM
           CARE_TRANSAC,
           SHORTTERMCARE,
@@ -251,47 +251,36 @@ const profileLongterm = async (req, res) => {
   try {
     console.log('Data fetched from database')
     const result = await runQuery(
-      `WITH SERVICE_COUNT AS (
-        SELECT
-            COUNT(*) AS COUNTS
-        FROM
-            CARE_TRANSAC,
-            SHORTTERMCARE,
-            TAKES_CARE,
-            VEHICLE_INFO,
-            USERS
-        WHERE
-            SHORTTERM_ID=CARE_TRANSAC.SERVICE_ID
-            AND SHORTTERM_ID=TAKES_CARE.SERVICE_ID
-            AND TAKES_CARE.VEHICLENO=VEHICLE_INFO.VEHICLENO
-            AND VEHICLE_INFO.VEHICLE_OWNER=USERS.USERID
-            AND USERID=:userid
-      )
-      SELECT
-          SERVICE_COUNT.COUNTS,
-          SERVICE_TYPE,
-          MECHANIC_NAME,
-          REPAIR,
-          WASH,
-          VEHICLE_INFO.VEHICLENO,
-          VEHICLETYPE,
-          VEHICLE_MODEL,
-          VEHICLE_COLOR,
-          VEHICLE_COMPANY,
-          SERVICE_DATE
-      FROM
-          CARE_TRANSAC,
-          SHORTTERMCARE,
-          TAKES_CARE,
-          VEHICLE_INFO,
-          USERS,
-          SERVICE_COUNT
-      WHERE
-          SHORTTERM_ID=CARE_TRANSAC.SERVICE_ID
-          AND SHORTTERM_ID=TAKES_CARE.SERVICE_ID
-          AND TAKES_CARE.VEHICLENO=VEHICLE_INFO.VEHICLENO
-          AND VEHICLE_INFO.VEHICLE_OWNER=USERS.USERID
-          AND USERID=:userid`,
+      `SELECT
+    COUNT(*)                               AS TOTAL_LONG,
+    TC.VEHICLENO,
+    CT.SERVICE_TYPE,
+    LC.MAINTENANCE_CATEGORY,
+    CT.SERVICING_COST,
+    TO_CHAR(TC.SERVICE_DATE, 'yyyy-mm-dd') AS SERVICE_DATE
+FROM
+    VEHICLE_INFO     VI,
+    TAKES_CARE       TC,
+    CARE_TRANSAC     CT,
+    LONGTERMCARE     LC,
+    MAINTENANCE_INFO MI,
+    USERS            U
+WHERE
+    VI.VEHICLE_OWNER=:VEHICLEOWNER
+    and U.USERID=VI.VEHICLE_OWNER
+    AND VI.VEHICLENO=TC.VEHICLENO
+    AND TC.SERVICE_ID=CT.SERVICE_ID
+    AND CT.SERVICE_ID=LC.LONGTERM_ID
+    AND CT.SERVICE_ID=MI.MAINTENANCE_ID
+    AND TO_DATE(LC.FINAL_DATE, 'yyyy-mm-dd') > TO_DATE(SYSDATE, 'yyyy-mm-dd')
+GROUP BY
+    TC.VEHICLENO,
+    CT.SERVICE_TYPE,
+    LC.MAINTENANCE_CATEGORY,
+    CT.SERVICING_COST,
+    TC.SERVICE_DATE
+ORDER BY
+    TC.SERVICE_DATE`,
       {
         userid,
       }
