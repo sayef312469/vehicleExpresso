@@ -7,6 +7,7 @@ const {
   profileParking,
   updateContact,
   profileShorterm,
+  profileLongterm,
   userRecord,
   userIdUpdate,
 } = require('../controllers/userController')
@@ -21,6 +22,7 @@ router.get('/profile/:id', profileUser)
 router.post('/upload/:id', upload.single('file'), profilePicture)
 router.get('/profile-parking/:id', profileParking)
 router.get('/shorterm/:id', profileShorterm)
+router.get('/longterm/:id', profileLongterm)
 router.put('/update/:id', updateContact)
 router.get('/record', userRecord)
 router.put('/recordUpdate/:id', userIdUpdate)

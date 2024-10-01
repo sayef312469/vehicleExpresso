@@ -31,6 +31,7 @@ export default function ProfileTest() {
   const fileInputRef = useRef(null)
   const [parkingInfo, setParkingInfo] = useState([])
   const [shortermInfo, setShortermInfo] = useState([])
+  const [longtermInfo, setLongtermInfo] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -73,6 +74,27 @@ export default function ProfileTest() {
     }
 
     fetchShortermInfo()
+  }, [user])
+
+  useEffect(() => {
+    const fetchLongtermInfo = async () => {
+      try {
+        const response = await fetch(
+          'http://localhost:4000/api/user/longterm/' + user.id
+        )
+        if (!response.ok) {
+          throw new Error('Failed to fetch data')
+        }
+        const data = await response.json()
+        setLongtermInfo(data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchLongtermInfo()
   }, [user])
 
   async function handleUpdate(phone, area, city, country) {
@@ -573,10 +595,10 @@ export default function ProfileTest() {
                         Mechanic Name: <i>{' ' + carInfo.MECHANIC_NAME}</i>
                       </li>
                       <li>
-                        Repair Type: <i>{' ' + carInfo.REPAIR.CARE_TYPE}</i>
+                        Repair Type: <i>{' ' + carInfo.REPAIR.TYPE}</i>
                       </li>
                       <li>
-                        Wash Type: <i>{' ' + carInfo.WASH.CARE_TYPE}</i>
+                        Wash Type: <i>{' ' + carInfo.WASH.TYPE}</i>
                       </li>
                       <br />
                     </React.Fragment>
@@ -602,10 +624,44 @@ export default function ProfileTest() {
             </Card.Header>
             <Card.Body>
               <Card.Title>Active Services</Card.Title>
-              <Card.Text>
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </Card.Text>
+              {loading ? (
+                <p>Loading...</p>
+              ) : longtermInfo.length === 0 ? (
+                <p>No active services available.</p>
+              ) : (
+                <Card.Text>
+                  {longtermInfo.map((carInfo, index) => (
+                    <React.Fragment key={index}>
+                      <li>
+                        Service Type: <i>{' ' + carInfo.SERVICE_TYPE}</i>
+                      </li>
+                      <li>
+                        Start Date: <i>{' ' + carInfo.SERVICE_DATE}</i>
+                      </li>
+                      <li>
+                        Car Number: <i>{' ' + carInfo.VEHICLENO}</i>
+                      </li>
+                      <li>
+                        Car Type: <i>{' ' + carInfo.VEHICLETYPE}</i>
+                      </li>
+                      <li>
+                        Car Color: <i>{' ' + carInfo.VEHICLE_COLOR}</i>
+                      </li>
+                      <li>
+                        Car Model: <i>{' ' + carInfo.VEHICLE_MODEL}</i>
+                      </li>
+                      <li>
+                        Mechanic Name: <i>{' ' + carInfo.MECHANIC_NAME}</i>
+                      </li>
+                      <li>
+                        Maintenance Category: <i>{' ' + carInfo.MAINTENANCE_CATEGORY}</i>
+                      </li>
+                      <br />
+                    </React.Fragment>
+                  ))}
+                
+                </Card.Text>
+              )}
             </Card.Body>
           </Card>
 

@@ -252,11 +252,14 @@ const profileLongterm = async (req, res) => {
     console.log('Data fetched from database')
     const result = await runQuery(
       `SELECT
-    COUNT(*)                               AS TOTAL_LONG,
-    TC.VEHICLENO,
-    CT.SERVICE_TYPE,
-    LC.MAINTENANCE_CATEGORY,
-    CT.SERVICING_COST,
+    COUNT(*) AS TOTAL_LONG,
+    TC.VEHICLENO AS VEHICLENO,
+    VEHICLETYPE,
+    VEHICLE_MODEL,
+    VEHICLE_COLOR,
+    VEHICLE_COMPANY,
+    CT.SERVICE_TYPE AS SERVICE_TYPE,
+    LC.MAINTENANCE_CATEGORY AS MAINTENANCE_CATEGORY,
     TO_CHAR(TC.SERVICE_DATE, 'yyyy-mm-dd') AS SERVICE_DATE
 FROM
     VEHICLE_INFO     VI,
@@ -275,9 +278,12 @@ WHERE
     AND TO_DATE(LC.FINAL_DATE, 'yyyy-mm-dd') > TO_DATE(SYSDATE, 'yyyy-mm-dd')
 GROUP BY
     TC.VEHICLENO,
+    VEHICLETYPE,
+    VEHICLE_MODEL,
+    VEHICLE_COLOR,
+    VEHICLE_COMPANY,
     CT.SERVICE_TYPE,
     LC.MAINTENANCE_CATEGORY,
-    CT.SERVICING_COST,
     TC.SERVICE_DATE
 ORDER BY
     TC.SERVICE_DATE`,
@@ -361,6 +367,7 @@ module.exports = {
   profileParking,
   updateContact,
   profileShorterm,
+  profileLongterm,
   userRecord,
   userIdUpdate,
 }
