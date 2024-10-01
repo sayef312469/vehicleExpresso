@@ -337,7 +337,7 @@ const userIdUpdate = async (req, res) => {
   const { userid } = req.body
   try {
     const result = await runQuery(
-      `update users set userid=:userid where userid=:id`,
+      `UPDATE USERS SET USERID=:userid WHERE USERID=:id`,
       {
         userid,
         id,
