@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css2?family=Baskervville+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+.user{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 40vw;
+  padding: 0 40px;
+  gap: 20px;
+}
+
+.user .popup{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  position:absolute;
+  top:12%;
+  box-shadow: 0 4px 10px 2px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  background-color: rgb(42, 127, 130);
+  width: 500px;
+  height: 600px;
+  z-index: 2;
+}
+
+.user .popup .exit{
+  position: absolute;
+  padding:6px 10px;
+  border-radius: 13px;
+  margin: 3% 91%;
+  background-color: crimson;
+  cursor: pointer;
+}
+
+.user .popup .exit:hover{
+  background-color: #ad2020;
+  scale: 1.1;
+}
+
+.user .popup .submit{
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  padding:5px 10px;
+  display: inline-block;
+  margin: 2% 78%;
+  background-color: #1aac83;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+}
+
+.user .popup .submit:hover{
+  background-color: rgb(16, 139, 105);
+  scale: 1.1;
+}
+
+.user .popup .block,.user .popup .block .check-block,.user .popup .block select{
+  display: flex;
+  margin:0 30px;
+  justify-content: space-between;
+  align-items:baseline;
+}
+
+.user .popup div input,.user .popup .block select{
+  padding: 5px;
+  margin-bottom: 10px;
+  margin-right: 20px;
+  border: 1px solid #272424;
+  border-radius: 5px;
+  width:60%;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+input:invalid{
+  border-color: red;
+}
+
+input:invalid:focus{
+  outline: none;
+}
+
+.user .popup h5{
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.user .popup div textarea{
+  padding: 5px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  border: 1px solid #272424;
+  border: 1px solid #272424;
+  border-radius: 5px;
+  width:40%;
+  height:10%;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+  resize: none;
+}
+
+.user .popup fieldset {
+  font-size: 15px;
+  font-weight:500;
+}
+
+.user .popup fieldset legend{
+  margin-top: 10px;
+  margin-left: 30px;
+  padding-right: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+.user .popup .check{
+  margin-left: 45px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+} 
+
+.user .popup .check input{
+  height:15px;
+  width: 15px;
+  cursor: pointer;
+ } 
+
+.description{
+  height:50px;
+}
+
+
+.vr{
+  width: 1.5px;
+  height:10px;
+  top: 65%;
+  visibility: hidden;
+}
+
+span{
+  margin: 0 auto;
+  text-align: center;
+}
+
+.payment{
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 45px 10px;
+  width: 98%;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.title{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: cadetblue;
+  font-family: "Special Elite", system-ui;
+  font-weight: bold;
+  font-style: normal;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+
+.payment .history-table{
+  display: block;
+  overflow: hidden;
+  width: 95%;
+  table-layout: auto;
+  white-space: nowrap;
+  border-collapse: collapse;
+  overflow-x: auto;
+  margin: auto;
+}
+
+.payment .history-table th, .history-table td{
+  padding: 0.8rem;
+  width: 20%;
+}
+
+.form-error{
+  background-color: #f8d7da;
+  border: 1px solid #df4759;
+  width: 50%;
+  margin: auto;
+  margin-top: 50px;
+  text-align: center;
+  color: #df4759;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.user .animation-container {
+  display: flex;
+  align-items: center;
+  width: 98%;
+  height: auto;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.user .animation-container img {
+  width: 55%;
+  margin: auto;
+}
+
+
+.user .animation-container div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  gap: 40px;
+}
+
+.user .animation-container div div {
+  --b: 3px;   
+  --s: .45em;
+  --color: #373B44;
+  
+  padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+  color: var(--color);
+  --_p: var(--s);
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+  transition: .3s linear, color 0s, background-color 0s;
+  outline: var(--b) solid #0000;
+  outline-offset: .6em;
+  font-size: 16px;
+
+  border: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  background-color: cadetblue;
+}
+
+.user .animation-container div div:hover {
+  --_p: 0px;
+  outline-color: var(--color);
+  outline-offset: .05em;
+}
+
+#or {
+  position: relative;
+  width: 290px;
+  height: 50px;
+  
+  line-height: 50px;
+  text-align: center;
+}
+
+#or::before,
+#or::after {
+  position: absolute;
+  width: 130px;
+  height: 2px;
+  top: 24px;
+  background-color: #78B7D0;
+  content: '';
+}
+
+#or::before {
+  left: 0;
+}
+
+#or::after {
+  right: 0;
+}
+
+.user .animation-container div div svg {
+  font-size: 30px;
+  color:  black;
+  font-weight: bold;
+  background-color: rgba(89, 255, 219, 0.2);
+  border-radius: 20px;
+}
+
+.user .animation-container div div button {
+  background: transparent;
+  border: none;
+  font-size: 25px;
+  font-family: "Baskervville SC", serif;
+  font-weight: bold;
+}
+
+@media (width< 950px){
+  .user .animation-container div div{
+    scale: 0.7;
+  }
+}
+
+@media (width<830px){
+  .user .buttons{
+    flex-direction: column;
+  }
+  .user .animation-container img{
+    display: none;
+  }
+}
+

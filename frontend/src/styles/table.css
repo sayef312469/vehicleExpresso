@@ -1,0 +1,159 @@
+.shortrecord,.longrecord{
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    /* backdrop-filter: blur(5px); */
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width:90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+  
+.filter-bar{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 90%;
+    height: auto;
+    border-radius: 20px 0;
+    border: 1px solid #333;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.search-input{
+   visibility: visible;
+   width: auto;
+   height: auto;
+   min-width: 65%;
+   border-radius: 8px 0;
+   color: white;
+   margin: 5px;
+   background-color: #3a3c3c;
+}
+/* .search-input{
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+} */
+
+.filter-option{
+  visibility: visible;
+  padding: 10px;
+  border: 1px solid #272424;
+  border-radius: 8px;
+  width:auto;
+  margin: 5px;
+  height: auto;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+/* 
+.filter-option{
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+} */
+
+.table{
+    display: block;
+    table-layout: auto;
+    border-collapse: collapse;
+    white-space: nowrap;
+    border-radius: 4px;
+    width: auto;
+    max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+
+.table thead{
+    background-color:cadetblue;
+    color: #222;
+}
+
+.table th, .table td{
+    padding: 0.8rem;
+    background-color: transparent;
+}
+
+
+tbody .rows{
+    border-top: 1.5px solid #353333;
+    text-overflow: ellipsis;
+}
+
+tbody .rows:hover{
+    background-color: #c4c2c2;
+}
+
+.page-buttons{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 50%;
+    padding: 5px;
+}
+
+.arrow-button{
+    width: 35px;
+    height: 35px;
+    color: green;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+.arrow-button.disable{
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    color: crimson;
+    pointer-events: none;
+}
+
+.delete-btn{
+    color: crimson;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.edit-btn{
+    color: #00b3ff;
+    margin:0 10px;
+    cursor: pointer;
+}
+
+.des-btn{
+    color: #119639;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.filter-btn{
+    color: cadetblue;
+    margin-left: 10px;
+    margin-right: 10px;
+    min-width: 30px;
+    min-height: 30px;
+}
+.shortrecord h3,.longrecord h3{
+    background-color: cadetblue;
+    padding: 5px;
+    margin-top: 10px;
+    border-radius: 8px;
+    width: 40%;
+}
+.arrow-button:hover,.delete-btn:hover,.edit-btn:hover,.des-btn:hover{
+    scale:1.2;
+}
+
+
+@media (width<830px){
+    .filter-bar{
+      flex-direction: column;
+    }
+  }
+
+

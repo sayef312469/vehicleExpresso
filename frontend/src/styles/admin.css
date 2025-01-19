@@ -1,0 +1,147 @@
+.admin{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 40px;
+  width: 100%;
+  min-height: 40vw;
+}
+hr{
+  margin: 10px auto;
+  width: 90%;
+}
+.header-container{
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+.admin h3,.user h3{
+  min-width: 350px;
+  padding: 5px;
+  width:40%;
+  border-radius: 8px;
+  color: black;
+  text-align: center;
+  font-weight: bold;
+  margin: auto;
+  word-wrap: break-word;
+}
+
+.admin h4{
+  text-align: center;
+  color: cadetblue;
+  font-weight: bold;
+}
+
+.long-button button, .short-button button, .chat-button button{
+  background-color: transparent;
+}
+
+ .admin .animation-container{
+  display: flex;
+  align-items: center;
+  padding: 45px 10px;
+  width: 98%;
+  height: auto;
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+ }
+
+.admin .animation-container img{
+  width: 50%;
+  margin: auto;
+}
+
+.admin .animation-container div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 40%;
+  gap: 160px;
+}
+
+.admin .animation-container div div button{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  padding: 1em 2em;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  color: #333;
+  transition: all 1000ms;
+  font-size: 16px;
+  position: relative;
+  overflow: hidden;
+  outline: 2px solid #333;
+}
+
+.admin .animation-container div div{
+  width: 100%;
+}
+.admin .animation-container div div button:hover {
+  color: #ffffff;
+  transform: scale(1.1);
+  box-shadow: 4px 5px 17px -4px #7ad5e3;
+}
+
+.admin .animation-container div div button::before {
+  content: "";
+  position: absolute;
+  left: -60px;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: #2c9caf;
+  transform: skewX(45deg);
+  z-index: -1;
+  transition: width 1000ms;
+}
+
+.admin .animation-container div div button:hover::before {
+  width: 250%;
+} 
+
+
+.admin .chart-comps{
+  margin-top: 10px;
+  display: flex;
+  min-width:98%;
+  justify-content: center;
+  gap: 20px;
+}
+
+@media (width<830px){
+  .admin .button-container{
+    flex-direction: column;
+    gap:20px;
+  }
+  .admin .animation-container{
+    min-width: 350px;
+  }
+  .admin .animation-container img{
+    display: none;
+  }
+  .admin .chart-comps{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
